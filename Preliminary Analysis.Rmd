@@ -29,8 +29,8 @@ knitr::opts_chunk$set(echo = TRUE)
 # Import the dataset
 
 Import the maternal smoking dataset:
-```{r maternal smomking dataset, message = FALSE}
-CHDS <- read.csv("CHDS.csv")
+```{r maternal smomking dataset, message = FALSE} 
+CHDS <- read.csv("CHDS.csv") # test
 ```
 
 # Descriptions of individual variables
