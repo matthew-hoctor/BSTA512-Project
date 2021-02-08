@@ -1,0 +1,34 @@
+---
+title: "Preliminary Analysis"
+author: "Bradley Hopkins, Matthew Hoctor"
+date: "2/6/2021"
+output:
+  html_document:
+    number_sections: yes
+    theme: lumen
+    toc: yes
+    toc_float:
+      collapsed: yes
+      smooth_scroll: no
+  pdf_document:
+    toc: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+#library(dplyr)
+#library(readxl)
+#library(tidyverse)
+#library(ggplot2)
+#library(CarletonStats)
+#library(pwr)
+#library(BSDA)
+#library(exact2x2)
+```
+
+# Import the dataset
+
+Import the maternal smoking dataset:
+```{r maternal smomking dataset, message = FALSE}
+CHDS <- read.csv("CHDS.csv")
+```
