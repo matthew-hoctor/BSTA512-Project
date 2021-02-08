@@ -32,3 +32,32 @@ Import the maternal smoking dataset:
 ```{r maternal smomking dataset, message = FALSE}
 CHDS <- read.csv("CHDS.csv")
 ```
+
+# Descriptions of individual variables
+
+## Birth Weight
+
+## Gestational age
+
+## Maternal Age
+
+## Cigarettes smoked
+
+## Maternal height
+
+## Maternal pre-partum weight
+
+# Generation of new variables of interest
+
+## BMI
+
+## BMI category
+
+## Smoking category
+
+# Scatter plot matrix
+
+# Check normality of response data
+
+
+
