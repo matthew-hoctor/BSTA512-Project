@@ -97,7 +97,37 @@ pairs(~bwt+gestwks+age+mnocig+mheight+mppwt+BMI+BMI_cat+SMK_cat, data = CHDS, ma
 
 ## Birth Weight
 
+We can perform the Shapiro-Wilk test to to test for normality:
+
+```{r}
+shapiro.test(CHDS$bwt)
+```
+
+This borderline p-value suggests that more investigation may be needed.  A Q-Q plot and boxplot may help:
+
+```{r}
+qqnorm(CHDS$bwt)
+boxplot(CHDS$bwt)
+```
+
+These results suggest that birth weight is normally distributed.
+
 ## Gestational Age
+
+We can perform the Shapiro-Wilk test to to test for normality:
+
+```{r}
+shapiro.test(CHDS$gestwks)
+```
+
+This is very consistant with normal distribution.  We will do a Q-Q plot and boxplot for completeness:
+
+```{r}
+qqnorm(CHDS$gestwks)
+boxplot(CHDS$gestwks)
+```
+
+These results suggest that gestational age is normally distributed.
 
 # References:
 
