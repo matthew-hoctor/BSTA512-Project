@@ -51,13 +51,53 @@ CHDS <- read.csv("CHDS.csv")
 
 ## BMI
 
+The following R Code creates a new variable for body mass index from the maternal weight and pre-partum height data:
+
+```{r}
+CHDS$BMI <- 703 * CHDS$mppwt / ((CHDS$mheight)^2)
+```
+
 ## BMI category
+
+The following R code creates a new variable for BMI category:
+
+```{r}
+CHDS$BMI_cat <- 
+  ifelse(CHDS$BMI < 18.5, 0, 
+  ifelse(CHDS$BMI < 25, 1,
+  ifelse(CHDS$BMI < 30, 2,
+  ifelse(CHDS$BMI < 35, 3,
+  ifelse(CHDS$BMI < 40, 4, 
+  5)))))
+```
+
+Note that 0 corresponds to underweight, 1 to normal weight, 2 to overweight, 3 to class I obese, 4 to class II obese, and 5 to class III obese.
 
 ## Smoking category
 
+The following R code creates a new variable for smoking category.  Patients are categorized as 0, non-smokers; 1, light smokers 1-9 cigarettes/day; 2, moderate smokers, 10-19 cigarettes/day; or 3, heavy smokers 20+ cigarettes/day:
+
+```{r}
+CHDS$SMK_cat <-
+  ifelse(CHDS$mnocig == 0, 0,
+  ifelse(CHDS$mnocig < 10, 1,
+  ifelse(CHDS$mnocig < 20, 2, 
+  3)))
+```
+
 # Scatter plot matrix
+
+The following R code creates a scatter plot matrix:
+
+```{r}
+pairs(~bwt+gestwks+age+mnocig+mheight+mppwt+BMI+BMI_cat+SMK_cat, data = CHDS, main = "Scatterplot Matrix")
+```
 
 # Check normality of response data
 
+## Birth Weight
 
+## Gestational Age
+
+# References:
 
