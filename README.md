@@ -1,4 +1,6 @@
-BSTA 513
+BSTA 512
+
+Bradley Hopkins, Matthew Hoctor
 
 Pre-meeting brainstorming document
 
