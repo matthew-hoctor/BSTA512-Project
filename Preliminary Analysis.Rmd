@@ -29,30 +29,30 @@ library(describedata)
 #library(exact2x2)
 ```
 
-## Import the dataset
+# Import the dataset
 
 Import the maternal smoking dataset:
 ```{r maternal smoking dataset, message = FALSE} 
 CHDS <- read.csv("CHDS.csv")
 ```
 
-## Descriptions of individual variables
+# Descriptions of individual variables
 
-### Birth Weight
+## Birth Weight
 
-### Gestational age
+## Gestational age
 
-### Maternal Age
+## Maternal Age
 
-### Cigarettes smoked
+## Cigarettes smoked
 
-### Maternal height
+## Maternal height
 
-### Maternal pre-partum weight
+## Maternal pre-partum weight
 
-## Generation of new variables of interest
+# Generation of new variables of interest
 
-### BMI
+## BMI
 
 The following R Code creates a new variable for body mass index from the maternal weight and pre-partum height data:
 
@@ -60,7 +60,7 @@ The following R Code creates a new variable for body mass index from the materna
 CHDS$BMI <- 703 * CHDS$mppwt / ((CHDS$mheight)^2)
 ```
 
-### BMI category
+## BMI category
 
 The following R code creates a new variable for BMI category:
 
@@ -76,7 +76,7 @@ CHDS$BMI_cat <-
 
 Note that 0 corresponds to underweight, 1 to normal weight, 2 to overweight, 3 to class I obese, 4 to class II obese, and 5 to class III obese.
 
-### Smoking category
+## Smoking category
 
 The following R code creates a new variable for smoking category.  Patients are categorized as 0, non-smokers; 1, light smokers 1-9 cigarettes/day; 2, moderate smokers, 10-19 cigarettes/day; or 3, heavy smokers 20+ cigarettes/day:
 
@@ -88,7 +88,7 @@ CHDS$SMK_cat <-
   3)))
 ```
 
-## Scatter plot matrix
+# Scatter plot matrix
 
 The following R code creates a scatter plot matrix:
 
@@ -96,9 +96,9 @@ The following R code creates a scatter plot matrix:
 pairs(~bwt+gestwks+age+mnocig+mheight+mppwt+BMI+BMI_cat+SMK_cat, data = CHDS, main = "Scatterplot Matrix")
 ```
 
-## Check normality of response data
+# Check normality of response data
 
-### Birth Weight
+## Birth Weight
 
 We can perform the Shapiro-Wilk test to to test for normality:
 
@@ -116,7 +116,7 @@ boxplot(CHDS$bwt)
 
 These results suggest that birth weight is normally distributed.
 
-### Gestational Age
+## Gestational Age
 
 We can perform the Shapiro-Wilk test to to test for normality:
 
