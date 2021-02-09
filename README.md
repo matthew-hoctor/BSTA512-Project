@@ -4,7 +4,7 @@
 
 **Read all support documents to understand what you can do with your project.**
 
-**Look at the dataset to see what are available (e.g., info/variables)** \newline\newline
+**Look at the dataset to see what are available (e.g., info/variables)**
 
 * BWT --- Birth weight measured in pounds
 * GESTWKS --- Gestation measured in weeks
