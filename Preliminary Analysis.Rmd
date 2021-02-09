@@ -27,6 +27,7 @@ library(describedata)
 #library(pwr)
 #library(BSDA)
 #library(exact2x2)
+library(ppcor)
 ```
 
 # Project overview
@@ -181,6 +182,15 @@ boxplot(CHDS$gestwks)
 ```
 
 These results suggest that gestational age is normally distributed.
+
+# Preliminatory Exploratory analysis
+
+The following code evaluates the the correlation coefficients for each of the variables used in the study:
+```{r}
+pcor(CHDS)$estimate
+```
+
+Note that from the above output that the magnitude of the correlation of `bwt` with `mppwt` and `BMI` are almost as large as the magnitude of the correlation of `bwt` with `mcnocig`. Also worth noting is the magnitude of the correlation between `bwt` and `gestwks`, although this is not unexpected since birthweight is well documented to be associated with gestation age with much higher risk of low birth weight among pre-term infants. 
 
 # References:
 
