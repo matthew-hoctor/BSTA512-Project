@@ -42,17 +42,53 @@ CHDS <- read.csv("CHDS.csv")
 
 # Descriptions of individual variables
 
-## Birth Weight
+## Summary statistics for each variable:
 
-## Gestational age
+```{r}
+summary(CHDS)
+```
 
-## Maternal Age
+## Birth Weight plots
 
-## Cigarettes smoked
+```{r}
+hist(CHDS$bwt, main = paste("Histogram of Birth Weight"), xlab = "Birth Weight (lbs)")
+boxplot(CHDS$bwt, main = "Box Plot of Birth Weight", ylab = "Birth Weight (lbs)")
+```
 
-## Maternal height
+## Gestational age plots
 
-## Maternal pre-partum weight
+```{r}
+hist(CHDS$gestwks, main = paste("Histogram of Gestational Age"), xlab = "Gestational Age (weeks)")
+boxplot(CHDS$bwt, main = "Box Plot of Gestational Age", ylab = "Gestational Age (weeks)")
+```
+
+## Maternal Age plots
+
+```{r}
+hist(CHDS$age, main = paste("Histogram of Maternal Age"), xlab = "Maternal Age (years)")
+boxplot(CHDS$age, main = "Box Plot of Maternal Age", ylab = "Maternal Age (years)")
+```
+
+## Cigarettes smoked plots
+
+```{r}
+hist(CHDS$mnocig, main = paste("Histogram of Maternal Smoking"), xlab = "Maternal Smoking (cigarettes/day)")
+boxplot(CHDS$mnocig, main = "Box Plot of Maternal Smoking", ylab = "Maternal Smoking (cigarettes/day)")
+```
+
+## Maternal height plots
+
+```{r}
+hist(CHDS$mheight, main = paste("Histogram of Maternal Height"), xlab = "Maternal Height (in)")
+boxplot(CHDS$mheight, main = "Box Plot of Maternal Height", ylab = "Maternal Height (in)")
+```
+
+## Maternal pre-partum weight plots
+
+```{r}
+hist(CHDS$mppwt, main = paste("Histogram of Maternal Weight"), xlab = "Maternal Pre-Partum Weight (lbs)")
+boxplot(CHDS$mppwt, main = "Box Plot of Maternal Weight", ylab = "Maternal Pre-Partum Weight (lbs)")
+```
 
 # Generation of new variables of interest
 
@@ -92,6 +128,8 @@ CHDS$SMK_cat <-
   3)))
 ```
 
+## Birth weight category
+
 # Scatter plot matrix
 
 The following R code creates a scatter plot matrix:
@@ -108,7 +146,6 @@ We can perform the Shapiro-Wilk test to to test for normality:
 
 ```{r}
 shapiro.test(CHDS$bwt)
-
 ```
 
 This borderline p-value suggests that more investigation may be needed.  A Q-Q plot and boxplot may help:
@@ -118,7 +155,13 @@ qqnorm(CHDS$bwt)
 boxplot(CHDS$bwt)
 ```
 
-These results suggest that birth weight is normally distributed.
+These results suggest that birth weight is normally distributed. For completeness we can check the gladder function:
+
+```{r}
+gladder(CHDS$bwt)
+```
+
+None of the transformed distributions look particularly better than the origional distribution.
 
 ## Gestational Age
 
@@ -141,3 +184,4 @@ These results suggest that gestational age is normally distributed.
 
 # References:
 
+See [literature review section](https://github.com/matthew-hoctor/BSTA512-Project#literature-review)
