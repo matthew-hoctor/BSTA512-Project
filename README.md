@@ -165,7 +165,7 @@
 
 Our research question concerns the 'Birthweight paradox', which refers to the observation made by Yerushalmy (1971) that although the incidence of low birth weight was found to be higher in smoking mother than non-smoking mothers, the mortality rate was actually found to be higher in low birth weight infants with smoking mothers compared to non-smoking mothers. VanderWeele (2014) proposed that there may be unmeasured common causes that contribute to both low birth weight and infant mortality, such that the link between low birth weight and infant mortality is actually explained by this unexplained measure and the smoking status of the mother would not necessarily be a major contributor.
 
-We plan to evaluate the hypothesis that there is an association between the risk of low birth weight and maternal pre-pregnancy weight, even when controlling for smoking status.
+We plan to evaluate the hypothesis that BMI plays a role as a confounder in the relationship between birth-weight and maternal smoking.
 
 # Descriptive and Exploratory Analysis 
 
