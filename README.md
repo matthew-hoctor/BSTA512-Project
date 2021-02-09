@@ -168,6 +168,8 @@ We plan to evaluate the hypothesis that ***
 
 # Descriptive and Exploratory Analysis 
 
+The analysis can be found here: [link](https://matthew-hoctor.github.io/BSTA512-Project/Preliminary-Analysis.html)
+
 **Run some descriptive analysis to study distribution of the data for each variable; some exploratory analysis, see the project outline for details.**
 
 * For descriptive analysis, you may put all values in a table.

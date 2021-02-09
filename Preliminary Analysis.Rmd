@@ -29,6 +29,10 @@ library(describedata)
 #library(exact2x2)
 ```
 
+# Project overview
+
+A project overview can be found in the README.md document on the main github project page: [link](https://github.com/matthew-hoctor/BSTA512-Project)
+
 # Import the dataset
 
 Import the maternal smoking dataset:
