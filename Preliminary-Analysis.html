@@ -421,8 +421,8 @@ div.tocify {
 <p>These results suggest that gestational age is normally distributed.</p>
 </div>
 </div>
-<div id="preliminatory-exploratory-analysis" class="section level1" number="7">
-<h1 number="7"><span class="header-section-number">7</span> Preliminatory Exploratory analysis</h1>
+<div id="preliminary-exploratory-analysis" class="section level1" number="7">
+<h1 number="7"><span class="header-section-number">7</span> Preliminary Exploratory analysis</h1>
 <p>The following code evaluates the the correlation coefficients for each of the variables used in the study:</p>
 <pre class="r"><code>pcor(CHDS)$estimate</code></pre>
 <pre><code>##                  bwt     gestwks          age       mnocig      mheight
@@ -446,6 +446,144 @@ div.tocify {
 ## BMI_cat  0.003685339  0.101953565  1.000000000  0.03782960
 ## SMK_cat  0.010531220 -0.022518208  0.037829597  1.00000000</code></pre>
 <p>Note that from the above output that the magnitude of the correlation of <code>bwt</code> with <code>mppwt</code> and <code>BMI</code> are almost as large as the magnitude of the correlation of <code>bwt</code> with <code>mcnocig</code>. Also worth noting is the magnitude of the correlation between <code>bwt</code> and <code>gestwks</code>, although this is not unexpected since birthweight is well documented to be associated with gestation age with much higher risk of low birth weight among pre-term infants.</p>
+<div id="birth-weight-and-gestation-weeks" class="section level2" number="7.1">
+<h2 number="7.1"><span class="header-section-number">7.1</span> Birth-weight and gestation weeks</h2>
+<pre class="r"><code>summary(lm(CHDS$bwt ~ CHDS$gestwks))</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = CHDS$bwt ~ CHDS$gestwks)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -3.1734 -0.6253  0.0266  0.6276  3.3305 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  -2.34818    0.80582  -2.914  0.00369 ** 
+## CHDS$gestwks  0.24804    0.02024  12.255  &lt; 2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.9891 on 678 degrees of freedom
+## Multiple R-squared:  0.1814, Adjusted R-squared:  0.1801 
+## F-statistic: 150.2 on 1 and 678 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>The output above shows that there is very highly statistically significant evidence (P &lt; 0.001) for a linear relationship between <code>bwt</code> and <code>gestwks</code>.</p>
+</div>
+<div id="birth-weight-and-age" class="section level2" number="7.2">
+<h2 number="7.2"><span class="header-section-number">7.2</span> Birth-weight and age</h2>
+<pre class="r"><code>summary(lm(CHDS$bwt ~ CHDS$age))</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = CHDS$bwt ~ CHDS$age)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -4.2181 -0.7170  0.0804  0.6851  3.8811 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 7.5097117  0.2029260  37.007   &lt;2e-16 ***
+## CHDS$age    0.0002614  0.0076786   0.034    0.973    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 1.093 on 678 degrees of freedom
+## Multiple R-squared:  1.709e-06,  Adjusted R-squared:  -0.001473 
+## F-statistic: 0.001159 on 1 and 678 DF,  p-value: 0.9729</code></pre>
+<p>The output above shows there is insufficient evidence (P = 0.9729) to suggest a linear relationship between birth-weight and age.</p>
+</div>
+<div id="birth-weight-and-cigarettes-smoked-per-day" class="section level2" number="7.3">
+<h2 number="7.3"><span class="header-section-number">7.3</span> Birth-weight and cigarettes smoked per day</h2>
+<pre class="r"><code>summary(lm(CHDS$bwt ~ CHDS$mnocig))</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = CHDS$bwt ~ CHDS$mnocig)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -4.3457 -0.7457 -0.0175  0.6976  3.7543 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  7.645663   0.049406 154.751  &lt; 2e-16 ***
+## CHDS$mnocig -0.017386   0.003661  -4.749  2.5e-06 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 1.075 on 678 degrees of freedom
+## Multiple R-squared:  0.03219,    Adjusted R-squared:  0.03076 
+## F-statistic: 22.55 on 1 and 678 DF,  p-value: 2.502e-06</code></pre>
+<p>The output above shows that there is very highly statistically significant evidence (P &lt; 0.001) that there is a linear association between birthweight and number of cigarettes smoked per day by the mother.</p>
+</div>
+<div id="birth-weight-and-maternal-height" class="section level2" number="7.4">
+<h2 number="7.4"><span class="header-section-number">7.4</span> Birth-weight and maternal height</h2>
+<pre class="r"><code>summary(lm(CHDS$bwt ~ CHDS$mheight))</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = CHDS$bwt ~ CHDS$mheight)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -4.1778 -0.6833  0.0222  0.7113  4.0113 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)   1.77576    1.06676   1.665   0.0964 .  
+## CHDS$mheight  0.08909    0.01654   5.385 9.98e-08 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 1.07 on 678 degrees of freedom
+## Multiple R-squared:  0.04102,    Adjusted R-squared:  0.03961 
+## F-statistic:    29 on 1 and 678 DF,  p-value: 9.976e-08</code></pre>
+<p>The output above shows that there is very highly statistically significant evidence (P &lt; 0.001) that there is a linear association between birthweight and maternal height.</p>
+</div>
+<div id="birth-weight-and-maternal-pre-pregnancy-weight" class="section level2" number="7.5">
+<h2 number="7.5"><span class="header-section-number">7.5</span> Birth-weight and maternal pre-pregnancy weight</h2>
+<pre class="r"><code>summary(lm(CHDS$bwt ~ CHDS$mppwt))</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = CHDS$bwt ~ CHDS$mppwt)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -4.4210 -0.6892  0.0107  0.6800  3.8415 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 5.798434   0.293231  19.774  &lt; 2e-16 ***
+## CHDS$mppwt  0.013539   0.002288   5.917 5.21e-09 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 1.066 on 678 degrees of freedom
+## Multiple R-squared:  0.0491, Adjusted R-squared:  0.0477 
+## F-statistic: 35.01 on 1 and 678 DF,  p-value: 5.211e-09</code></pre>
+<p>The output above shows that there is very highly statistically significant evidence (P &lt; 0.001) for a linear association between birthweight and maternal pre-pregnancy weight.</p>
+</div>
+<div id="birth-weight-and-maternal-pre-pregnancy-bmi" class="section level2" number="7.6">
+<h2 number="7.6"><span class="header-section-number">7.6</span> Birth-weight and maternal pre-pregnancy BMI</h2>
+<pre class="r"><code>summary(lm(CHDS$bwt ~ CHDS$BMI))</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = CHDS$bwt ~ CHDS$BMI)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -4.3693 -0.7058  0.0108  0.7167  3.8015 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  6.38694    0.34253  18.647  &lt; 2e-16 ***
+## CHDS$BMI     0.05262    0.01584   3.322 0.000941 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 1.084 on 678 degrees of freedom
+## Multiple R-squared:  0.01602,    Adjusted R-squared:  0.01457 
+## F-statistic: 11.04 on 1 and 678 DF,  p-value: 0.0009409</code></pre>
+<p>The output above shows that there is very highly statistically significant evidence (P &lt; 0.001) for a linear association between birthweight and maternal pre-pregnancy BMI.</p>
+</div>
 </div>
 <div id="references" class="section level1" number="8">
 <h1 number="8"><span class="header-section-number">8</span> References:</h1>
