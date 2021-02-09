@@ -141,7 +141,7 @@
 
 <details>
   <summary>
-  Yerushalmy and the problems of causal inference* https://academic.oup.com/ije/article/43/5/1349/697896
+  Yerushalmy and the problems of causal inference https://academic.oup.com/ije/article/43/5/1349/697896
   </summary> 
 
 > Yerushalmy’s work makes worthwhile reading for the modern epidemiologist and gives insights into how erroneous causal interpretations arise. In his 1971 paper, he confirmed that smoking mothers were about twice as likely to have a low birthweight infant as non-smoking mothers. However, he also found that the neonatal mortality rate for low birthweight babies born to non-smoking mothers was higher than in mothers who smoked. Furthermore, he found that **‘the healthiest low-birth-weight infants were found for couples where the wife smoked and her husband did not smoke; the most vulnerable were produced by couples where the wife did not smoke and the husband smoked’.1 This finding, sometimes termed the ‘birthweight paradox’,2 or the ‘crossover paradox’,3 may be explained by unmeasured confounding or by different low-birthweight phenotypes.** Kramer and colleagues point out that: ‘Yerushalmy thought that the “paradox” called into question whether maternal smoking causes perinatal death’.3 Goldstein maintains that there is no ‘paradox’ but simply an inappropriate adjustment—in exploring the effect of maternal smoking on neonatal mortality there is no justification for considering low birthweight a confounder,4 a point upon which our commentators agree.
@@ -165,7 +165,7 @@
 
 Our research question concerns the 'Birthweight paradox', which refers to the observation made by Yerushalmy (1971) that although the incidence of low birth weight was found to be higher in smoking mother than non-smoking mothers, the mortality rate was actually found to be higher in low birth weight infants with smoking mothers compared to non-smoking mothers. VanderWeele (2014) proposed that there may be unmeasured common causes that contribute to both low birth weight and infant mortality, such that the link between low birth weight and infant mortality is actually explained by this unexplained measure and the smoking status of the mother would not necessarily be a major contributor.
 
-We plan to evaluate the hypothesis that ***
+We plan to evaluate the hypothesis that there is an association between the risk of low birth weight and maternal pre-pregnancy BMI, even when controlling for smoking status.
 
 # Descriptive and Exploratory Analysis 
 

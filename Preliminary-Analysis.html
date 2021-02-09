@@ -584,6 +584,30 @@ div.tocify {
 ## F-statistic: 11.04 on 1 and 678 DF,  p-value: 0.0009409</code></pre>
 <p>The output above shows that there is very highly statistically significant evidence (P &lt; 0.001) for a linear association between birthweight and maternal pre-pregnancy BMI.</p>
 </div>
+<div id="birth-weight-and-maternal-pre-pregnancy-bmi-with-cigarettes-smoked-as-control" class="section level2" number="7.7">
+<h2 number="7.7"><span class="header-section-number">7.7</span> Birth-weight and maternal pre-pregnancy BMI with cigarettes smoked as control</h2>
+<pre class="r"><code>summary(lm(CHDS$bwt ~ CHDS$BMI + CHDS$mnocig))</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = CHDS$bwt ~ CHDS$BMI + CHDS$mnocig)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -4.4842 -0.7097 -0.0094  0.7055  3.6819 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  6.586817   0.340253  19.359  &lt; 2e-16 ***
+## CHDS$BMI     0.049132   0.015623   3.145  0.00173 ** 
+## CHDS$mnocig -0.016833   0.003642  -4.622 4.55e-06 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 1.068 on 677 degrees of freedom
+## Multiple R-squared:  0.04612,    Adjusted R-squared:  0.0433 
+## F-statistic: 16.37 on 2 and 677 DF,  p-value: 1.144e-07</code></pre>
+<p>Including <code>mnocig</code> in the model still provides significant evidence for the <code>BMI</code> correlation coefficient (0.001 &lt; P &lt; 0.01), although the magnitude of the coefficient has decreased slightly, from 0.05262 to 0.049132. The R<sup>2</sup> value for the model including both <code>BMI</code> and <code>mnocig</code> in the model is slightly higher than for when <code>BMI</code> is used alone, increasing from 0.01602 to 0.04612.</p>
+</div>
 </div>
 <div id="references" class="section level1" number="8">
 <h1 number="8"><span class="header-section-number">8</span> References:</h1>
