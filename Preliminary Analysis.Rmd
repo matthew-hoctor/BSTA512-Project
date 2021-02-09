@@ -246,7 +246,7 @@ The output above shows that there is very highly statistically significant evide
 summary(lm(CHDS$bwt ~ CHDS$BMI + CHDS$mnocig))
 ```
 
-Including `mnocig` in the model still provides significant evidence for the `BMI` correlation coefficient (0.001 < P < 0.01), although the magnitude of the coefficient has decreased slightly, from 0.05262 to 0.049132. The R^2^ value for the model including both `BMI` and `mnocig` in the model is slightly higher than for when `BMI` is used alone, increasing from 0.01602 to 0.04612.
+Including `mnocig` in the model still provides significant evidence for the `BMI` correlation coefficient (0.001 < P < 0.01), although the magnitude of the coefficient has decreased slightly, from 0.05262 to 0.049132. The R^2^ value for the model including both `BMI` and `mnocig` is slightly higher than for when `BMI` is used alone, increasing from 0.01602 to 0.04612.
 
 # References:
 
