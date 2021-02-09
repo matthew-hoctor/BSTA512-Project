@@ -19,37 +19,172 @@ knitr::opts_chunk$set(echo = TRUE)
 #library(dplyr)
 #library(readxl)
 #library(tidyverse)
-#library(ggplot2)
+library(ggplot2)
+library(ggthemes)
+library(gridExtra)
 #library(CarletonStats)
 #library(pwr)
 #library(BSDA)
 #library(exact2x2)
 ```
 
-# Import the dataset
+# Getting Started
+
+**Read carefully project outline document to see what you need to do with your project.**
+
+**Read all support documents to understand what you can do with your project.**
+
+**Look at the dataset to see what are available (e.g., info/variables)** \newline\newline
+
+* BWT --- Birth weight measured in pounds
+* GESTWKS --- Gestation measured in weeks
+* MAGE --- Mother’s age measured in years
+* MNOCIG --- Number of cigarettes the maternal smokes per day
+* MHEIGHT --- Mother’s height measured in inches
+* MPPWT --- Mother’s pre-pregnancy weight measured in pounds
+
+**New variables to consider:**
+  
+* Maternal BMI & BMI category
+* Smoking category
+
+# Literature Review
+
+**Do an intensive online search to find/gain knowledge about some similar/related topics through some studies. Use the resources of literature search and readings as your scientific support for your project, more particularly for your aims.**
+
+<details>
+
+  <summary> *526: Unraveling the racial disparity in preterm birth: experiences of discrimination are associated with preterm birth and low birth weight in black women* [link](https://www.ajog.org/article/S0002-9378(10)01804-1/fulltext) </summary> 
+  
+> A prospective cohort study of women with a singleton pregnancy who presented between 22-33 6/7 weeks for signs of preterm labor was examined. Black race was identified through self-report. EOD as a child (CEOD) or adult (AEOD) in 9 situations and response to unfair treatment (UT) due to “race or skin color” was assessed using the Experiences of Discrimination validated instrument. CEOD and AEOD were each scored from 0-9 reflecting the number of situations in which discrimination was experienced. UT was scored 0-2; 0 was the most passive and 2 was the most active response to UT. **Associations between the exposures and PTB and low birth weight (LBW< 2500g) were analyzed** using chi square analyses and fisher's exact tests. MVLR was used to control for confounders.
+
+> Of 325 women enrolled, we analyzed the 262 who self-identified as black. 57% of women report at least one EOD as a child and 47% report at least one EOD as an adult. AEOD was associated with PTB (p=0.026), whereas **CEOD was associated with LBW (p=0.012)**. Additionally, patient response to UT was associated with both PTB (p<0.001) and LBW (p=0.009). Specifically, those who are intermediate or non committal in their response to UT (score 1) have the highest risk of PTB after controlling for insurance and prenatal care. Those who are the most passive (score 0) have the lowest PTB risk (Table).
+
+(NOTE: I included this source to illustrate how non-physiological factors can contribute to outcomes such as low birth weight and also potentially contribute toward neonatal mortality, suggesting that these seemingly unrelated factors could pose as confounders for the relationship between smoking and neonatal mortality)
+
+</details> 
+
+
+
+<details>
+
+  <summary> *Commentary: Resolutions of the birthweight paradox: competing explanations and analytical insights* [link](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4190521/) </summary> 
+
+> The analyses in Yerushalmy’s paper1 indicated that, among low birthweight infants of less than 2500 g, maternal smoking was associated with lower infant mortality. The results have been replicated in a number of studies and populations, and these seemingly paradoxical associations are now often referred to as the ‘birthweight paradox.’ As can be seen from the present set of commentaries, Yerushalmy’s paper continues to generate discussion and interest even 40 years after its publication. Several explanations have been put forward for this paradoxical association. Here we will review some of these, discuss some relations and differences between the explanations that have been proposed, and then conclude with the question of what, if anything, we can infer about the role of birthweight in governing the associations between maternal smoking and infant mortality.
+
+> **One explanation for the birthweight paradox associations is selection or confounding bias due to conditioning on an intermediate**.2–4 If, as in Figure 1, there are unmeasured common causes (U) of low birthweight (L) and infant mortality (Y), such as for instance malnutrition or birth defects, then analyses of the association between maternal smoking (S) and infant mortality among low birthweight infants (L=1) can be in the reverse direction compared with that which one would have obtained if adjustment for U had been possible.
+
+</details> 
+
+
+
+<details>
+  <summary> *Commentary: Smoking, birthweight and mortality: Jacob Yerushalmy on self-selection and the pitfalls of causal inference* [link](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4200064/) </summary> 
+
+> To help rule out non-causal spurious associations, **Yerushalmy urged that investigators should test for the ‘specificity’ of an association. That is, our confidence that a causal relationship is not spurious should be greater when a cause is associated with fewer effects (and vice versa).** The rationale here is that a factor which appears to be associated with many dissimilar outcomes may reflect some form of study bias. For example, statistician Joseph Berkson argued that the fact that most (88.5%) of the excess deaths among smokers in the Hammond and Horn study were not from lung cancer, but from various other causes, indicated the presence of some sort of selection bias.6
+
+> **Those epidemiologists who argued that the evidence was sufficient at the time to call cigarette smoking a cause of lung cancer, appealed to causal criteria also, but a different set of criteria.** For example, the strength of an association was held to be important because **a strong non-causal association required a strong confounder to explain it, and weak associations were more likely to be artefacts of selection bias.** Such an obvious fact could hardly escape the attention of any conscientious investigator, the reasoning went.7 In contrast, Yerushalmy had rejected strength of association as a criterion for inference because its evaluation was necessarily subjective: ‘There is no rational way to decide how large a difference there must be before we accept it as indicating a cause-effect relationship’.8 At the same time, the lack of specificity of smoking as a cause of lung cancer was not a source of worry, according to Abraham Lilienfeld, because the association between smoking and lung cancer in particular was so dramatic relative to other adverse effects.9
+
+</details> 
+
+
+
+<details> 
+  <summary> *The relationship of parents' cigarette smoking to outcome of pregnancy--implications as to the problem of inferring causation from observed associations (reprint of original article)* [link](https://pubmed.ncbi.nlm.nih.gov/25301860/) </summary>
+
+> The relationship of parents' cigarette smoking to outcome of pregnancy-implications as to the problem of inferring causation from observed associations. Amer J Epidem 1971;93:443-456. Nearly 10,000 white and more than 3000 black women were interviewed early in pregnancy on a variety of medical, genetic, environmental, and behavior variables. The increase in the incidence of low-birth-weight among infants of smoking mothers was confirmed. However, a number of paradoxical findings were observed which raise doubts as to causation. Thus, no increase in neonatal mortality was noted. Rather, the neonatal mortality rate and the risk of congenital anomalies of low-birthweight infants were considerably lower for smoking than for nonsmoking mothers. These favorable results cannot be explained by differences in gestational age, nor does a "displacement" hypothesis appear reasonable. Among other findings which could not easily be explained: The healthiest low-birth-weight infants were found for couples where the wife smoked and her husband did not smoke; the most vulnerable were produced by couples where the wife did not smoke and the husband smoked. There were great differences in mode-of-life characteristics between smokers and nonsmokers. The latter were more likely to use contraceptive methods, to plan the baby, less likely to drink coffee and hard liquor, and in general appeared to live at a much slower and moderate pace than the smokers. Most puzzling difference is that of age at menarche, which was lower for smoking mothers. These paradoxical findings raise doubts and argue against the proposition that cigarette smoking acts as an exogenous factor which interferes with intrauterine development of the fetus.
+
+</details> 
+
+
+
+<details>
+  <summary> *Tobacco and Nicotine Cessation During Pregnancy -- Committee opinion by the American College of Obstetricians and Gynecologists* [link](https://www.acog.org/en/Clinical/Clinical%20Guidance/Committee%20Opinion/Articles/2020/05/Tobacco%20and%20Nicotine%20Cessation%20During%20Pregnancy) </summary>
+
+> Pregnant women should be advised of the **significant perinatal risks** associated with tobacco use, including orofacial clefts, **fetal growth restriction**, placenta previa, abruptio placentae, **preterm prelabor rupture of membranes**, **low birth weight**, increased perinatal mortality, ectopic pregnancy, and decreased maternal thyroid function. Children born to women who smoke during pregnancy are at an increased risk of respiratory infections, asthma, infantile colic, bone fractures, and childhood obesity. Pregnancy influences many women to stop smoking, and approximately 54% of women who smoke before pregnancy quit smoking directly before or during pregnancy. Smoking cessation at any point in gestation benefits the pregnant woman and her fetus. The greatest benefit is observed with cessation before 15 weeks of gestation. Although cigarettes are the most commonly used tobacco product in pregnancy, alternative forms of tobacco use, such as e-cigarettes or vaping products, hookahs, and cigars, are increasingly common. Clinicians should advise cessation of tobacco products used in any form and provide motivational feedback. Although counseling and pregnancy-specific materials are effective cessation aids for many pregnant women, some women continue to use tobacco products. Clinicians should individualize care by offering psychosocial, behavioral, and pharmacotherapy interventions. Available cessation-aid services and resources, including digital resources, should be discussed and documented regularly at prenatal and postpartum follow-up visits.
+
+</details> 
+
+
+
+<details>
+
+  <summary> *Yerushalmy and the problems of causal inference* [link](https://academic.oup.com/ije/article/43/5/1349/697896) </summary> 
+
+> Yerushalmy’s work makes worthwhile reading for the modern epidemiologist and gives insights into how erroneous causal interpretations arise. In his 1971 paper, he confirmed that smoking mothers were about twice as likely to have a low birthweight infant as non-smoking mothers. However, he also found that the neonatal mortality rate for low birthweight babies born to non-smoking mothers was higher than in mothers who smoked. Furthermore, he found that **‘the healthiest low-birth-weight infants were found for couples where the wife smoked and her husband did not smoke; the most vulnerable were produced by couples where the wife did not smoke and the husband smoked’.1 This finding, sometimes termed the ‘birthweight paradox’,2 or the ‘crossover paradox’,3 may be explained by unmeasured confounding or by different low-birthweight phenotypes.** Kramer and colleagues point out that: ‘Yerushalmy thought that the “paradox” called into question whether maternal smoking causes perinatal death’.3 Goldstein maintains that there is no ‘paradox’ but simply an inappropriate adjustment—in exploring the effect of maternal smoking on neonatal mortality there is no justification for considering low birthweight a confounder,4 a point upon which our commentators agree.
+
+</details> 
+
+
+
+<details>
+
+  <summary> *Young maternal age and low birth weight risk: An exploration of racial/ethnic disparities in the birth outcomes of mothers in the United States* [link](https://www-sciencedirect-com.proxy.lib.pdx.edu/science/article/pii/S0362331913001341) </summary> 
+
+> This study considers how low birth weight (LBW) prevalence varies by race/ethnicity and maternal age and explores mechanisms that explain disparities. Results show that maternal age patterns in LBW risk for African Americans differ from Whites and foreign- and U.S.-born Hispanics. Background socioeconomic disadvantage, together with current socioeconomic status and smoking during pregnancy, explain almost all of the LBW disparity between white teenage mothers and their older counterparts. **These findings suggest that social disadvantage is a primary driver in unfavorable birth outcomes among white teenage mothers compared to older white mothers.** Alternatively, background disadvantage and other social characteristics explain very little of the LBW disparities among African Americans and U.S.- and foreign-born Hispanics. **Overall, these results indicate LBW disparities by maternal age are a complex product of socioeconomic disadvantage and current social and behavioral factors, such that LBW risk does not operate uniformly by race/ethnicity or maternal age.**
+
+</details> 
+
+
+
+<details>
+
+  <summary> *Maternal Age, Multiple Birth, and Extremely Low Birth Weight Infants* [link](https://www-sciencedirect-com.proxy.lib.pdx.edu/science/article/pii/S0022347608009566?via%3Dihub) </summary> 
+
+> Objectives: To compare the rates of adverse neurodevelopmental outcome or death at 18 to 22 months among extremely low birth weight (ELBW) infants born to mothers ≥40 years to the corresponding rates among infants of younger mothers.
+
+> Study design: Prospective evaluation of ELBW infants to quantify the relative risks of maternal age and multiple birth for death or adverse neurodevelopmental outcome.
+
+> Results: The sample consisted of 14 671 live ELBW births divided into maternal age groups: <20, 20 to 29, 30 to 39, and ≥40 years. Of infants born to mothers ≥40 years, 20% were multiples. Mothers ≥40 years had high rates of obstetric interventions and medical morbidities compared with mothers <40 years. ELBW live births of mothers ≥40 years were 22% more likely to survive and had a 13% decreased risk of neurodevelopmental impairment or death compared with mothers <20. Multiple birth, however, was associated with a 10% greater risk of neurodevelopmental impairment or death.
+
+> Conclusion: **Although mothers ≥40 years had high pregnancy-related morbidities, we found no overall increased risk of the composite outcome of death or NDI.** Multiple birth, however, was a predictor of all adverse outcomes examined, regardless of maternal age.
+
+</details> 
+
+
+
+# Project Aims and Hypothesis
+**Shape your project aims and hypotheses based on reading literature, your knowledge and skills. Make sure your aims tightly connected to the project goal (i.e., association model building, and prediction model building.)**
+
+Our research question involves evaluating the 'Birthweight paradox', which refers to the observation made by Yerushalmy (1971) that although the incidence of low birth weight was found to be higher in smoking mother than non-smoking mothers, the mortality rate was actually found to be higher in low birth weight infants with smoking mothers compared to non-smoking mothers. VanderWeele (2014) proposed that there may be unmeasured common causes that contribute to both low birth weight and infant mortality, such that the link between low birth weight is actually explained by this unexplained measure and the smoking status of the mother would not necessarily factor in at all.
+
+We plan to test the hypothesis that ***
+
+# Descriptive and Exploratory Analysis 
+
+**Run some descriptive analysis to study distribution of the data for each variable; some exploratory analysis, see the project outline for details.**
+
+* Describe each variable
+* Are data transformations necessary? (gladder function)
+* Scatter plot matrix
+* Check normality of response data
+* Check independence assumption
+* Consider categorization of variables, e.g. smoking
+
+## Import the dataset
 
 Import the maternal smoking dataset:
-```{r maternal smomking dataset, message = FALSE} 
+```{r maternal smoking dataset, message = FALSE} 
 CHDS <- read.csv("CHDS.csv")
 ```
 
-# Descriptions of individual variables
+## Descriptions of individual variables
 
-## Birth Weight
+### Birth Weight
 
-## Gestational age
+### Gestational age
 
-## Maternal Age
+### Maternal Age
 
-## Cigarettes smoked
+### Cigarettes smoked
 
-## Maternal height
+### Maternal height
 
-## Maternal pre-partum weight
+### Maternal pre-partum weight
 
-# Generation of new variables of interest
+## Generation of new variables of interest
 
-## BMI
+### BMI
 
 The following R Code creates a new variable for body mass index from the maternal weight and pre-partum height data:
 
@@ -57,7 +192,7 @@ The following R Code creates a new variable for body mass index from the materna
 CHDS$BMI <- 703 * CHDS$mppwt / ((CHDS$mheight)^2)
 ```
 
-## BMI category
+### BMI category
 
 The following R code creates a new variable for BMI category:
 
@@ -73,7 +208,7 @@ CHDS$BMI_cat <-
 
 Note that 0 corresponds to underweight, 1 to normal weight, 2 to overweight, 3 to class I obese, 4 to class II obese, and 5 to class III obese.
 
-## Smoking category
+### Smoking category
 
 The following R code creates a new variable for smoking category.  Patients are categorized as 0, non-smokers; 1, light smokers 1-9 cigarettes/day; 2, moderate smokers, 10-19 cigarettes/day; or 3, heavy smokers 20+ cigarettes/day:
 
@@ -85,7 +220,7 @@ CHDS$SMK_cat <-
   3)))
 ```
 
-# Scatter plot matrix
+## Scatter plot matrix
 
 The following R code creates a scatter plot matrix:
 
@@ -93,9 +228,9 @@ The following R code creates a scatter plot matrix:
 pairs(~bwt+gestwks+age+mnocig+mheight+mppwt+BMI+BMI_cat+SMK_cat, data = CHDS, main = "Scatterplot Matrix")
 ```
 
-# Check normality of response data
+## Check normality of response data
 
-## Birth Weight
+### Birth Weight
 
 We can perform the Shapiro-Wilk test to to test for normality:
 
@@ -112,7 +247,7 @@ boxplot(CHDS$bwt)
 
 These results suggest that birth weight is normally distributed.
 
-## Gestational Age
+### Gestational Age
 
 We can perform the Shapiro-Wilk test to to test for normality:
 
@@ -120,7 +255,7 @@ We can perform the Shapiro-Wilk test to to test for normality:
 shapiro.test(CHDS$gestwks)
 ```
 
-This is very consistant with normal distribution.  We will do a Q-Q plot and boxplot for completeness:
+This is very consistent with normal distribution.  We will do a Q-Q plot and boxplot for completeness:
 
 ```{r}
 qqnorm(CHDS$gestwks)
@@ -128,6 +263,21 @@ boxplot(CHDS$gestwks)
 ```
 
 These results suggest that gestational age is normally distributed.
+
+## Exploratory Analysis
+
+A preliminary exploratory analysis of the data is shown below, to provide a concept for further evaluation later on.
+
+```{r}
+ggplot(CHDS) +
+  geom_point(aes(x = BMI,
+                 y = bwt,
+                 color = mnocig)) +
+  theme_classic() +
+  facet_wrap( ~ SMK_cat)
+```
+
+
 
 # References:
 
