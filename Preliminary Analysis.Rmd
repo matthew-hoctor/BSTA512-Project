@@ -139,6 +139,12 @@ The following R code creates a scatter plot matrix:
 pairs(~bwt+gestwks+age+mnocig+mheight+mppwt+BMI+BMI_cat+SMK_cat, data = CHDS, main = "Scatterplot Matrix")
 ```
 
+# Pairwise Correlation Matrix
+
+```{r}
+pwcorr(CHDS)
+```
+
 # Check normality of response data
 
 ## Birth Weight
