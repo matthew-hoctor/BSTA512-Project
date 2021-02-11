@@ -1,5 +1,6 @@
 ---
-title: "BSTA 512 Midterm Project (Title TBD)"
+title: "Final Project (Title TBD)"
+subtitle: "BSTA 512-612: Winter 2021, OHSU-PSU School of Public Health"
 author: "Matthew Hoctor, Bradley Hopkins"
 date: "2/10/2021"
 output:
@@ -43,8 +44,6 @@ library(ppcor)
 ## Prediction Model
 
 # 4. Discussion
-
-
 
 # 5. Appendix
 
