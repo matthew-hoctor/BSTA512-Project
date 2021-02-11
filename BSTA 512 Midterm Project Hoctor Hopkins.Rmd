@@ -1,0 +1,57 @@
+---
+title: "BSTA 512 Midterm Project (Title TBD)"
+author: "Matthew Hoctor, Bradley Hopkins"
+date: "2/10/2021"
+output:
+  pdf_document:
+    toc: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(dplyr)
+#library(tidyverse)
+#library(ggplot2)
+#library(ggthemes)
+#library(gridExtra)
+library(describedata)
+#library(readxl)
+#library(CarletonStats)
+#library(pwr)
+#library(BSDA)
+#library(exact2x2)
+library(ppcor)
+```
+
+******************************************************************************
+
+# Summary
+
+# 1. Introduction
+
+# 2. Study Background
+
+# 3. Statistical Analysis
+
+## Exploratory Analysis
+
+## Method
+
+## Association Model
+
+## Prediction Model
+
+# 4. Discussion
+
+
+
+# 5. Appendix
+
+## Appendix A
+
+## Appendix B
+
+## Appendix C
+
+# 6. References
