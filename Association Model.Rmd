@@ -1,0 +1,104 @@
+---
+title: "Appendix A: Association Model"
+author: "Bradley Hopkins, Matthew Hoctor"
+date: "2/13/2021"
+output:
+  html_document:
+    number_sections: yes
+    theme: lumen
+    toc: yes
+    toc_float:
+      collapsed: yes
+      smooth_scroll: no
+  pdf_document:
+    toc: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+#library(tidyverse)
+#library(ggplot2)
+#library(ggthemes)
+#library(gridExtra)
+library(describedata)
+#library(readxl)
+#library(CarletonStats)
+#library(pwr)
+#library(BSDA)
+#library(exact2x2)
+#library(ppcor)
+```
+
+# Import the dataset
+
+Import the maternal smoking dataset from the preliminary analysis:
+```{r maternal smoking dataset, message = FALSE} 
+CHDS <- read.csv("CHDS2.csv")
+```
+
+# Crude Model
+
+The following R code creates the crude model and reports summary and ANOVA data:
+
+```{r}
+lm.mwbw <- lm(bwt ~ SMK_cat, data = CHDS)
+summary(lm.mwbw)
+anova(lm.mwbw)
+```
+
+# Full Model
+
+The following R code creates the full model and reports summary and ANOVA data:
+
+```{r}
+lm.mwbw.full <- lm(bwt ~ SMK_cat + gestwks + age + mheight + mppwt + BMI, data = CHDS)
+summary(lm.mwbw.full)
+anova(lm.mwbw.full)
+```
+
+# Analysis of Effect Modification
+
+## BMI
+
+## Maternal Height
+
+## Maternal Weight
+
+## Maternal Age
+
+## Gestational Age
+
+# Analysis of Confounding
+
+## BMI
+
+## Maternal Height
+
+## Maternal Weight
+
+## Maternal Age
+
+## Gestational Age
+
+# Full Model Diagnostics
+
+## Residual Analysis
+
+## Normality Analysis
+
+Due to the large sample size the Shapiro-Wilk test will not be performed.  The following R code creates a QQ Plot:
+
+
+
+## Influential Outlier Detection
+
+## Collinearity Assessment
+
+# Mediation analysis
+
+## BMI
+
+## Maternal Weight
+
+## Gestational Age
