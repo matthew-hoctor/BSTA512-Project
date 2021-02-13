@@ -262,6 +262,14 @@ summary(lm(CHDS$bwt ~ CHDS$mppwt + CHDS$mnocig))
 
 When `mnocig` is included in the model for `bwt` and `mppwt`, the magnitude of the coefficient for `mppwt` decreases slightly (from 0.013539 to 0.013265) and the significance level remains about the same. The R^2^ value increases a fair amount from 0.0491 to 0.07929, suggesting this model is better able to explain the variance in `bwt` compared to the model of `mppwt` alone.
 
+# Export the modified dataset as a new .csv file
+
+The following .csv file will be used for building the association model and prediction model:
+
+```{r}
+write.csv(CHDS, file = "CHDS2.csv")
+```
+
 # References:
 
 See [literature review section](https://github.com/matthew-hoctor/BSTA512-Project#literature-review)
