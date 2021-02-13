@@ -6,6 +6,7 @@ date: "2/10/2021"
 output:
   pdf_document:
     toc: true
+    number_sections: true
 ---
 
 ```{r setup, include=FALSE}
@@ -29,13 +30,13 @@ library(ppcor)
 
 # Summary
 
-# 1. Introduction
+# Introduction
 
+The relationship between maternal prenatal smoking and low birth weight (LBW) is a topic that has long been of interest to investigators, due to the association of LBW with poor infant health outcomes (Blencowe et al., 2019). However, although the association of maternal smoking as a factor in LBW is well-documented and consistent (Ventura et al., 2003), the mechanism by which it contributes to LBW and how this mechanism might be affected by other factors that are also associated with LBW are not well understood. For example, the risk of LBW from prenatal smoking has been demonstrated to be significantly reduced among overweight and obese mothers (La Merrill et al., 2011).
 
+# Study Background
 
-# 2. Study Background
-
-# 3. Statistical Analysis
+# Statistical Analysis
 
 ## Exploratory Analysis
 
@@ -45,9 +46,9 @@ library(ppcor)
 
 ## Prediction Model
 
-# 4. Discussion
+# Discussion
 
-# 5. Appendix
+# Appendix
 
 ## Appendix A
 
@@ -55,4 +56,4 @@ library(ppcor)
 
 ## Appendix C
 
-# 6. References
+# References
