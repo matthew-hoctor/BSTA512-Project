@@ -28,13 +28,27 @@ Britto RP, Florêncio TM, Benedito Silva AA, Sesso R, Cavalcante JC, Sawaya AL. 
 
 Dennis, J., Mollborn, S. (2013) Young maternal age and low birth weight risk: An exploration of racial/ethnic disparities in the birth outcomes of mothers in the United States. The Social Science Journal, Volume 50, Issue 4, 2013, Pages 625-634, ISSN 0362-3319, https://doi.org/10.1016/j.soscij.2013.09.008.
 
+Fraser, A. M., Brockert, J. E., & Ward, R. H. (1995). Association of young maternal age with adverse reproductive outcomes. New England Journal of Medicine, 332(17), 1113–1118.
+
+Gould, J. B., Davey, B., & LeRoy, S. (1989). Socioeconomic differentials and neonatal mortality: Racial comparison of California singletons. Pediatrics, 83(2), 181–186.
+
 Gul R, Iqbal S, Anwar Z, Ahdi SG, Ali SH, Pirzada S. Pre-pregnancy maternal BMI as predictor of neonatal birth weight. PLoS One. 2020;15(10):e0240748. Published 2020 Oct 28. doi:10.1371/journal.pone.0240748
+
+Hack, M., Flannery, D. J., Schluchter, M., Cartar, L., Borawski, E., & Klein, N. (2002). Outcomes in young adulthood for very-low-birth-weight infants. New England Journal of Medicine, 346(3), 149–157.
 
 Hack, M., Gerry Taylor, H., Drotar, D., Schluchter, M., Cartar, L., Andreias, L., et al. (2005). Chronic conditions, functional limitations, and special health care needs of school-aged children born with extremely low-birth-weight in the 1990s. JAMA, 294(3), 318–325.
 
 Inoue S, Naruse H, Yorifuji T, et al. Association between Short Maternal Height and Low Birth Weight: a Hospital-based Study in Japan. J Korean Med Sci. 2016;31(3):353-359. doi:10.3346/jkms.2016.31.3.353
 
+Knopik, V. S., Marceau, K., Palmer, R. H., Smith, T. F., & Heath, A. C. (2016). Maternal smoking during pregnancy and offspring birth weight: A genetically-informed approach comparing multiple raters. Behavior Genetics, 46(3), 353–364.
+
+Kowlessar NM, Jiang HJ, Steiner C. Hospital Stays for Newborns, 2011: Statistical Brief #163. 2013 Oct. In: Healthcare Cost and Utilization Project (HCUP) Statistical Briefs [Internet]. Rockville (MD): Agency for Healthcare Research and Quality (US); 2006 Feb-. Available from: https://www.ncbi.nlm.nih.gov/books/NBK173954/
+
+Kuja-Halkola R, D’Onofrio BM, Larsson H, Lichtenstein P (2014) Maternal smoking during pregnancy and adverse outcomes in offspring: genetic and environmental sources of covariance. Behav Genet 44(5):456–467
+
 La Merrill M, Stein CR, Landrigan P, Engel SM, Savitz DA. Prepregnancy body mass index, smoking during pregnancy, and infant birth weight. Ann Epidemiol. 2011;21(6):413-420. doi:10.1016/j.annepidem.2010.11.012
+
+Martin, J. A., Hamilton, B. E., Ventura, S. J., Osterman, M. J., & Mathews, T. J. (2013). Births: Final data for 2011. National vital statistics reports (Vol. 62). Hyattsville, MD: National Center for Health Statistics.
 
 Parascandola M. Commentary: Smoking, birthweight and mortality: Jacob Yerushalmy on self-selection and the pitfalls of causal inference. Int J Epidemiol. 2014;43(5):1373-1377. doi:10.1093/ije/dyu163
 
@@ -49,6 +63,8 @@ VanderWeele TJ. Commentary: Resolutions of the birthweight paradox: competing ex
 Ventura, S. J., Hamilton, B. E., Mathews, T. J., & Chandra, A. (2003). Trends and variations in smoking during pregnancy and low birth weight: Evidence from the birth certificate, 1990–2000. Pediatrics, 111(Supplement 1), 1176–1180.
 
 Vohr, B., Tyson, J., Wright, L., Perritt, R., Li, L., Poole, W. (2009). Maternal Age, Multiple Birth, and Extremely Low Birth Weight Infants. The Journal of Pediatrics. Volume 154, Issue 4, Pages 498-503.e2, ISSN 0022-3476, https://doi.org/10.1016/j.jpeds.2008.10.044.
+
+World Health Organization. (2014). Global Nutrition Targets 2025: Low birth weight policy brief. Retrieved June 20, 2019, from WHO website: http://www.who.int.proxy.lib.pdx.edu/nutrition/publications/globaltargets2025_policybrief_lbw/en/ .
 
 Yerushalmy J. The relationship of parents' cigarette smoking to outcome of pregnancy--implications as to the problem of inferring causation from observed associations. Int J Epidemiol. 2014 Oct;43(5):1355-66. doi: 10.1093/ije/dyu160. PMID: 25301860.
 
