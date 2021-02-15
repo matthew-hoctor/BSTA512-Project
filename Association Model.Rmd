@@ -45,12 +45,6 @@ $$Y = \beta_0 + \beta_1 X + \epsilon$$
 
 Firstly, we will create $k-1 = 3$ dummy variables to represent the ordinal smoking category data; we can name them $SMK1$ for category 1, $SMK2$ for category 3, and $SMK3$ for category 3.  The values of these variables will be assigned to 0 or 1 according to the reference cell coding approach:
 
-```{r}
-CHDS$SMK1 <- ifelse(CHDS$SMK_cat == 1, 1,0)
-CHDS$SMK2 <- ifelse(CHDS$SMK_cat == 2, 1,0)
-CHDS$SMK3 <- ifelse(CHDS$SMK_cat == 3, 1,0)
-```
-
 If we let
 
 $$
@@ -73,17 +67,27 @@ X_3=
 \end{split}
 $$
 
+The following R code creates these dummy variables as defined above:
+
+```{r}
+CHDS$SMK1 <- ifelse(CHDS$SMK_cat == 1, 1,0)
+CHDS$SMK2 <- ifelse(CHDS$SMK_cat == 2, 1,0)
+CHDS$SMK3 <- ifelse(CHDS$SMK_cat == 3, 1,0)
+```
+
 The reformulated crude model can be expressed as:
 
 $$Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2+ \beta_3 X_3 + \epsilon$$
 
-The following R code creates the crude model and reports summary and ANOVA data:
+To test if a crude association can be established we can consider $H_0: \beta_1 = \beta_2 = \beta_3 = 0$, and test it at significance $\alpha = 0.05$  The following R code creates the crude model and reports summary and ANOVA data:
 
 ```{r}
 lm.bwcrude <- lm(bwt ~ SMK1 + SMK2 + SMK3, data = CHDS)
 summary(lm.bwcrude)
 anova(lm.bwcrude)
 ```
+
+We can see that all reported p-values are less than the pre-specified specificity, and thus a crude association can be established.
 
 # Full Model
 
@@ -281,13 +285,99 @@ anova(lm.par_X3mheight)
 
 The F-value and associated p-value are 2.7956 & 0.094990 respectively; thus we can conclude that maternal height is not an effect-measure modifier of heavy smoking, at pre-defined significance $\alpha = 0.05$; the observed results are not inconsistent with $\beta_9'' = 0$.
 
+## Conclusion
+
+Finding no effect-measure modification, we can move on to analysis of confounding:
+
 # Analysis of Confounding
+
+For each possible confounding variable (gestational age, $X_4$; BMI, $X_5$; and maternal height, $X_6$) we can create an adjusted model (i.e. the parsimonious model above), and a crude model with the confounder in question removed.  We can then consider change in estimated coefficients for each smoking category and test if the change is greater than 10%:
+
+$$\Delta \hat{\beta_i} = \frac{\hat{\beta_i}_{\; adjusted} - \hat{\beta_i}_{\; crude}}{\hat{\beta_i}_{\; crude}}$$
+
+## Gestational Age
+
+The following code creates a 'crude' model to compare to by removing gestational age from the model:
+
+```{r}
+lm.par_gestwks <- lm(bwt ~ SMK1 + SMK2 + SMK3 + mheight + BMI, data = CHDS)
+```
+
+To compute $\Delta \hat{\beta_1}$:
+
+```{r}
+100*(summary(lm.bwfull_age)$coefficients[2,1] - summary(lm.par_gestwks)$coefficients[2,1]) / ( summary(lm.par_gestwks)$coefficients[2,1])
+```
+
+To compute $\Delta \hat{\beta_2}$:
+
+```{r}
+100*(summary(lm.bwfull_age)$coefficients[3,1] - summary(lm.par_gestwks)$coefficients[3,1]) / ( summary(lm.par_gestwks)$coefficients[3,1])
+```
+
+To compute $\Delta \hat{\beta_3}$:
+
+```{r}
+100*(summary(lm.bwfull_age)$coefficients[4,1] - summary(lm.par_gestwks)$coefficients[4,1]) / ( summary(lm.par_gestwks)$coefficients[4,1])
+```
+
+The above analysis shows that removal of gestational age from the model changes $\hat{\beta_i}$ (for i = 1, 2, 3) by greater than $10\%$ in each case, and thus gestational age can be considered a confounder of the smoking-birthweight relation.
 
 ## BMI
 
-## Maternal Weight
+The following code creates a 'crude' model to compare to by removing BMI from the model:
 
-## Gestational Age
+```{r}
+lm.par_BMI <- lm(bwt ~ SMK1 + SMK2 + SMK3 + mheight + gestwks, data = CHDS)
+```
+
+To compute $\Delta \hat{\beta_1}$:
+
+```{r}
+100*(summary(lm.bwfull_age)$coefficients[2,1] - summary(lm.par_BMI)$coefficients[2,1]) / ( summary(lm.par_BMI)$coefficients[2,1])
+```
+
+To compute $\Delta \hat{\beta_2}$:
+
+```{r}
+100*(summary(lm.bwfull_age)$coefficients[3,1] - summary(lm.par_BMI)$coefficients[3,1]) / ( summary(lm.par_BMI)$coefficients[3,1])
+```
+
+To compute $\Delta \hat{\beta_3}$:
+
+```{r}
+100*(summary(lm.bwfull_age)$coefficients[4,1] - summary(lm.par_BMI)$coefficients[4,1]) / ( summary(lm.par_BMI)$coefficients[4,1])
+```
+
+The above analysis shows that removal of BMI from the model changes $\hat{\beta_i}$ (for i = 3 only) by greater than $10\%$, and thus gestational age can be considered a confounder of the heavy-smoking-birthweight relation.
+
+## Maternal Height
+
+The following code creates a 'crude' model to compare to by removing maternal height from the model:
+
+```{r}
+lm.par_mheight <- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + BMI, data = CHDS)
+```
+
+To compute $\Delta \hat{\beta_1}$:
+
+```{r}
+100*(summary(lm.bwfull_age)$coefficients[2,1] - summary(lm.par_mheight)$coefficients[2,1]) / ( summary(lm.par_mheight)$coefficients[2,1])
+```
+
+To compute $\Delta \hat{\beta_2}$:
+
+```{r}
+100*(summary(lm.bwfull_age)$coefficients[3,1] - summary(lm.par_mheight)$coefficients[3,1]) / ( summary(lm.par_mheight)$coefficients[3,1])
+```
+
+To compute $\Delta \hat{\beta_3}$:
+
+```{r}
+100*(summary(lm.bwfull_age)$coefficients[4,1] - summary(lm.par_mheight)$coefficients[4,1]) / ( summary(lm.par_mheight)$coefficients[4,1])
+```
+
+The above analysis shows that removal of maternal height from the model changes $\hat{\beta_i}$ (for i = 1 only) by greater than $10\%$, and thus gestational age can be considered a confounder of the light-smoking-birthweight relation.
 
 # Full Model Diagnostics
 
