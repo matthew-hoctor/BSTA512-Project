@@ -41,7 +41,7 @@ CHDS <- read.csv("CHDS2.csv")
 
 If we let $Y$ equal birthweight, and $X$ equal smoking category, the crude model can be conceptualized as:
 
-$$Y = \beta_0 + \beta_1 X + E$$
+$$Y = \beta_0 + \beta_1 X + \epsilon$$
 
 Firstly, we will create $k-1 = 3$ dummy variables to represent the ordinal smoking category data; we can name them $SMK1$ for category 1, $SMK2$ for category 3, and $SMK3$ for category 3.  The values of these variables will be assigned to 0 or 1 according to the reference cell coding approach:
 
@@ -75,24 +75,24 @@ $$
 
 The reformulated crude model can be expressed as:
 
-$$Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2+ \beta_3 X_3 + E$$
+$$Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2+ \beta_3 X_3 + \epsilon$$
 
 The following R code creates the crude model and reports summary and ANOVA data:
 
 ```{r}
-lm.bwSMKcat <- lm(bwt ~ SMK1 + SMK2 + SMK3, data = CHDS)
-summary(lm.bwSMKcat)
-anova(lm.bwSMKcat)
+lm.bwcrude <- lm(bwt ~ SMK1 + SMK2 + SMK3, data = CHDS)
+summary(lm.bwcrude)
+anova(lm.bwcrude)
 ```
 
 # Full Model
 
-The following R code creates the full model and reports summary and ANOVA data:
+To create the full model we will include all independent variables in the dataset except for maternal weight, as it is already a linear component of BMI, and will create colinearity without adding significantly to the model.  The following R code creates the full model and reports summary and ANOVA data:
 
 ```{r}
-lm.bwfull <- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + age + mheight + mppwt + BMI, data = CHDS)
-summary(lm.bwfull)
+lm.bwfull <- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + age + mheight + BMI, data = CHDS)
 anova(lm.bwfull)
+summary(lm.bwfull)
 ```
 
 # Parsimonious Model Selection by Backward-Elimination
@@ -101,140 +101,37 @@ To create a parsimonious model we will utilize the backward-elimination procedur
 
 ## First Iteration
 
-### Gestational Age
-
-The following R code takes the full model and creates a reduced model by removing gestational age.  The Anova function then calculates the F-statistic & p-value:
+The summary function reports the coefficients and associated p-values (right column of table) from the full model:
 
 ```{r}
-lm.bwfull_gestwks <- lm(bwt ~ SMK1 + SMK2 + SMK3 + age + mheight + mppwt + BMI, data = CHDS)
-anova(lm.bwfull_gestwks, lm.bwfull)$`Pr(>F)`
+summary(lm.bwfull)
 ```
 
-### Maternal Age
-
-The following R code takes the full model and creates a reduced model by removing maternal age.  The Anova function then calculates the F-statistic & p-value:
-
-```{r}
-lm.bwfull_age <- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + mheight + mppwt + BMI, data = CHDS)
-anova(lm.bwfull_age, lm.bwfull)$`Pr(>F)`
-```
-
-### Maternal Height
-
-The following R code takes the full model and creates a reduced model by removing maternal height.  The Anova function then calculates the F-statistic & p-value:
-
-```{r}
-lm.bwfull_mheight <- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + age + mppwt + BMI, data = CHDS)
-anova(lm.bwfull_mheight, lm.bwfull)$`Pr(>F)`
-```
-
-### Maternal Weight
-
-The following R code takes the full model and creates a reduced model by removing maternal weight  The Anova function then calculates the F-statistic & p-value:
-
-```{r}
-lm.bwfull_mppwt <- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + age + mheight + BMI, data = CHDS)
-anova(lm.bwfull_mppwt, lm.bwfull)$`Pr(>F)`
-```
-
-### Maternal BMI
-
-The following R code takes the full model and creates a reduced model by removing maternal weight  The Anova function then calculates the F-statistic & p-value:
-
-```{r}
-lm.bwfull_BMI <- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + age + mheight + mppwt, data = CHDS)
-anova(lm.bwfull_BMI, lm.bwfull)$`Pr(>F)`
-```
-
-### Variable Selection
-
-We can see that maternal height has the highest p-value (0.8039443), and that the p-value is well above 0.10; thus it will be removed.  We can begin the second iteration with the full model excluding maternal height:
+We can see that maternal age has the highest p-value (0.59621), and that the p-value is well above 0.10; thus it will be removed.  We can begin the second iteration with the full model excluding maternal age:
 
 ## Second Iteration
 
-### Gestational Age
-
-The following R code takes the full model and creates a reduced model by removing gestational age.  The Anova function then calculates the F-statistic & p-value:
+The following R code takes the full model and creates a reduced model by removing gestational age.  The summary function then reports the coefficients and associated p-values:
 
 ```{r}
-lm.bwfull_mheight_gestwks <- lm(bwt ~ SMK1 + SMK2 + SMK3 + age +  mppwt + BMI, data = CHDS)
-anova(lm.bwfull_mheight_gestwks, lm.bwfull_mheight)$`Pr(>F)`
+lm.bwfull_age <- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + mheight + BMI, data = CHDS)
+summary(lm.bwfull_age)
 ```
 
-### Maternal Age
+We can see that all p-values are above our threshold of 0.10; thus no further variables will be removed.  We can construct the parsimonious model:
 
-The following R code takes the full model and creates a reduced model by removing maternal age.  The Anova function then calculates the F-statistic & p-value:
+## Variable Selection
 
-```{r}
-lm.bwfull_mheight_age <- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks +  mppwt + BMI, data = CHDS)
-anova(lm.bwfull_mheight_age, lm.bwfull_mheight)$`Pr(>F)`
-```
+If we denote gestational age as $X_4$, & BMI as $X_5$,we can state the parsimonious as:
 
-### Maternal Weight
-
-The following R code takes the full model and creates a reduced model by removing maternal weight  The Anova function then calculates the F-statistic & p-value:
-
-```{r}
-lm.bwfull_mheight_mppwt <- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + age + BMI, data = CHDS)
-anova(lm.bwfull_mheight_mppwt, lm.bwfull_mheight)$`Pr(>F)`
-```
-
-### Maternal BMI
-
-The following R code takes the full model and creates a reduced model by removing maternal weight  The Anova function then calculates the F-statistic & p-value:
-
-```{r}
-lm.bwfull_mheight_BMI <- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + age + mppwt, data = CHDS)
-anova(lm.bwfull_mheight_BMI, lm.bwfull_mheight)$`Pr(>F)`
-```
-
-### Variable Selection
-
-We can see that maternal age has the highest p-value (0.5922738), and that the p-value is well above 0.10; thus it will be removed.  We can begin the third iteration with the full model excluding maternal height and maternal age:
-
-## Third Iteration
-
-### Gestational Age
-
-The following R code takes the full model and creates a reduced model by removing gestational age.  The Anova function then calculates the F-statistic & p-value:
-
-```{r}
-lm.bwfull_mheight_age_gestwks <- lm(bwt ~ SMK1 + SMK2 + SMK3 + mppwt + BMI, data = CHDS)
-anova(lm.bwfull_mheight_age_gestwks, lm.bwfull_mheight_age)$`Pr(>F)`
-```
-
-### Maternal Weight
-
-The following R code takes the full model and creates a reduced model by removing maternal weight  The Anova function then calculates the F-statistic & p-value:
-
-```{r}
-lm.bwfull_mheight_age_mppwt <- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + BMI, data = CHDS)
-anova(lm.bwfull_mheight_age_mppwt, lm.bwfull_mheight_age)$`Pr(>F)`
-```
-
-### Maternal BMI
-
-The following R code takes the full model and creates a reduced model by removing maternal weight  The Anova function then calculates the F-statistic & p-value:
-
-```{r}
-lm.bwfull_mheight_age_BMI <- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + mppwt, data = CHDS)
-anova(lm.bwfull_mheight_age_BMI, lm.bwfull_mheight_age)$`Pr(>F)`
-```
-
-### Variable Selection
-
-We can see that the p-value for maternal age (0.001799058) is the heights, abut it is below our threshold of 0.10; thus no variables will be removed at this iteration.  If we denote gestational age as $X_4$, maternal weight as $X_5$, and maternal BMI as $X_6$; we can state the parsimonious as:
-
-$$Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2+ \beta_3 X_3 + \beta_4 X_4 + \beta_5 X_5+ \beta_6 X_6 + E$$
+$$Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2+ \beta_3 X_3 + \beta_4 X_4 + \beta_5 X_5+ \epsilon$$
 
 The following R code reports summary statistics and ANOVA table for this model:
 
 ```{r}
-summary(lm.bwfull_mheight_age)
-anova(lm.bwfull_mheight_age)
+summary(lm.bwfull_age)
+anova(lm.bwfull_age)
 ```
-
-Note that the light smoking variable (Pr(>F) = 0.112064) does not meet our criteria, however since this is the effect of interest we will continue with it in our model.
 
 We can begin the analysis of effect modification and confounding:
 
