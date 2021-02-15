@@ -107,7 +107,7 @@ The summary function reports the coefficients and associated p-values (right col
 summary(lm.bwfull)
 ```
 
-We can see that maternal age has the highest p-value (0.59621), and that the p-value is well above 0.10; thus it will be removed.  We can begin the second iteration with the full model excluding maternal age:
+We can see that maternal age has the highest p-value (0.59621), and that the p-value is well above $\alpha = 0.10$; thus it will be removed.  We can begin the second iteration with the full model excluding maternal age:
 
 ## Second Iteration
 
@@ -118,13 +118,13 @@ lm.bwfull_age <- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + mheight + BMI, data = C
 summary(lm.bwfull_age)
 ```
 
-We can see that all p-values are above our threshold of 0.10; thus no further variables will be removed.  We can construct the parsimonious model:
+We can see that all p-values are above our threshold of $\alpha = 0.10$; thus no further variables will be removed.  We can construct the parsimonious model:
 
 ## Variable Selection
 
-If we denote gestational age as $X_4$, & BMI as $X_5$,we can state the parsimonious as:
+If we denote gestational age as $X_4$, BMI as $X_5$, & maternal height as $X_6$ we can state the parsimonious as:
 
-$$Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2+ \beta_3 X_3 + \beta_4 X_4 + \beta_5 X_5+ \epsilon$$
+$$Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2+ \beta_3 X_3 + \beta_4 X_4 + \beta_5 X_5 + \beta_6 X_6 + \epsilon$$
 
 The following R code reports summary statistics and ANOVA table for this model:
 
@@ -139,9 +139,147 @@ We can begin the analysis of effect modification and confounding:
 
 ## BMI
 
-## Maternal Weight
+For this step we wish to investigate if BMI is an effect-modifier which changes the association between smoking and birth weight.  We can construct an association model with an interaction term for each of our dummy variables:
+
+For light smoking:
+
+$$Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2+ \beta_3 X_3 + \beta_4 X_4 + \beta_5 X_5 + \beta_6 X_6 +  \beta_7 X_1 X_5 + \epsilon$$
+
+For moderate smoking:
+
+$$Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2+ \beta_3 X_3 + \beta_4 X_4 + \beta_5 X_5 +  \beta_8 X_2 X_5 + \epsilon$$
+
+For heavy smoking:
+
+$$Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2+ \beta_3 X_3 + \beta_4 X_4 + \beta_5 X_5 + + \beta_6 X_6 + \beta_9 X_3 X_5 + \epsilon$$
+
+We wish to test the null hypothesis $H_0: \beta_7 = \beta_8 = \beta_9 = 0$.  We can construct three linear models to test this hypothesis:
+
+### Light Smoking
+
+```{r}
+lm.par_X1BMI <- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + mheight + BMI + BMI*as.factor(SMK1), data = CHDS)
+summary(lm.par_X1BMI)
+anova(lm.par_X1BMI)
+```
+
+The F-value and associated p-value are 0.0620 & 0.80342 respectively; thus we can conclude that BMI is not an effect-measure modifier of light smoking, at pre-defined significance $\alpha = 0.05$; the observed results are not inconsistent with $\beta_7 = 0$.
+
+### Moderate Smoking
+
+```{r}
+lm.par_X2BMI <- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + mheight + BMI + BMI*as.factor(SMK2), data = CHDS)
+summary(lm.par_X2BMI)
+anova(lm.par_X2BMI)
+```
+
+The F-value and associated p-value are 0.2912 & 0.589638 respectively; thus we can conclude that BMI is not an effect-measure modifier of moderate smoking, at pre-defined significance $\alpha = 0.05$; the observed results are not inconsistent with $\beta_8 = 0$.
+
+### Heavy Smoking
+
+```{r}
+lm.par_X3BMI <- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + mheight + BMI + BMI*as.factor(SMK3), data = CHDS)
+summary(lm.par_X3BMI)
+anova(lm.par_X3BMI)
+```
+
+The F-value and associated p-value are 0.0332 & 0.85537 respectively; thus we can conclude that BMI is not an effect-measure modifier of heavy smoking, at pre-defined significance $\alpha = 0.05$; the observed results are not inconsistent with $\beta_9 = 0$.
 
 ## Gestational Age
+
+For this step we wish to investigate if gestational age is an effect-modifier which changes the association between smoking and birth weight.  We can construct an association model with an interaction term for each of our dummy variables:
+
+For light smoking:
+
+$$Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2+ \beta_3 X_3 + \beta_4 X_4 + \beta_5 X_5 + \beta_6 X_6 +  \beta_7' X_1 X_4 + \epsilon$$
+
+For moderate smoking:
+
+$$Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2+ \beta_3 X_3 + \beta_4 X_4 + \beta_5 X_5 +  \beta_8' X_2 X_4 + \epsilon$$
+
+For heavy smoking:
+
+$$Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2+ \beta_3 X_3 + \beta_4 X_4 + \beta_5 X_5 + + \beta_6 X_6 + \beta_9' X_3 X_4 + \epsilon$$
+
+We wish to test the null hypothesis $H_0: \beta_7' = \beta_8' = \beta_9' = 0$.  We can construct three linear models to test this hypothesis:
+
+### Light Smoking
+
+```{r}
+lm.par_X1gestwks <- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + mheight + BMI + gestwks*as.factor(SMK1), data = CHDS)
+summary(lm.par_X1gestwks)
+anova(lm.par_X1gestwks)
+```
+
+The F-value and associated p-value are 0.2016 & 0.653555 respectively; thus we can conclude that gestational age is not an effect-measure modifier of light smoking, at pre-defined significance $\alpha = 0.05$; the observed results are not inconsistent with $\beta_7' = 0$.
+
+### Moderate Smoking
+
+```{r}
+lm.par_X2gestwks <- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + mheight + BMI + gestwks*as.factor(SMK2), data = CHDS)
+summary(lm.par_X2gestwks)
+anova(lm.par_X2gestwks)
+```
+
+The F-value and associated p-value are 0.0015 & 0.968617 respectively; thus we can conclude that gestational age is not an effect-measure modifier of moderate smoking, at pre-defined significance $\alpha = 0.05$; the observed results are not inconsistent with $\beta_8' = 0$.
+
+### Heavy Smoking
+
+```{r}
+lm.par_X3gestwks <- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + mheight + BMI + gestwks*as.factor(SMK3), data = CHDS)
+summary(lm.par_X3gestwks)
+anova(lm.par_X3gestwks)
+```
+
+The F-value and associated p-value are 0.3951 & 0.529848 respectively; thus we can conclude that gestational age is not an effect-measure modifier of heavy smoking, at pre-defined significance $\alpha = 0.05$; the observed results are not inconsistent with $\beta_9' = 0$.
+
+## Maternal Height
+
+For this step we wish to investigate if maternal height is an effect-modifier which changes the association between smoking and birth weight.  We can construct an association model with an interaction term for each of our dummy variables:
+
+For light smoking:
+
+$$Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2+ \beta_3 X_3 + \beta_4 X_4 + \beta_5 X_5 + \beta_6 X_6 +  \beta_7'' X_1 X_6 + \epsilon$$
+
+For moderate smoking:
+
+$$Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2+ \beta_3 X_3 + \beta_4 X_4 + \beta_5 X_5 +  \beta_8'' X_2 X_6 + \epsilon$$
+
+For heavy smoking:
+
+$$Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2+ \beta_3 X_3 + \beta_4 X_4 + \beta_5 X_5 + + \beta_6 X_6 + \beta_9'' X_3 X_6 + \epsilon$$
+
+We wish to test the null hypothesis $H_0: \beta_7'' = \beta_8'' = \beta_9'' = 0$.  We can construct three linear models to test this hypothesis:
+
+### Light Smoking
+
+```{r}
+lm.par_X1mheight <- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + mheight + BMI + mheight*as.factor(SMK1), data = CHDS)
+summary(lm.par_X1mheight)
+anova(lm.par_X1mheight)
+```
+
+The F-value and associated p-value are 0.0454 & 0.83130 respectively; thus we can conclude that maternal height is not an effect-measure modifier of light smoking, at pre-defined significance $\alpha = 0.05$; the observed results are not inconsistent with $\beta_7'' = 0$.
+
+### Moderate Smoking
+
+```{r}
+lm.par_X2mheight <- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + mheight + BMI + mheight*as.factor(SMK2), data = CHDS)
+summary(lm.par_X2mheight)
+anova(lm.par_X2mheight)
+```
+
+The F-value and associated p-value are 1.1584 & 0.282193 respectively; thus we can conclude that maternal height is not an effect-measure modifier of moderate smoking, at pre-defined significance $\alpha = 0.05$; the observed results are not inconsistent with $\beta_8'' = 0$.
+
+### Heavy Smoking
+
+```{r}
+lm.par_X3mheight <- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + mheight + BMI + mheight*as.factor(SMK3), data = CHDS)
+summary(lm.par_X3mheight)
+anova(lm.par_X3mheight)
+```
+
+The F-value and associated p-value are 2.7956 & 0.094990 respectively; thus we can conclude that maternal height is not an effect-measure modifier of heavy smoking, at pre-defined significance $\alpha = 0.05$; the observed results are not inconsistent with $\beta_9'' = 0$.
 
 # Analysis of Confounding
 
