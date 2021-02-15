@@ -192,15 +192,48 @@ anova(lm.bwfull_mheight_BMI, lm.bwfull_mheight)$`Pr(>F)`
 
 We can see that maternal age has the highest p-value (0.5922738), and that the p-value is well above 0.10; thus it will be removed.  We can begin the third iteration with the full model excluding maternal height and maternal age:
 
+## Third Iteration
+
+### Gestational Age
+
+The following R code takes the full model and creates a reduced model by removing gestational age.  The Anova function then calculates the F-statistic & p-value:
+
+```{r}
+lm.bwfull_mheight_age_gestwks <- lm(bwt ~ SMK1 + SMK2 + SMK3 + mppwt + BMI, data = CHDS)
+anova(lm.bwfull_mheight_age_gestwks, lm.bwfull_mheight_age)$`Pr(>F)`
+```
+
+### Maternal Weight
+
+The following R code takes the full model and creates a reduced model by removing maternal weight  The Anova function then calculates the F-statistic & p-value:
+
+```{r}
+lm.bwfull_mheight_age_mppwt <- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + BMI, data = CHDS)
+anova(lm.bwfull_mheight_age_mppwt, lm.bwfull_mheight_age)$`Pr(>F)`
+```
+
+### Maternal BMI
+
+The following R code takes the full model and creates a reduced model by removing maternal weight  The Anova function then calculates the F-statistic & p-value:
+
+```{r}
+lm.bwfull_mheight_age_BMI <- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + mppwt, data = CHDS)
+anova(lm.bwfull_mheight_age_BMI, lm.bwfull_mheight_age)$`Pr(>F)`
+```
+
+### Variable Selection
+
+We can see that the p-value for maternal age (0.001799058) is the heights, abut it is below our threshold of 0.10; thus no variables will be removed at this iteration.  If we denote gestational age as $X_4$, maternal weight as $X_5$, and maternal BMI as $X_6$; we can state the parsimonious as:
+
+$$Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2+ \beta_3 X_3 + \beta_4 X_4 + \beta_5 X_5+ \beta_6 X_6 + E$$
+
+We can begin the analysis of effect modification and confounding:
+
 # Analysis of Effect Modification
 
 ## BMI
 
-## Maternal Height
-
 ## Maternal Weight
-
-## Maternal Age
 
 ## Gestational Age
 
@@ -208,11 +241,7 @@ We can see that maternal age has the highest p-value (0.5922738), and that the p
 
 ## BMI
 
-## Maternal Height
-
 ## Maternal Weight
-
-## Maternal Age
 
 ## Gestational Age
 
