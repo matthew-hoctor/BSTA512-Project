@@ -39,12 +39,50 @@ CHDS <- read.csv("CHDS2.csv")
 
 # Crude Model
 
+If we let $Y$ equal birthweight, and $X$ equal smoking category, the crude model can be conceptualized as:
+
+$$Y = \beta_0 + \beta_1 X + E$$
+
+Firstly, we will create $k-1 = 3$ dummy variables to represent the ordinal smoking category data; we can name them $SMK1$ for category 1, $SMK2$ for category 3, and $SMK3$ for category 3.  The values of these variables will be assigned to 0 or 1 according to the reference cell coding approach:
+
+```{r}
+CHDS$SMK1 <- ifelse(CHDS$SMK_cat == 1, 1,0)
+CHDS$SMK2 <- ifelse(CHDS$SMK_cat == 2, 1,0)
+CHDS$SMK3 <- ifelse(CHDS$SMK_cat == 3, 1,0)
+```
+
+If we let
+
+$$
+\begin{split}
+X_1=
+\begin{cases}
+1  \; \mbox{if in smoking category 1}\\
+0  \; \mbox{otherwise}\\
+\end{cases}\\
+X_2=
+\begin{cases}
+1  \; \mbox{if in smoking category 2}\\
+0  \; \mbox{otherwise}\\
+\end{cases}\\
+X_3=
+\begin{cases}
+1  \; \mbox{if in smoking category 3}\\
+0  \; \mbox{otherwise}\\
+\end{cases}
+\end{split}
+$$
+
+The reformulated crude model can be expressed as:
+
+$$Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2+ \beta_3 X_3 + E$$
+
 The following R code creates the crude model and reports summary and ANOVA data:
 
 ```{r}
-lm.mwbw <- lm(bwt ~ SMK_cat, data = CHDS)
-summary(lm.mwbw)
-anova(lm.mwbw)
+lm.bwSMKcat <- lm(bwt ~ SMK1 + SMK2 + SMK3, data = CHDS)
+summary(lm.bwSMKcat)
+anova(lm.bwSMKcat)
 ```
 
 # Full Model
@@ -52,9 +90,9 @@ anova(lm.mwbw)
 The following R code creates the full model and reports summary and ANOVA data:
 
 ```{r}
-lm.mwbw.full <- lm(bwt ~ SMK_cat + gestwks + age + mheight + mppwt + BMI, data = CHDS)
-summary(lm.mwbw.full)
-anova(lm.mwbw.full)
+lm.bwfull <- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + age + mheight + mppwt + BMI, data = CHDS)
+summary(lm.bwfull)
+anova(lm.bwfull)
 ```
 
 # Analysis of Effect Modification
@@ -88,8 +126,6 @@ anova(lm.mwbw.full)
 ## Normality Analysis
 
 Due to the large sample size the Shapiro-Wilk test will not be performed.  The following R code creates a QQ Plot:
-
-
 
 ## Influential Outlier Detection
 

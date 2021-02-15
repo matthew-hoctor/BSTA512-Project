@@ -1595,78 +1595,114 @@ div.tocify {
 </div>
 <div id="crude-model" class="section level1">
 <h1><span class="header-section-number">2</span> Crude Model</h1>
+<p>If we let <span class="math inline">\(Y\)</span> equal birthweight, and <span class="math inline">\(X\)</span> equal smoking category, the crude model can be conceptualized as:</p>
+<p><span class="math display">\[Y = \beta_0 + \beta_1 X + E\]</span></p>
+<p>Firstly, we will create <span class="math inline">\(k-1 = 3\)</span> dummy variables to represent the ordinal smoking category data; we can name them <span class="math inline">\(SMK1\)</span> for category 1, <span class="math inline">\(SMK2\)</span> for category 3, and <span class="math inline">\(SMK3\)</span> for category 3. The values of these variables will be assigned to 0 or 1 according to the reference cell coding approach:</p>
+<pre class="r"><code>CHDS$SMK1 &lt;- ifelse(CHDS$SMK_cat == 1, 1,0)
+CHDS$SMK2 &lt;- ifelse(CHDS$SMK_cat == 2, 1,0)
+CHDS$SMK3 &lt;- ifelse(CHDS$SMK_cat == 3, 1,0)</code></pre>
+<p>If we let</p>
+<p><span class="math display">\[
+\begin{split}
+X_1=
+\begin{cases}
+1  \; \mbox{if in smoking category 1}\\
+0  \; \mbox{otherwise}\\
+\end{cases}\\
+X_2=
+\begin{cases}
+1  \; \mbox{if in smoking category 2}\\
+0  \; \mbox{otherwise}\\
+\end{cases}\\
+X_3=
+\begin{cases}
+1  \; \mbox{if in smoking category 3}\\
+0  \; \mbox{otherwise}\\
+\end{cases}
+\end{split}
+\]</span></p>
+<p>The reformulated crude model can be expressed as:</p>
+<p><span class="math display">\[Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2+ \beta_3 X_3 + E\]</span></p>
 <p>The following R code creates the crude model and reports summary and ANOVA data:</p>
-<pre class="r"><code>lm.mwbw &lt;- lm(bwt ~ SMK_cat, data = CHDS)
-summary(lm.mwbw)</code></pre>
+<pre class="r"><code>lm.bwSMKcat &lt;- lm(bwt ~ SMK1 + SMK2 + SMK3, data = CHDS)
+summary(lm.bwSMKcat)</code></pre>
 <pre><code>## 
 ## Call:
-## lm(formula = bwt ~ SMK_cat, data = CHDS)
+## lm(formula = bwt ~ SMK1 + SMK2 + SMK3, data = CHDS)
 ## 
 ## Residuals:
 ##     Min      1Q  Median      3Q     Max 
-## -4.3916 -0.7011  0.0037  0.7013  3.7084 
+## -4.4328 -0.7328 -0.0328  0.7214  3.6672 
 ## 
 ## Coefficients:
 ##             Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)  7.69159    0.05182 148.436  &lt; 2e-16 ***
-## SMK_cat     -0.19053    0.03447  -5.528 4.62e-08 ***
+## (Intercept)  7.73281    0.05442 142.091  &lt; 2e-16 ***
+## SMK1        -0.35223    0.11797  -2.986  0.00293 ** 
+## SMK2        -0.76008    0.14163  -5.367 1.10e-07 ***
+## SMK3        -0.46665    0.10790  -4.325 1.76e-05 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 1.069 on 678 degrees of freedom
-## Multiple R-squared:  0.04313,    Adjusted R-squared:  0.04172 
-## F-statistic: 30.56 on 1 and 678 DF,  p-value: 4.625e-08</code></pre>
-<pre class="r"><code>anova(lm.mwbw)</code></pre>
+## Residual standard error: 1.062 on 676 degrees of freedom
+## Multiple R-squared:  0.0585, Adjusted R-squared:  0.05432 
+## F-statistic:    14 on 3 and 676 DF,  p-value: 7.294e-09</code></pre>
+<pre class="r"><code>anova(lm.bwSMKcat)</code></pre>
 <pre><code>## Analysis of Variance Table
 ## 
 ## Response: bwt
 ##            Df Sum Sq Mean Sq F value    Pr(&gt;F)    
-## SMK_cat     1  34.94  34.942  30.559 4.625e-08 ***
-## Residuals 678 775.25   1.143                      
+## SMK1        1   2.24  2.2415  1.9864    0.1592    
+## SMK2        1  24.04 24.0434 21.3074 4.682e-06 ***
+## SMK3        1  21.11 21.1076 18.7056 1.755e-05 ***
+## Residuals 676 762.80  1.1284                      
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 </div>
 <div id="full-model" class="section level1">
 <h1><span class="header-section-number">3</span> Full Model</h1>
 <p>The following R code creates the full model and reports summary and ANOVA data:</p>
-<pre class="r"><code>lm.mwbw.full &lt;- lm(bwt ~ SMK_cat + gestwks + age + mheight + mppwt + BMI, data = CHDS)
-summary(lm.mwbw.full)</code></pre>
+<pre class="r"><code>lm.bwfull &lt;- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + age + mheight + mppwt + BMI, data = CHDS)
+summary(lm.bwfull)</code></pre>
 <pre><code>## 
 ## Call:
-## lm(formula = bwt ~ SMK_cat + gestwks + age + mheight + mppwt + 
-##     BMI, data = CHDS)
+## lm(formula = bwt ~ SMK1 + SMK2 + SMK3 + gestwks + age + mheight + 
+##     mppwt + BMI, data = CHDS)
 ## 
 ## Residuals:
 ##     Min      1Q  Median      3Q     Max 
-## -3.2226 -0.6251  0.0095  0.5793  3.3104 
+## -3.2872 -0.6161  0.0094  0.5695  3.3012 
 ## 
 ## Coefficients:
 ##              Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept) -0.892446   7.915883  -0.113    0.910    
-## SMK_cat     -0.156406   0.030641  -5.104 4.32e-07 ***
-## gestwks      0.233832   0.019413  12.045  &lt; 2e-16 ***
-## age         -0.003381   0.006683  -0.506    0.613    
-## mheight     -0.025829   0.122608  -0.211    0.833    
-## mppwt        0.028001   0.030844   0.908    0.364    
-## BMI         -0.118710   0.182846  -0.649    0.516    
+## (Intercept) -0.462001   7.904337  -0.058    0.953    
+## SMK1        -0.174356   0.106512  -1.637    0.102    
+## SMK2        -0.550951   0.126895  -4.342 1.63e-05 ***
+## SMK3        -0.407657   0.096149  -4.240 2.55e-05 ***
+## gestwks      0.231782   0.019421  11.935  &lt; 2e-16 ***
+## age         -0.003579   0.006671  -0.536    0.592    
+## mheight     -0.030408   0.122442  -0.248    0.804    
+## mppwt        0.028407   0.030805   0.922    0.357    
+## BMI         -0.122729   0.182561  -0.672    0.502    
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.9439 on 673 degrees of freedom
-## Multiple R-squared:  0.2599, Adjusted R-squared:  0.2533 
-## F-statistic: 39.38 on 6 and 673 DF,  p-value: &lt; 2.2e-16</code></pre>
-<pre class="r"><code>anova(lm.mwbw.full)</code></pre>
+## Residual standard error: 0.9421 on 671 degrees of freedom
+## Multiple R-squared:  0.2649, Adjusted R-squared:  0.2561 
+## F-statistic: 30.22 on 8 and 671 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>anova(lm.bwfull)</code></pre>
 <pre><code>## Analysis of Variance Table
 ## 
 ## Response: bwt
 ##            Df Sum Sq Mean Sq  F value    Pr(&gt;F)    
-## SMK_cat     1  34.94  34.942  39.2154 6.765e-10 ***
-## gestwks     1 137.16 137.158 153.9331 &lt; 2.2e-16 ***
-## age         1   0.00   0.000   0.0001 0.9916936    
-## mheight     1  27.72  27.719  31.1086 3.536e-08 ***
-## mppwt       1  10.34  10.341  11.6058 0.0006966 ***
-## BMI         1   0.38   0.376   0.4215 0.5164096    
-## Residuals 673 599.66   0.891                       
+## SMK1        1   2.24   2.241   2.5253  0.112506    
+## SMK2        1  24.04  24.043  27.0878 2.587e-07 ***
+## SMK3        1  21.11  21.108  23.7802 1.350e-06 ***
+## gestwks     1 132.20 132.200 148.9385 &lt; 2.2e-16 ***
+## age         1   0.00   0.005   0.0055  0.941062    
+## mheight     1  25.18  25.184  28.3727 1.367e-07 ***
+## mppwt       1   9.43   9.426  10.6200  0.001175 ** 
+## BMI         1   0.40   0.401   0.4519  0.501648    
+## Residuals 671 595.59   0.888                       
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 </div>
