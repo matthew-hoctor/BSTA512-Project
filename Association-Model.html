@@ -1813,6 +1813,47 @@ anova(lm.bwfull_mheight_age_BMI, lm.bwfull_mheight_age)$`Pr(&gt;F)`</code></pre>
 <h3><span class="header-section-number">4.3.4</span> Variable Selection</h3>
 <p>We can see that the p-value for maternal age (0.001799058) is the heights, abut it is below our threshold of 0.10; thus no variables will be removed at this iteration. If we denote gestational age as <span class="math inline">\(X_4\)</span>, maternal weight as <span class="math inline">\(X_5\)</span>, and maternal BMI as <span class="math inline">\(X_6\)</span>; we can state the parsimonious as:</p>
 <p><span class="math display">\[Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2+ \beta_3 X_3 + \beta_4 X_4 + \beta_5 X_5+ \beta_6 X_6 + E\]</span></p>
+<p>The following R code reports summary statistics and ANOVA table for this model:</p>
+<pre class="r"><code>summary(lm.bwfull_mheight_age)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = bwt ~ SMK1 + SMK2 + SMK3 + gestwks + mppwt + BMI, 
+##     data = CHDS)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -3.2563 -0.6220  0.0119  0.5565  3.2672 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) -2.487584   0.827917  -3.005  0.00276 ** 
+## SMK1        -0.174310   0.106358  -1.639  0.10170    
+## SMK2        -0.549682   0.126687  -4.339 1.65e-05 ***
+## SMK3        -0.408044   0.095998  -4.251 2.43e-05 ***
+## gestwks      0.231602   0.019380  11.951  &lt; 2e-16 ***
+## mppwt        0.020765   0.003693   5.623 2.75e-08 ***
+## BMI         -0.078448   0.025031  -3.134  0.00180 ** 
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.941 on 673 degrees of freedom
+## Multiple R-squared:  0.2645, Adjusted R-squared:  0.2579 
+## F-statistic: 40.34 on 6 and 673 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>anova(lm.bwfull_mheight_age)</code></pre>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: bwt
+##            Df Sum Sq Mean Sq  F value    Pr(&gt;F)    
+## SMK1        1   2.24   2.241   2.5315  0.112064    
+## SMK2        1  24.04  24.043  27.1544 2.501e-07 ***
+## SMK3        1  21.11  21.108  23.8387 1.310e-06 ***
+## gestwks     1 132.20 132.200 149.3049 &lt; 2.2e-16 ***
+## mppwt       1  26.01  26.010  29.3757 8.314e-08 ***
+## BMI         1   8.70   8.697   9.8223  0.001799 ** 
+## Residuals 673 595.90   0.885                       
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>Note that the light smoking variable (Pr(&gt;F) = 0.112064) does not meet our criteria, however since this is the effect of interest we will continue with it in our model.</p>
 <p>We can begin the analysis of effect modification and confounding:</p>
 </div>
 </div>
