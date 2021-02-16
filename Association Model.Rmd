@@ -418,9 +418,27 @@ qqnorm(studm, ylab = "Studentized Residuals", main = "Q-Q Plot of Studentized Re
 qqline(studm)
 ```
 
-Q-Q plots suggest that the normality assumption is met.
+Q-Q plots suggest that the normality assumption is met.  The handfull of points at the very edges of the plot may or may not be outliers, which brings us to our next section:
 
 ## Influential Outlier Detection
+
+The following code adds leverages & Cook's distance to the dataset:
+
+```{r}
+k <- 7                                  # number of predictors in our model
+h_limit <- 2*(1+k)/nrow(CHDS)           # recommended leverage threashold
+CHDS$h <- hatvalues(lm.bwfull_age)      # Add leverages to the dataset
+CHDS$c <- cooks.distance(lm.bwfull_age) # add Cook's distance to the dataset
+```
+
+The following code checks if any data points have Cook's distance, $c$, greater than 1 or if the leverage, $h$, is greater than the recommended threshold of $2(k+1)/n$. 
+ 
+```{r}
+CHDS[CHDS$c>1,]
+CHDS[CHDS$h>h_limit,]
+```
+
+Upon examination of the data reported in the second table, none of the data is wildly implausable, with the exception of a 48 week gestational age.  A 48-week gestational age is well above the 0.1th percentile of gestational age based on ultrasound based estimates of gestation; and furthermore none of the women in this study (n=1867) had gestation age greater than 46 weeks.1
 
 ## Collinearity Assessment
 
@@ -431,3 +449,7 @@ Q-Q plots suggest that the normality assumption is met.
 ## Maternal Weight
 
 ## Gestational Age
+
+# References
+
+1. Hoffman CS, Messer LC, Mendola P, Savitz DA, Herring AH, Hartmann KE. Comparison of gestational age at birth based on last menstrual period and ultrasound during the first trimester. Paediatr Perinat Epidemiol. 2008 Nov;22(6):587-96. doi: 10.1111/j.1365-3016.2008.00965.x. PMID: 19000297.
