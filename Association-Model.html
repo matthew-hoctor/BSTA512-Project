@@ -2424,7 +2424,37 @@ CHDS$c &lt;- cooks.distance(lm.bwfull_age) # add Cook&#39;s distance to the data
 ## 620    0    0 0.02596950 0.0011858733
 ## 632    0    1 0.02418572 0.0052575926
 ## 667    0    1 0.02496293 0.0037041722</code></pre>
-<p>Upon examination of the data reported in the second table, none of the data is wildly implausable, with the exception of a 48 week gestational age. A 48-week gestational age is well above the 0.1th percentile of gestational age based on ultrasound based estimates of gestation; and furthermore none of the women in this study (n=1867) had gestation age greater than 46 weeks.1</p>
+<p>Upon examination of the data reported in the second table, none of the data is wildly implausible, with the exception of a 48 week gestational age. A 48-week gestational age is well above the 0.1th percentile of gestational age based on ultrasound based estimates of gestation; and furthermore none of the women in this study (n=1867) had gestation age greater than 46 weeks.<sup>1</sup></p>
+<p>We can create a new dataset with this observation (observation 60) removed:</p>
+<pre class="r"><code>CHDS_60 &lt;- CHDS[-c(60),]</code></pre>
+<p>And a new parsimonious model can be created:</p>
+<pre class="r"><code>lm.par_60 &lt;- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + mheight + BMI, data = CHDS_60)
+summary(lm.par_60)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = bwt ~ SMK1 + SMK2 + SMK3 + gestwks + mheight + BMI, 
+##     data = CHDS_60)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -3.2487 -0.6078  0.0073  0.5562  3.2309 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) -8.16421    1.25041  -6.529 1.30e-10 ***
+## SMK1        -0.18009    0.10571  -1.704  0.08890 .  
+## SMK2        -0.55037    0.12595  -4.370 1.44e-05 ***
+## SMK3        -0.41179    0.09542  -4.315 1.83e-05 ***
+## gestwks      0.24136    0.01954  12.355  &lt; 2e-16 ***
+## mheight      0.08226    0.01459   5.638 2.54e-08 ***
+## BMI          0.04403    0.01391   3.166  0.00162 ** 
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.9353 on 672 degrees of freedom
+## Multiple R-squared:  0.274,  Adjusted R-squared:  0.2675 
+## F-statistic: 42.26 on 6 and 672 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>Upon comparison to the original parsimonious model we can see that most <span class="math inline">\(\hat{\beta}_i\)</span> have very similar values, with a slight change in <span class="math inline">\(\hat{\beta}_0\)</span>.</p>
 </div>
 <div id="collinearity-assessment" class="section level2">
 <h2><span class="header-section-number">7.4</span> Collinearity Assessment</h2>
