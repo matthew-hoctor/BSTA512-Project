@@ -383,9 +383,42 @@ The above analysis shows that removal of maternal height from the model changes 
 
 ## Residual Analysis
 
+The following R code extracts the fitted values, residuals, standardized residuals, and studentized residuals; and plots them so that our regression assumptions can be qualitatively assessed:
+
+```{r}
+fitted <- lm.bwfull_age$fitted.values # extract fitted values
+resm <- resid(lm.bwfull_age)          # extract model residuals
+standm <- rstandard(lm.bwfull_age)    # extract standardized residuals
+studm <- rstudent(lm.bwfull_age)      # extract studentized residuals
+
+#par(mfrow = c(3,1))                   # arranges plots
+# residual plot:
+#plot(fitted, resm, main = "Plot of Model Residuals as a Function of Fitted Values for Birth Weight", xlab = "Fitted Birth Weight Value (lbs)", ylab = "Residual (lbs)")
+#abline(0,0, col = "red")
+# standardized residual plot:
+plot(fitted, standm, main = "Plot of Standardized Model Residuals as a Function of Fitted Values for Birth Weight", xlab = "Fitted Birth Weight Value (lbs)", ylab = "Standardized Residual")
+abline(0,0, col = "red")
+# studentized residual plot:
+plot(fitted, studm, main = "Plot of Studentized Model Residuals as a Function of Fitted Values for Birth Weight", xlab = "Fitted Birth Weight Value (lbs)", ylab = "Studentized Residual")
+abline(0,0, col = "red")
+```
+
+The reference cell coding approach for creating dummy variables for smoking category ensures that the linearity assumption is met.  The above plots do not show any overt change in variance with increasing $\hat{Y}$; suggest that the homoscedasticity assumption is likely met.  Furthermore the residuals do not seem to be asymmetrically distributed, skewed, or multi-modal in any way; suggesting that the normality assumption is likely met.
+
 ## Normality Analysis
 
-Due to the large sample size the Shapiro-Wilk test will not be performed.  The following R code creates a QQ Plot:
+Due to the large sample size the Shapiro-Wilk test will not provide helpful insights and thus will not be performed.  The following R code creates a QQ Plot:
+
+```{r}
+qqnorm(resm, ylab = "Residuals", main = "Q-Q Plot of Residuals")
+qqline(resm)
+qqnorm(standm, ylab = "Standardized Residuals", main = "Q-Q Plot of Standardized Residuals")
+qqline(standm)
+qqnorm(studm, ylab = "Studentized Residuals", main = "Q-Q Plot of Studentized Residuals")
+qqline(studm)
+```
+
+Q-Q plots suggest that the normality assumption is met.
 
 ## Influential Outlier Detection
 
