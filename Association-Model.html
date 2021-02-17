@@ -2458,6 +2458,13 @@ summary(lm.par_60)</code></pre>
 </div>
 <div id="collinearity-assessment" class="section level2">
 <h2><span class="header-section-number">7.4</span> Collinearity Assessment</h2>
+<p>The variance inflation factor approach will be used to assess collinearity. The following R code calculates the factor for each <span class="math inline">\(\hat{\beta}_i\)</span>:</p>
+<pre class="r"><code>vif(lm.par_60)</code></pre>
+<pre><code>##     SMK1     SMK2     SMK3  gestwks  mheight      BMI 
+## 1.116076 1.080543 1.094130 1.012350 1.018422 1.036611</code></pre>
+<pre class="r"><code>mean(vif(lm.par_60))</code></pre>
+<pre><code>## [1] 1.059689</code></pre>
+<p>All factors are well below 10; indicating that collinearity is likely minimal.</p>
 </div>
 </div>
 <div id="mediation-analysis" class="section level1">
