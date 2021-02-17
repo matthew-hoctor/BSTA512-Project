@@ -26,6 +26,9 @@ Blencowe, H., Krasevec, J., Onis, M. de, Black, R. E., An, X., Stevens, G. A., �
 
 Britto RP, Florêncio TM, Benedito Silva AA, Sesso R, Cavalcante JC, Sawaya AL. Influence of maternal height and weight on low birth weight: a cross-sectional study in poor communities of northeastern Brazil. PLoS One. 2013;8(11):e80159. Published 2013 Nov 11. doi:10.1371/journal.pone.0080159
 
+Cederholm, T., Bosaeus, I., Barazzoni, R., Bauer, J., Van Gossum, A., Klek, S., Muscaritoli, M., Nyulasi, I., Ockenga, J., Schneider, S., De Van Der Scheuren, M., Singer, P. (2015). Diagnostic criteria for malnutrition – An ESPEN Consensus Statement. Clinical Nutrition,
+Volume 34, Issue 3, Pages 335-340, ISSN 0261-5614, https://doi.org/10.1016/j.clnu.2015.03.001.
+
 Dennis, J., Mollborn, S. (2013) Young maternal age and low birth weight risk: An exploration of racial/ethnic disparities in the birth outcomes of mothers in the United States. The Social Science Journal, Volume 50, Issue 4, 2013, Pages 625-634, ISSN 0362-3319, https://doi.org/10.1016/j.soscij.2013.09.008.
 
 Fraser, A. M., Brockert, J. E., & Ward, R. H. (1995). Association of young maternal age with adverse reproductive outcomes. New England Journal of Medicine, 332(17), 1113–1118.
