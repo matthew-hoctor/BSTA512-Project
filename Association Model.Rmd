@@ -28,6 +28,7 @@ library(describedata)
 #library(BSDA)
 #library(exact2x2)
 #library(ppcor)
+library(car)
 ```
 
 # Import the dataset
@@ -456,6 +457,15 @@ summary(lm.par_60)
 Upon comparison to the original parsimonious model we can see that most $\hat{\beta}_i$ have very similar values, with a slight change in $\hat{\beta}_0$.
 
 ## Collinearity Assessment
+
+The variance inflation factor approach will be used to assess collinearity.  The following R code calculates the factor for each $\hat{\beta}_i$:
+
+```{r}
+vif(lm.par_60)
+mean(vif(lm.par_60))
+```
+
+All factors are well below 10; indicating that collinearity is likely minimal.
 
 # Mediation analysis
 
