@@ -6,7 +6,6 @@ date: "2/10/2021"
 output:
   pdf_document:
     toc: true
-    number_sections: true
 ---
 
 ```{r setup, include=FALSE}
@@ -30,19 +29,17 @@ library(ppcor)
 
 # Summary
 
-# Introduction
+# 1. Introduction
 
-The relationship between maternal prenatal smoking and low birth weight (LBW) is a topic that has long been of interest to investigators, due to the association of LBW with poor health outcomes (Blencowe et al., 2019). An infant is considered to be LBW when they are born weighing less than 2500 grams, or less than about 5.5 lbs (WHO, 1993). LBW has been associated with many adverse effects, such as a higher mortality rate (Martin et al., 2013); various psychiatric and neurological problems (Hack et al., 2005); and even poor academic achievement (Hack et al., 2002). LBW has also been implicated as an economic impact, with Kowlessar et al. (2011) reporting an increased cost of hospital stays at \$27,200 for LBW infants compared to \$3,200 for all newborns. Maternal smoking during pregnancy has been of intense interest for decades because it has been implicated in LBW (Zhang and Yang, 2019; Parascandola, 2014; Yerushalmy, 1971).
+The relationship between maternal prenatal smoking and low birth weight (LBW) is a topic that has long been of interest to investigators, due to the association of LBW with poor health outcomes (Blencowe et al., 2019). An infant is considered to be LBW when they are born weighing less than 2500 grams, or less than about 5.5 lbs (WHO, 1993). LBW has been associated with many adverse effects, such as a higher mortality rate (Martin et al., 2013); various psychiatric and neurological problems (Hack et al., 2005); and even poor academic achievement (Hack et al., 2002). LBW has also been implicated as an economic impact, with Kowlessar et al. (2011) reporting an increased cost of hospital stays at \$27,200 for LBW infants compared to \$3,200 for all newborns. Maternal smoking during pregnancy has been of intense interest for decades because it has been implicated in LBW (Zhang & Yang, 2019; Parascandola, 2014; Yerushalmy, 1971).
 
 However, although the association of maternal smoking with LBW is well-documented and consistent (Ventura et al., 2003), the mechanism by which it contributes to LBW and how this mechanism might be affected by other factors are not well understood. For example, the risk of LBW from prenatal smoking has been demonstrated to be significantly reduced among overweight and obese mothers (La Merrill et al., 2011). But it is unclear how these mechanisms interact with one another, as maternal pre-pregnancy BMI is itself implicated as a predictor for birth-weight (Gul et al., 2020). This relationship is further complicated by the fact that one of the primary outcomes that makes LBW a topic of interest for researchers, perinatal death, is not always associated with LBW in the way that it might seem that it should --- it was demonstrated by Yerushalmy (1971) that among LBW infants, maternal smoking was actually associated with a decreased risk of perinatal death. Shah(2014) proposed that these seemingly contradictory findings, often referred to as the "Birth weight Paradox" (VanderWeele, 2014). This would reasonably explain Yerushalmy's finding if the association of this phenotype with maternal smoking were strong enough such that LBW infants with smoking mothers were much more likely to have this phenotype compared to others.
 
 The mechanisms that might contribute to these "other" phenotypes of LBW are not entirely clear, although existing work does point toward some reasonable candidates to start with. Vanderweele (2014) proposes that the increase in mortality for LBW infants with non-smoking mothers compared to smoking mothers may be that there is a much more insidious root cause for LBW in non-smoking mothers, such as malnutrition. There is some support for malnutrition as a potential cause for LBW, as it has been demonstrated there is a higher risk of pregnancies resulting in LBW in situations of inadequate social support, such as in low-income households (Gould, Davey, & Leroy, 1989) and in teenage pregnancies (Fraser et al., 1995). As noted above, low pre-pregnancy BMI has been noted to be associated with LBW (Gul et al., 2020), as well. These findings suggest that evaluating the effects that BMI has on the relationship between maternal smoking and LBW may help to clarify potential directions for future work related to the mechanisms underlying LBW and infant mortality.
 
-# Study Background
+# 2. Study Background
 
-This analysis has two primary aims: (1) to evaluate the effects of BMI on the relationship between maternal smoking and birth weight; and (2) to develop a model to predict birth weight based on factors such as smoking status, maternal BMI, and age. A major reason BMI is of interest in this analysis is due to its usefulness as a diagnostic tool for evaluating malnutrition, which can be otherwise difficult to assess (Cederholm et al., 2015). If a high BMI were to significantly mitigate the risk of LBW from maternal smoking compared to low BMI, this may highlight a potential biological mechanism for LBW and infant mortality that could be evaluated in future work. The motivation behind the second aim in this analysis would be to provide validation for existing methods of predicting LBW based on maternal characteristics, such as maternal pre-pregnancy BMI (Gul et al., 2020), maternal height (Inoue et al., 2016), and smoking status (Knopik et al., 2016).
-
-The sample used for this analysis was taken from the Child Health and Development Studies, a data set used in Yerushalmy's (1971) paper. Below is Yerushalmy's description of this data set (p. 445):
+The sample used for this analysis was taken from the Child Health and Development Studies (CHDS), a data set used in Yerushalmy's (1971) paper. Below is Yerushalmy's description of this data set (p. 445):
 
 >The information is derived from our Child Health and Development Studies (CHDS)—a comprehensive investigation of all pregnancies that occurred between 1960-1967, among women in the Kaiser Foundation Health Plan in the San Francisco-East Bay area. The Kaiser Health Plan is a prepaid medical care program.
 
@@ -52,7 +49,7 @@ The sample used for this analysis was taken from the Child Health and Developmen
 
 A key point to note from the description above is that the majority of pregnancies from the data set involve middle-class women who have established healthcare. This will be an important limitation going forward, because low social status has been shown to be associated with both LBW (Gould, Davey, & Leroy, 1989) and, to some extent, with BMI (Basto-Abreu et al., 2017). There is the possibility that there are aspects of the relationship between maternal smoking and LBW that would not be apparent from this sample simply because it has poor representation of women with low socio-economic status or women who are not established with a regular medical provider. With that being said, however, this analysis is still expected to provide some value in the sense that it may provide insight into potential avenues that might be taken. Potentially, this analysis could reveal important attributes of the relationship between maternal smoking and factors such as pre-pregnancy BMI, maternal height, or maternal age, which could then be evaluated further in future work.
 
-This analysis was performed with a reduced sample of 680 women from the source data set, due to the small scope of this project. Many of the variables described by Yerushalmy in the quote above, such as alcohol use or contraceptive methods, were not examined --- again, due to limitations of scope. Instead, the focus of this analysis is on 6 variables from the 1971 Yerushalmy study: birth-weight as the response variable; and gestational age, maternal age, mean number of cigarettes smoked per day by the mother, maternal height, and maternal pre-pregnancy weight as the predictors. Additionally, pre-pregnancy BMI was derived from maternal height and pre-pregnancy weight and examined as well. Each of these variables is discussed briefly below:
+Due to limitations of scope, this analysis was performed with a reduced sample of 680 white women from the source data set. Many of the variables described by Yerushalmy in the quote above, such as alcohol use or contraceptive methods, were not examined. Instead, the focus of this analysis is on 6 variables from the 1971 Yerushalmy study: birth-weight as the response variable; and gestational age, maternal age, mean number of cigarettes smoked per day by the mother, maternal height, and maternal pre-pregnancy weight as the predictors. Additionally, pre-pregnancy BMI was derived from maternal height and pre-pregnancy weight and examined as well. Each of these variables is discussed briefly below:
 
 **Birth weight** This is the the weight of the infant at the time of birth, in pounds. This is the response variable for this analysis and, as noted previously, this is of interest because LBW has been associated with poor health outcomes, such as infant mortality (Martin et al., 2013). 
 
@@ -62,27 +59,33 @@ This analysis was performed with a reduced sample of 680 women from the source d
 
 **Maternal age** This is the age of the mother at time of birth, measured in years. This is also a secondary predictor of interest in this analysis, although the relationship that maternal age has with birth weight is more complex. Dennis and Mollborn (2014) discuss how pregnancies at both ends of the spectrum for maternal age are associated with an increased risk for LBW. However, they also report that there are a variety of other non-biological factors involved and that "LBW disparities by maternal age are a complex product of socioeconomic disadvantage and current social and behavioral factors, such that LBW risk does not operate uniformly by race/ethnicity or maternal age." (Mollborn & Dennis, 2014). Similarly, Wang et al. (2020) found that the relationship between maternal age and birthweight is non-linear and that the risk of LBW increased both with very young and very old maternal age. For these reasons, including maternal age in the analysis can serve to verify past results and also provide another means for observing how relationships with the response variable change when other predictors are present.
 
-**Maternal height** This is the height of the mother, measured in inches. This is a secondary variable of interest for this analysis because maternal height has been shown to be associated with LBW, even in cases where socio-economic status is thought not to be a factor (Inoue et al., 2016). This would suggest that there could be a biological component in LBW independent of malnutrition or social status. Including this variable in the study is useful because it serves to motivate the biological argument for LBW not explained by maternal smoking.
+**Maternal height** This is the height of the mother, measured in inches. This is a secondary variable of interest for this analysis because maternal height has been shown to have a direct association with LBW, with increasing risk for LBW as height decreases, even in cases where socio-economic status is thought not to be a factor (Inoue et al., 2016). This would suggest that there could be a biological component in LBW independent of malnutrition or social status. Including this variable in the study is useful because it serves to motivate the biological argument for LBW not explained by maternal smoking.
 
-**Maternal pre-pregnancy weight** This is the pre-pregnancy weight of the mother, measured in pounds. Similar to maternal height, this is a secondary predictor of interest in this analysis due to the implication that it 
+**Maternal pre-pregnancy weight** This is the pre-pregnancy weight of the mother, measured in pounds. Similar to maternal height, this is a secondary predictor of interest in this analysis due to the biological implications it might have about the mechanism for LBW. Also like maternal height, pre-pregnancy weight has been shown to have a direct association with LBW, with increasing risk of LBW as pre-pregnancy weight decreases (Zhang & Yang, 2019). Pre-pregnancy weight is useful to include in the analysis because it has been postulated that the association between pre-pregnancy weight and LBW can be explained by poor nutrition or malnutrition (Inoue et al., 2016), suggesting that pre-pregnancy weight might be a good proxy for the mother's pre-pregnancy nutritional status.
 
+**Maternal pre-pregnancy BMI** This variable was derived from maternal height and pre-pregnancy maternal weight data from the study. This is another secondary predictor that is of interest for this analysis because it provides for a slightly different way to examine the relationship between maternal height and pre-pregnancy weight, since BMI is a measure of weight relative to height.This may make pre-pregnancy BMI a better proxy for nutritional status than pre-pregnancy weight alone.
 
+This analysis has two primary aims: (1) to evaluate the effects of BMI on the relationship between maternal smoking and birth weight; and (2) to develop a model to predict birth weight based on factors such as smoking status, maternal BMI, and age. The primary hypothesis that will be evaluated during this analysis is that pre-pregnancy BMI is a confounder for the relationship between birthweight and smoking status. A major reason BMI is of interest in this analysis is due to its usefulness as a diagnostic tool for evaluating malnutrition, which can be otherwise difficult to assess (Cederholm et al., 2015). If a high BMI were to significantly mitigate the risk of LBW from maternal smoking compared to low BMI, this may highlight a potential biological mechanism for LBW and infant mortality that could be evaluated in future work. The motivation behind the second aim in this analysis would be to provide validation for existing methods of predicting LBW based on maternal characteristics, such as maternal pre-pregnancy BMI (Gul et al., 2020), maternal height (Inoue et al., 2016), and smoking status (Knopik et al., 2016).
 
-**Maternal pre-pregnancy BMI**
+The analysis was accomplished in three major steps:
 
+* A preliminary exploratory analysis was performed, in order to identify any basic relationships between the variables in the sample.
+* An association model was built using birth weight as the primary response variable and cigarettes smoking as the primary predictor. Multiple relationships were examined during this step, and specifically the role of BMI as a confounder for the relationship between maternal smoking and birth weight was examined.
+* A prediction model was then build, again with birth weight as the primary response variable and maternal smoking as the primary predictor.
 
+There is a strong likelihood that the small size and relative uniformity of the sample used for this analysis will result in issues of generalization, particularly when the original data set the sample was itself fairly homogeneous. Instead, the purpose of this analysis will not be for making generalizable conlusions about the population but to identify trends that may be worth investigating in future work.
 
-# Statistical Analysis
+# 3. Statistical Analysis
 
-## Exploratory Analysis
+## 3.1 Exploratory Analysis
 
-## Method
+## 3.2 Method
 
-## Association Model
+## 3.3 Association Model
 
-## Prediction Model
+## 3.4 Prediction Model
 
-# Discussion
+# 4. Discussion
 
 # Appendix
 
