@@ -412,7 +412,7 @@ plot(fitted, studm, main = "Plot of Studentized Model Residuals as a Function of
 abline(0,0, col = "red")
 ```
 
-The reference cell coding approach for creating dummy variables for smoking category ensures that the linearity assumption is met.  The above plots do not show any overt change in variance with increasing $\hat{Y}$; suggest that the homoscedasticity assumption is likely met.  Furthermore the residuals do not seem to be asymmetrically distributed, skewed, or multi-modal in any way; suggesting that the normality assumption is likely met.
+The reference cell coding approach for creating dummy variables for smoking category ensures that the linearity assumption is met.  The above plots do not show any overt change in variance with increasing $\hat{Y}$; suggesting that the homoscedasticity assumption is met.  Furthermore the residuals do not seem to be asymmetrically distributed, skewed, or multi-modal in any way; suggesting that the normality assumption is likely met.
 
 ### Normality Analysis
 
@@ -435,7 +435,7 @@ The following code adds leverages & Cook's distance to the dataset:
 
 ```{r}
 k <- 7                                  # number of predictors in our model
-h_limit <- 2*(1+k)/nrow(CHDS)           # recommended leverage threashold
+h_limit <- 2*(1+k)/nrow(CHDS)           # recommended leverage threshold
 CHDS$h <- hatvalues(lm.bwfull)          # Add leverages to the dataset
 CHDS$c <- cooks.distance(lm.bwfull)     # add Cook's distance to the dataset
 ```
@@ -447,7 +447,7 @@ CHDS[CHDS$c>1,]
 CHDS[CHDS$h>h_limit,]
 ```
 
-Upon examination of the data reported in the second table, none of the data is wildly implausible, with the exception of a 48 week gestational age.  A 48-week gestational age is well above the 0.1th percentile of gestational age based on ultrasound based estimates of gestation; and furthermore none of the women in this study (n=1867) had gestation age greater than 46 weeks.<sup>1</sup>
+Upon examination of the data reported in the second table, none of the data is implausible, with the exception of a 48 week gestational age.  Of the women in a study of ultrasound-based determination of gestational age (n=1867), none had gestation age greater than 46 weeks.  The study further suggests that a 48-week gestational age is well above the 0.1th percentile of gestational age estimates based on date of last period.<sup>1</sup>
 
 We can create a new dataset with this observation (observation 60) removed:
 
@@ -455,62 +455,102 @@ We can create a new dataset with this observation (observation 60) removed:
 CHDS_60 <- CHDS[-c(60),]
 ```
 
-And a new parsimonious model can be created:
+And a new model can be created:
 
 ```{r}
-lm.par_60 <- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + mheight + BMI, data = CHDS_60)
-summary(lm.par_60)
+lm.bwfull_60 <- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + BMI + mheight + age, data = CHDS_60)
+summary(lm.bwfull_60)
 ```
 
-Upon comparison to the original parsimonious model we can see that most $\hat{\beta}_i$ have very similar values, with a slight change in $\hat{\beta}_0$.
+Upon comparison to the previous full model we can see that most $\hat{\beta}_i$ have very similar values, with very slight changes in $\hat{\beta}_0$ & $\hat{\beta}_4$.
 
 ### Collinearity Assessment
 
 The variance inflation factor approach will be used to assess collinearity.  The following R code calculates the factor for each $\hat{\beta}_i$:
 
 ```{r}
-vif(lm.par_60)
-mean(vif(lm.par_60))
+vif(lm.bwfull_60)
+mean(vif(lm.bwfull_60))
 ```
 
 All factors are well below 10; indicating that collinearity is likely minimal.
 
+## Statistical Inference
+
+### Regression line:
+
+If we retain the definition of the $X_i$ as above, we can write the regression line as:
+
+$$Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \beta_3 X_3 + \beta_4 X_4 + \beta_5 X_5 + \beta_6 X_6 + \beta_7 X_7 + \epsilon$$
+
+### Confidence Intervals
+
+For the crude model:
+
+```{r}
+confint(lm.bwcrude, level = 0.95)
+```
+
+For the adjusted model:
+
+```{r}
+confint(lm.bwfull_60, level = 0.95)
+```
+
+The confidence intervals are slightly tighter in the crude model.
+
+### P-values
+
+For the crude model:
+
+```{r}
+summary(lm.bwcrude)
+```
+
+For the adjusted model:
+
+```{r}
+summary(lm.bwfull_60)
+```
+
+The p-values are generally better in the crude model.
+
 # Prediction Model Building by Backward-Elimination
 
-To create a parsimonious model we will utilize the backward-elimination procedure starting from the full model above.  In the first iteration of this procedure we will calculate the partial F-statistic for each independent variable (other than smoking category) in turn.
+To create a parsimonious model we will utilize the backward-elimination procedure starting from the full model above.
 
 ## First Iteration
 
 The summary function reports the coefficients and associated p-values (right column of table) from the full model:
 
 ```{r}
-summary(lm.bwfull)
+summary(lm.bwfull_60)
 ```
 
-We can see that maternal age has the highest p-value (0.59621), and that the p-value is well above $\alpha = 0.10$; thus it will be removed.  We can begin the second iteration with the full model excluding maternal age:
+We can see that maternal age has the highest p-value (0.5795), and that the p-value is well above $\alpha = 0.10$; thus it will be removed.  We can begin the second iteration with the full model excluding maternal age:
 
 ## Second Iteration
 
 The following R code takes the full model and creates a reduced model by removing gestational age.  The summary function then reports the coefficients and associated p-values:
 
 ```{r}
-lm.bwfull_age <- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + mheight + BMI, data = CHDS)
-summary(lm.bwfull_age)
+lm.bwfull_60_age <- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + BMI + mheight, data = CHDS_60)
+summary(lm.bwfull_60_age)
 ```
 
 We can see that all p-values are above our threshold of $\alpha = 0.10$; thus no further variables will be removed.  We can construct the parsimonious model:
 
 ## Variable Selection
 
-If we denote gestational age as $X_4$, BMI as $X_5$, & maternal height as $X_6$ we can state the parsimonious as:
+If we denote gestational age as $X_4$, BMI as $X_5$, & maternal height as $X_6$ we can state the parsimonious model as:
 
 $$Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2+ \beta_3 X_3 + \beta_4 X_4 + \beta_5 X_5 + \beta_6 X_6 + \epsilon$$
 
 The following R code reports summary statistics and ANOVA table for this model:
 
 ```{r}
-summary(lm.bwfull_age)
-anova(lm.bwfull_age)
+summary(lm.bwfull_60_age)
+anova(lm.bwfull_60_age)
 ```
 
 # Mediation analysis
