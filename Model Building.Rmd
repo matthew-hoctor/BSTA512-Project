@@ -281,25 +281,25 @@ $$\Delta \hat{\beta_i} = \frac{\hat{\beta_i}_{\; adjusted} - \hat{\beta_i}_{\; c
 The following code creates a 'crude' model to compare to by removing gestational age from the model:
 
 ```{r}
-lm.par_gestwks <- lm(bwt ~ SMK1 + SMK2 + SMK3 + mheight + BMI, data = CHDS)
+lm.full_gestwks <- lm(bwt ~ SMK1 + SMK2 + SMK3 + BMI + mheight + age, data = CHDS)
 ```
 
 To compute $\Delta \hat{\beta_1}$:
 
 ```{r}
-100*(summary(lm.bwfull)$coefficients[2,1] - summary(lm.par_gestwks)$coefficients[2,1]) / ( summary(lm.par_gestwks)$coefficients[2,1])
+100*(summary(lm.bwfull)$coefficients[2,1] - summary(lm.full_gestwks)$coefficients[2,1]) / ( summary(lm.full_gestwks)$coefficients[2,1])
 ```
 
 To compute $\Delta \hat{\beta_2}$:
 
 ```{r}
-100*(summary(lm.bwfull)$coefficients[3,1] - summary(lm.par_gestwks)$coefficients[3,1]) / ( summary(lm.par_gestwks)$coefficients[3,1])
+100*(summary(lm.bwfull)$coefficients[3,1] - summary(lm.full_gestwks)$coefficients[3,1]) / ( summary(lm.full_gestwks)$coefficients[3,1])
 ```
 
 To compute $\Delta \hat{\beta_3}$:
 
 ```{r}
-100*(summary(lm.bwfull)$coefficients[4,1] - summary(lm.par_gestwks)$coefficients[4,1]) / ( summary(lm.par_gestwks)$coefficients[4,1])
+100*(summary(lm.bwfull)$coefficients[4,1] - summary(lm.full_gestwks)$coefficients[4,1]) / ( summary(lm.full_gestwks)$coefficients[4,1])
 ```
 
 The above analysis shows that removal of gestational age from the model changes $\hat{\beta_i}$ (for i = 1, 2, 3) by greater than $10\%$ in each case, and thus gestational age can be considered a confounder of the smoking-birthweight relation.
@@ -309,56 +309,84 @@ The above analysis shows that removal of gestational age from the model changes 
 The following code creates a 'crude' model to compare to by removing BMI from the model:
 
 ```{r}
-lm.par_BMI <- lm(bwt ~ SMK1 + SMK2 + SMK3 + mheight + gestwks, data = CHDS)
+lm.full_BMI <- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + mheight + age, data = CHDS)
 ```
 
 To compute $\Delta \hat{\beta_1}$:
 
 ```{r}
-100*(summary(lm.bwfull)$coefficients[2,1] - summary(lm.par_BMI)$coefficients[2,1]) / ( summary(lm.par_BMI)$coefficients[2,1])
+100*(summary(lm.bwfull)$coefficients[2,1] - summary(lm.full_BMI)$coefficients[2,1]) / ( summary(lm.full_BMI)$coefficients[2,1])
 ```
 
 To compute $\Delta \hat{\beta_2}$:
 
 ```{r}
-100*(summary(lm.bwfull)$coefficients[3,1] - summary(lm.par_BMI)$coefficients[3,1]) / ( summary(lm.par_BMI)$coefficients[3,1])
+100*(summary(lm.bwfull)$coefficients[3,1] - summary(lm.full_BMI)$coefficients[3,1]) / ( summary(lm.full_BMI)$coefficients[3,1])
 ```
 
 To compute $\Delta \hat{\beta_3}$:
 
 ```{r}
-100*(summary(lm.bwfull)$coefficients[4,1] - summary(lm.par_BMI)$coefficients[4,1]) / ( summary(lm.par_BMI)$coefficients[4,1])
+100*(summary(lm.bwfull)$coefficients[4,1] - summary(lm.full_BMI)$coefficients[4,1]) / ( summary(lm.full_BMI)$coefficients[4,1])
 ```
 
-The above analysis shows that removal of BMI from the model changes $\hat{\beta_i}$ (for i = 3 only) by greater than $10\%$, and thus gestational age can be considered a confounder of the heavy-smoking-birthweight relation.
+The above analysis shows that removal of BMI from the model changes $\hat{\beta_i}$ (for i = 3 only) by greater than $10\%$, and thus maternal BMI can be considered a confounder of the heavy-smoking-birthweight relation.
 
 ### Maternal Height
 
 The following code creates a 'crude' model to compare to by removing maternal height from the model:
 
 ```{r}
-lm.par_mheight <- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + BMI, data = CHDS)
+lm.full_mheight <- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + BMI + age, data = CHDS)
 ```
 
 To compute $\Delta \hat{\beta_1}$:
 
 ```{r}
-100*(summary(lm.bwfull)$coefficients[2,1] - summary(lm.par_mheight)$coefficients[2,1]) / ( summary(lm.par_mheight)$coefficients[2,1])
+100*(summary(lm.bwfull)$coefficients[2,1] - summary(lm.full_mheight)$coefficients[2,1]) / ( summary(lm.full_mheight)$coefficients[2,1])
 ```
 
 To compute $\Delta \hat{\beta_2}$:
 
 ```{r}
-100*(summary(lm.bwfull)$coefficients[3,1] - summary(lm.par_mheight)$coefficients[3,1]) / ( summary(lm.par_mheight)$coefficients[3,1])
+100*(summary(lm.bwfull)$coefficients[3,1] - summary(lm.full_mheight)$coefficients[3,1]) / ( summary(lm.full_mheight)$coefficients[3,1])
 ```
 
 To compute $\Delta \hat{\beta_3}$:
 
 ```{r}
-100*(summary(lm.bwfull)$coefficients[4,1] - summary(lm.par_mheight)$coefficients[4,1]) / ( summary(lm.par_mheight)$coefficients[4,1])
+100*(summary(lm.bwfull)$coefficients[4,1] - summary(lm.full_mheight)$coefficients[4,1]) / ( summary(lm.full_mheight)$coefficients[4,1])
 ```
 
-The above analysis shows that removal of maternal height from the model changes $\hat{\beta_i}$ (for i = 1 only) by greater than $10\%$, and thus gestational age can be considered a confounder of the light-smoking-birthweight relation.
+The above analysis shows that removal of maternal height from the model changes $\hat{\beta_i}$ (for i = 1 only) by greater than $10\%$, and thus maternal height can be considered a confounder of the light-smoking-birthweight relation.
+
+### Maternal Age
+
+The following code creates a 'crude' model to compare to by removing maternal age from the model:
+
+```{r}
+lm.full_age <- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + BMI + mheight, data = CHDS)
+```
+
+To compute $\Delta \hat{\beta_1}$:
+
+```{r}
+100*(summary(lm.bwfull)$coefficients[2,1] - summary(lm.full_age)$coefficients[2,1]) / ( summary(lm.full_age)$coefficients[2,1])
+```
+
+To compute $\Delta \hat{\beta_2}$:
+
+```{r}
+100*(summary(lm.bwfull)$coefficients[3,1] - summary(lm.full_age)$coefficients[3,1]) / ( summary(lm.full_age)$coefficients[3,1])
+```
+
+To compute $\Delta \hat{\beta_3}$:
+
+```{r}
+100*(summary(lm.bwfull)$coefficients[4,1] - summary(lm.full_age)$coefficients[4,1]) / ( summary(lm.full_age)$coefficients[4,1])
+```
+
+The above analysis shows that removal of maternal height from the model does not change $\hat{\beta_i}$ for any i by greater than $10\%$, and thus maternal height cannot be considered a confounder of the smoking-birthweight relation.  It can be included in the full model as a political variable.
 
 ## Full Model Diagnostics
 
@@ -408,8 +436,8 @@ The following code adds leverages & Cook's distance to the dataset:
 ```{r}
 k <- 7                                  # number of predictors in our model
 h_limit <- 2*(1+k)/nrow(CHDS)           # recommended leverage threashold
-CHDS$h <- hatvalues(lm.bwfull)      # Add leverages to the dataset
-CHDS$c <- cooks.distance(lm.bwfull) # add Cook's distance to the dataset
+CHDS$h <- hatvalues(lm.bwfull)          # Add leverages to the dataset
+CHDS$c <- cooks.distance(lm.bwfull)     # add Cook's distance to the dataset
 ```
 
 The following code checks if any data points have Cook's distance, $c$, greater than 1 or if the leverage, $h$, is greater than the recommended threshold of $2(k+1)/n$. 

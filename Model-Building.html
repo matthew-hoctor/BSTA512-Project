@@ -2343,47 +2343,62 @@ summary(lm.X3age)</code></pre>
 <div id="gestational-age-1" class="section level3">
 <h3><span class="header-section-number">2.4.1</span> Gestational Age</h3>
 <p>The following code creates a ‘crude’ model to compare to by removing gestational age from the model:</p>
-<pre class="r"><code>lm.par_gestwks &lt;- lm(bwt ~ SMK1 + SMK2 + SMK3 + mheight + BMI, data = CHDS)</code></pre>
+<pre class="r"><code>lm.full_gestwks &lt;- lm(bwt ~ SMK1 + SMK2 + SMK3 + BMI + mheight + age, data = CHDS)</code></pre>
 <p>To compute <span class="math inline">\(\Delta \hat{\beta_1}\)</span>:</p>
-<pre class="r"><code>100*(summary(lm.bwfull)$coefficients[2,1] - summary(lm.par_gestwks)$coefficients[2,1]) / ( summary(lm.par_gestwks)$coefficients[2,1])</code></pre>
-<pre><code>## [1] -32.5575</code></pre>
+<pre class="r"><code>100*(summary(lm.bwfull)$coefficients[2,1] - summary(lm.full_gestwks)$coefficients[2,1]) / ( summary(lm.full_gestwks)$coefficients[2,1])</code></pre>
+<pre><code>## [1] -32.69897</code></pre>
 <p>To compute <span class="math inline">\(\Delta \hat{\beta_2}\)</span>:</p>
-<pre class="r"><code>100*(summary(lm.bwfull)$coefficients[3,1] - summary(lm.par_gestwks)$coefficients[3,1]) / ( summary(lm.par_gestwks)$coefficients[3,1])</code></pre>
-<pre><code>## [1] -17.60098</code></pre>
+<pre class="r"><code>100*(summary(lm.bwfull)$coefficients[3,1] - summary(lm.full_gestwks)$coefficients[3,1]) / ( summary(lm.full_gestwks)$coefficients[3,1])</code></pre>
+<pre><code>## [1] -17.64811</code></pre>
 <p>To compute <span class="math inline">\(\Delta \hat{\beta_3}\)</span>:</p>
-<pre class="r"><code>100*(summary(lm.bwfull)$coefficients[4,1] - summary(lm.par_gestwks)$coefficients[4,1]) / ( summary(lm.par_gestwks)$coefficients[4,1])</code></pre>
-<pre><code>## [1] -13.37593</code></pre>
+<pre class="r"><code>100*(summary(lm.bwfull)$coefficients[4,1] - summary(lm.full_gestwks)$coefficients[4,1]) / ( summary(lm.full_gestwks)$coefficients[4,1])</code></pre>
+<pre><code>## [1] -13.20764</code></pre>
 <p>The above analysis shows that removal of gestational age from the model changes <span class="math inline">\(\hat{\beta_i}\)</span> (for i = 1, 2, 3) by greater than <span class="math inline">\(10\%\)</span> in each case, and thus gestational age can be considered a confounder of the smoking-birthweight relation.</p>
 </div>
 <div id="bmi-1" class="section level3">
 <h3><span class="header-section-number">2.4.2</span> BMI</h3>
 <p>The following code creates a ‘crude’ model to compare to by removing BMI from the model:</p>
-<pre class="r"><code>lm.par_BMI &lt;- lm(bwt ~ SMK1 + SMK2 + SMK3 + mheight + gestwks, data = CHDS)</code></pre>
+<pre class="r"><code>lm.full_BMI &lt;- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + mheight + age, data = CHDS)</code></pre>
 <p>To compute <span class="math inline">\(\Delta \hat{\beta_1}\)</span>:</p>
-<pre class="r"><code>100*(summary(lm.bwfull)$coefficients[2,1] - summary(lm.par_BMI)$coefficients[2,1]) / ( summary(lm.par_BMI)$coefficients[2,1])</code></pre>
-<pre><code>## [1] -23.58049</code></pre>
+<pre class="r"><code>100*(summary(lm.bwfull)$coefficients[2,1] - summary(lm.full_BMI)$coefficients[2,1]) / ( summary(lm.full_BMI)$coefficients[2,1])</code></pre>
+<pre><code>## [1] -23.73167</code></pre>
 <p>To compute <span class="math inline">\(\Delta \hat{\beta_2}\)</span>:</p>
-<pre class="r"><code>100*(summary(lm.bwfull)$coefficients[3,1] - summary(lm.par_BMI)$coefficients[3,1]) / ( summary(lm.par_BMI)$coefficients[3,1])</code></pre>
-<pre><code>## [1] -5.970607</code></pre>
+<pre class="r"><code>100*(summary(lm.bwfull)$coefficients[3,1] - summary(lm.full_BMI)$coefficients[3,1]) / ( summary(lm.full_BMI)$coefficients[3,1])</code></pre>
+<pre><code>## [1] -6.019314</code></pre>
 <p>To compute <span class="math inline">\(\Delta \hat{\beta_3}\)</span>:</p>
-<pre class="r"><code>100*(summary(lm.bwfull)$coefficients[4,1] - summary(lm.par_BMI)$coefficients[4,1]) / ( summary(lm.par_BMI)$coefficients[4,1])</code></pre>
-<pre><code>## [1] -4.674608</code></pre>
-<p>The above analysis shows that removal of BMI from the model changes <span class="math inline">\(\hat{\beta_i}\)</span> (for i = 3 only) by greater than <span class="math inline">\(10\%\)</span>, and thus gestational age can be considered a confounder of the heavy-smoking-birthweight relation.</p>
+<pre class="r"><code>100*(summary(lm.bwfull)$coefficients[4,1] - summary(lm.full_BMI)$coefficients[4,1]) / ( summary(lm.full_BMI)$coefficients[4,1])</code></pre>
+<pre><code>## [1] -4.644929</code></pre>
+<p>The above analysis shows that removal of BMI from the model changes <span class="math inline">\(\hat{\beta_i}\)</span> (for i = 3 only) by greater than <span class="math inline">\(10\%\)</span>, and thus maternal BMI can be considered a confounder of the heavy-smoking-birthweight relation.</p>
 </div>
 <div id="maternal-height-1" class="section level3">
 <h3><span class="header-section-number">2.4.3</span> Maternal Height</h3>
 <p>The following code creates a ‘crude’ model to compare to by removing maternal height from the model:</p>
-<pre class="r"><code>lm.par_mheight &lt;- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + BMI, data = CHDS)</code></pre>
+<pre class="r"><code>lm.full_mheight &lt;- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + BMI + age, data = CHDS)</code></pre>
 <p>To compute <span class="math inline">\(\Delta \hat{\beta_1}\)</span>:</p>
-<pre class="r"><code>100*(summary(lm.bwfull)$coefficients[2,1] - summary(lm.par_mheight)$coefficients[2,1]) / ( summary(lm.par_mheight)$coefficients[2,1])</code></pre>
-<pre><code>## [1] -16.02826</code></pre>
+<pre class="r"><code>100*(summary(lm.bwfull)$coefficients[2,1] - summary(lm.full_mheight)$coefficients[2,1]) / ( summary(lm.full_mheight)$coefficients[2,1])</code></pre>
+<pre><code>## [1] -16.21234</code></pre>
 <p>To compute <span class="math inline">\(\Delta \hat{\beta_2}\)</span>:</p>
-<pre class="r"><code>100*(summary(lm.bwfull)$coefficients[3,1] - summary(lm.par_mheight)$coefficients[3,1]) / ( summary(lm.par_mheight)$coefficients[3,1])</code></pre>
-<pre><code>## [1] -9.075082</code></pre>
+<pre class="r"><code>100*(summary(lm.bwfull)$coefficients[3,1] - summary(lm.full_mheight)$coefficients[3,1]) / ( summary(lm.full_mheight)$coefficients[3,1])</code></pre>
+<pre><code>## [1] -9.131777</code></pre>
 <p>To compute <span class="math inline">\(\Delta \hat{\beta_3}\)</span>:</p>
-<pre class="r"><code>100*(summary(lm.bwfull)$coefficients[4,1] - summary(lm.par_mheight)$coefficients[4,1]) / ( summary(lm.par_mheight)$coefficients[4,1])</code></pre>
-<pre><code>## [1] 4.890669</code></pre>
-<p>The above analysis shows that removal of maternal height from the model changes <span class="math inline">\(\hat{\beta_i}\)</span> (for i = 1 only) by greater than <span class="math inline">\(10\%\)</span>, and thus gestational age can be considered a confounder of the light-smoking-birthweight relation.</p>
+<pre class="r"><code>100*(summary(lm.bwfull)$coefficients[4,1] - summary(lm.full_mheight)$coefficients[4,1]) / ( summary(lm.full_mheight)$coefficients[4,1])</code></pre>
+<pre><code>## [1] 5.077227</code></pre>
+<p>The above analysis shows that removal of maternal height from the model changes <span class="math inline">\(\hat{\beta_i}\)</span> (for i = 1 only) by greater than <span class="math inline">\(10\%\)</span>, and thus maternal height can be considered a confounder of the light-smoking-birthweight relation.</p>
+</div>
+<div id="maternal-age-1" class="section level3">
+<h3><span class="header-section-number">2.4.4</span> Maternal Age</h3>
+<p>The following code creates a ‘crude’ model to compare to by removing maternal age from the model:</p>
+<pre class="r"><code>lm.full_age &lt;- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + BMI + mheight, data = CHDS)</code></pre>
+<p>To compute <span class="math inline">\(\Delta \hat{\beta_1}\)</span>:</p>
+<pre class="r"><code>100*(summary(lm.bwfull)$coefficients[2,1] - summary(lm.full_age)$coefficients[2,1]) / ( summary(lm.full_age)$coefficients[2,1])</code></pre>
+<pre><code>## [1] 0.3031967</code></pre>
+<p>To compute <span class="math inline">\(\Delta \hat{\beta_2}\)</span>:</p>
+<pre class="r"><code>100*(summary(lm.bwfull)$coefficients[3,1] - summary(lm.full_age)$coefficients[3,1]) / ( summary(lm.full_age)$coefficients[3,1])</code></pre>
+<pre><code>## [1] 0.06838896</code></pre>
+<p>To compute <span class="math inline">\(\Delta \hat{\beta_3}\)</span>:</p>
+<pre class="r"><code>100*(summary(lm.bwfull)$coefficients[4,1] - summary(lm.full_age)$coefficients[4,1]) / ( summary(lm.full_age)$coefficients[4,1])</code></pre>
+<pre><code>## [1] -0.2120098</code></pre>
+<p>The above analysis shows that removal of maternal height from the model does not change <span class="math inline">\(\hat{\beta_i}\)</span> for any i by greater than <span class="math inline">\(10\%\)</span>, and thus maternal height cannot be considered a confounder of the smoking-birthweight relation. It can be included in the full model as a political variable.</p>
 </div>
 </div>
 <div id="full-model-diagnostics" class="section level2">
@@ -2429,8 +2444,8 @@ qqline(studm)</code></pre>
 <p>The following code adds leverages &amp; Cook’s distance to the dataset:</p>
 <pre class="r"><code>k &lt;- 7                                  # number of predictors in our model
 h_limit &lt;- 2*(1+k)/nrow(CHDS)           # recommended leverage threashold
-CHDS$h &lt;- hatvalues(lm.bwfull)      # Add leverages to the dataset
-CHDS$c &lt;- cooks.distance(lm.bwfull) # add Cook&#39;s distance to the dataset</code></pre>
+CHDS$h &lt;- hatvalues(lm.bwfull)          # Add leverages to the dataset
+CHDS$c &lt;- cooks.distance(lm.bwfull)     # add Cook&#39;s distance to the dataset</code></pre>
 <p>The following code checks if any data points have Cook’s distance, <span class="math inline">\(c\)</span>, greater than 1 or if the leverage, <span class="math inline">\(h\)</span>, is greater than the recommended threshold of <span class="math inline">\(2(k+1)/n\)</span>.</p>
 <pre class="r"><code>CHDS[CHDS$c&gt;1,]</code></pre>
 <pre><code>##  [1] X       bwt     gestwks age     mnocig  mheight mppwt   BMI     BMI_cat
