@@ -22,6 +22,8 @@
 
 **Do an intensive online search to find/gain knowledge about some similar/related topics through some studies. Use the resources of literature search and readings as your scientific support for your project, more particularly for your aims.**
 
+Basto-Abreu, A., Barrientos-Gutierrez, T., Zepeda-Tello, R., Camacho, V., de Porras, D., Hernandez-Avila, M. (2017). Obesity. The Relationship of Socioeconomic Status with Body Mass Index Depends on the Socioeconomic Measure Used. Obesity. Volume 26, Issue 1 p. 176-184 https://doi.org/10.1002/oby.22042
+
 Blencowe, H., Krasevec, J., Onis, M. de, Black, R. E., An, X., Stevens, G. A., … Cousens, S. (2019). National, regional, and worldwide estimates of low birthweight in 2015, with trends from 2000: A systematic analysis. The Lancet Global Health, 7(7), e849–e860.
 
 Britto RP, Florêncio TM, Benedito Silva AA, Sesso R, Cavalcante JC, Sawaya AL. Influence of maternal height and weight on low birth weight: a cross-sectional study in poor communities of northeastern Brazil. PLoS One. 2013;8(11):e80159. Published 2013 Nov 11. doi:10.1371/journal.pone.0080159
@@ -30,6 +32,8 @@ Cederholm, T., Bosaeus, I., Barazzoni, R., Bauer, J., Van Gossum, A., Klek, S., 
 Volume 34, Issue 3, Pages 335-340, ISSN 0261-5614, https://doi.org/10.1016/j.clnu.2015.03.001.
 
 Dennis, J., Mollborn, S. (2013) Young maternal age and low birth weight risk: An exploration of racial/ethnic disparities in the birth outcomes of mothers in the United States. The Social Science Journal, Volume 50, Issue 4, 2013, Pages 625-634, ISSN 0362-3319, https://doi.org/10.1016/j.soscij.2013.09.008.
+
+Engle, W. (2006). A Recommendation for the Definition of “Late Preterm” (Near-Term) and the Birth Weight–Gestational Age Classification System. Seminars in Perinatology, Volume 30, Issue 1, Pages 2-7, ISSN 0146-0005
 
 Fraser, A. M., Brockert, J. E., & Ward, R. H. (1995). Association of young maternal age with adverse reproductive outcomes. New England Journal of Medicine, 332(17), 1113–1118.
 
@@ -40,6 +44,8 @@ Gul R, Iqbal S, Anwar Z, Ahdi SG, Ali SH, Pirzada S. Pre-pregnancy maternal BMI 
 Hack, M., Flannery, D. J., Schluchter, M., Cartar, L., Borawski, E., & Klein, N. (2002). Outcomes in young adulthood for very-low-birth-weight infants. New England Journal of Medicine, 346(3), 149–157.
 
 Hack, M., Gerry Taylor, H., Drotar, D., Schluchter, M., Cartar, L., Andreias, L., et al. (2005). Chronic conditions, functional limitations, and special health care needs of school-aged children born with extremely low-birth-weight in the 1990s. JAMA, 294(3), 318–325.
+
+Husten C. G. (2009). How should we define light or intermittent smoking? Does it matter?. Nicotine & tobacco research : official journal of the Society for Research on Nicotine and Tobacco, 11(2), 111–121. https://doi.org/10.1093/ntr/ntp010
 
 Inoue S, Naruse H, Yorifuji T, et al. Association between Short Maternal Height and Low Birth Weight: a Hospital-based Study in Japan. J Korean Med Sci. 2016;31(3):353-359. doi:10.3346/jkms.2016.31.3.353
 
@@ -66,6 +72,8 @@ VanderWeele TJ. Commentary: Resolutions of the birthweight paradox: competing ex
 Ventura, S. J., Hamilton, B. E., Mathews, T. J., & Chandra, A. (2003). Trends and variations in smoking during pregnancy and low birth weight: Evidence from the birth certificate, 1990–2000. Pediatrics, 111(Supplement 1), 1176–1180.
 
 Vohr, B., Tyson, J., Wright, L., Perritt, R., Li, L., Poole, W. (2009). Maternal Age, Multiple Birth, and Extremely Low Birth Weight Infants. The Journal of Pediatrics. Volume 154, Issue 4, Pages 498-503.e2, ISSN 0022-3476, https://doi.org/10.1016/j.jpeds.2008.10.044.
+
+Wang, S., Yang, L., Shang, L. et al. Changing trends of birth weight with maternal age: a cross-sectional study in Xi’an city of Northwestern China. BMC Pregnancy Childbirth 20, 744 (2020). https://doi.org/10.1186/s12884-020-03445-2
 
 World Health Organization. (2014). Global Nutrition Targets 2025: Low birth weight policy brief. Retrieved June 20, 2019, from WHO website: http://www.who.int.proxy.lib.pdx.edu/nutrition/publications/globaltargets2025_policybrief_lbw/en/ .
 
