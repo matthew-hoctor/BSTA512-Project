@@ -412,7 +412,7 @@ plot(fitted, studm, main = "Plot of Studentized Model Residuals as a Function of
 abline(0,0, col = "red")
 ```
 
-The reference cell coding approach for creating dummy variables for smoking category ensures that the linearity assumption is met.  The above plots do not show any overt change in variance with increasing $\hat{Y}$; suggesting that the homoscedasticity assumption is met.  Furthermore the residuals do not seem to be asymmetrically distributed, skewed, or multi-modal in any way; suggesting that the normality assumption is likely met.
+The above plots do not show any overt change in variance with increasing $\hat{Y}$; suggesting that the homoscedasticity assumption is met.  Furthermore the residuals do not seem to be asymmetrically distributed, skewed, or multi-modal in any way; suggesting that the normality assumption is likely met.  The reference cell coding approach for creating dummy variables for smoking category ensures that the linearity assumption is met.
 
 ### Normality Analysis
 
@@ -434,7 +434,7 @@ Q-Q plots suggest that the normality assumption is met.  The handfull of points 
 The following code adds leverages & Cook's distance to the dataset:
 
 ```{r}
-k <- 7                                  # number of predictors in our model
+k <- 8                                  # number of predictors in association model
 h_limit <- 2*(1+k)/nrow(CHDS)           # recommended leverage threshold
 CHDS$h <- hatvalues(lm.bwfull)          # Add leverages to the dataset
 CHDS$c <- cooks.distance(lm.bwfull)     # add Cook's distance to the dataset
@@ -552,6 +552,82 @@ The following R code reports summary statistics and ANOVA table for this model:
 summary(lm.bwfull_60_age)
 anova(lm.bwfull_60_age)
 ```
+
+## Model Diagnostics
+
+### Residual Analysis
+
+The following R code extracts the fitted values, residuals, standardized residuals, and studentized residuals; and plots them so that our regression assumptions can be qualitatively assessed:
+
+```{r}
+fitted <- lm.bwfull_60_age$fitted.values # extract fitted values
+resm <- resid(lm.bwfull_60_age)          # extract model residuals
+standm <- rstandard(lm.bwfull_60_age)    # extract standardized residuals
+studm <- rstudent(lm.bwfull_60_age)      # extract studentized residuals
+
+#par(mfrow = c(3,1))                   # arranges plots
+# residual plot:
+#plot(fitted, resm, main = "Plot of Model Residuals as a Function of Fitted Values for Birth Weight", xlab = "Fitted Birth Weight Value (lbs)", ylab = "Residual (lbs)")
+#abline(0,0, col = "red")
+# standardized residual plot:
+plot(fitted, standm, main = "Plot of Standardized Model Residuals as a Function of Fitted Values for Birth Weight - Parsimonious Model", xlab = "Fitted Birth Weight Value (lbs)", ylab = "Standardized Residual")
+abline(0,0, col = "red")
+# studentized residual plot:
+plot(fitted, studm, main = "Plot of Studentized Model Residuals as a Function of Fitted Values for Birth Weight - Parsimonious Model", xlab = "Fitted Birth Weight Value (lbs)", ylab = "Studentized Residual")
+abline(0,0, col = "red")
+```
+
+Similarly to the residual analysis for the association model, the above plots do not show any overt change in variance with increasing $\hat{Y}$; suggesting that the homoscedasticity assumption is met.  Furthermore the residuals do not seem to be asymmetrically distributed, skewed, or multi-modal in any way; suggesting that the normality assumption is likely met.  The reference cell coding approach for creating dummy variables for smoking category ensures that the linearity assumption is met.
+
+### Normality Analysis
+
+Due to the large sample size the Shapiro-Wilk test will not provide helpful insights and thus will not be performed.  The following R code creates a QQ Plot:
+
+```{r}
+qqnorm(resm, ylab = "Residuals", main = "Q-Q Plot of Residuals - Parsimonious Model")
+qqline(resm)
+qqnorm(standm, ylab = "Standardized Residuals", main = "Q-Q Plot of Standardized Residuals - Parsimonious Model")
+qqline(standm)
+qqnorm(studm, ylab = "Studentized Residuals", main = "Q-Q Plot of Studentized Residuals - Parsimonious Model")
+qqline(studm)
+```
+
+Similarly to the normality analysis for the association model, the Q-Q plots suggest that the normality assumption is met.  The handfull of points at the very edges of the plot may or may not be outliers, which brings us to our next section:
+
+### Influential Outlier Detection
+
+The following code adds leverages & Cook's distance to the dataset:
+
+```{r}
+k <- 7                                       # number of predictors in prediction model
+h_limit <- 2*(1+k)/nrow(CHDS_60)             # recommended leverage threshold
+CHDS_60$h <- hatvalues(lm.bwfull_60_age)     # Add leverages to the dataset
+CHDS_60$c <- cooks.distance(lm.bwfull_60_age)# add Cook's distance to the dataset
+```
+
+The following code checks if any data points have Cook's distance, $c$, greater than 1 or if the leverage, $h$, is greater than the recommended threshold of $2(k+1)/n$. 
+ 
+```{r}
+CHDS[CHDS_60$c>1,]
+CHDS[CHDS_60$h>h_limit,]
+```
+
+Upon examination of the data reported in the second table, none of the data is implausible.
+
+### Collinearity Assessment
+
+The variance inflation factor approach will be used to assess collinearity.  The following R code calculates the factor for each $\hat{\beta}_i$:
+
+```{r}
+vif(lm.bwfull_60_age)
+mean(vif(lm.bwfull_60_age))
+```
+
+All factors are well below 10; indicating that collinearity is likely minimal.
+
+## Statistical Inference
+
+
 
 # Mediation analysis
 
