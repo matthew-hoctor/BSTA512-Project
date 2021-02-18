@@ -2832,6 +2832,93 @@ CHDS_60$c &lt;- cooks.distance(lm.bwfull_60_age)# add Cook&#39;s distance to the
 </div>
 <div id="statistical-inference-1" class="section level2">
 <h2><span class="header-section-number">3.5</span> Statistical Inference</h2>
+<div id="regression-line-1" class="section level3">
+<h3><span class="header-section-number">3.5.1</span> Regression line:</h3>
+<p>If we retain the definition of the <span class="math inline">\(X_i\)</span> as above, we can write the regression line as:</p>
+<p><span class="math display">\[Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2+ \beta_3 X_3 + \beta_4 X_4 + \beta_5 X_5 + \beta_6 X_6 + \epsilon\]</span></p>
+</div>
+<div id="confidence-intervals-1" class="section level3">
+<h3><span class="header-section-number">3.5.2</span> Confidence Intervals</h3>
+<p>For the adjusted association model:</p>
+<pre class="r"><code>confint(lm.bwfull_60, level = 0.95)</code></pre>
+<pre><code>##                    2.5 %       97.5 %
+## (Intercept) -10.56754782 -5.634226121
+## SMK1         -0.38832099  0.027022082
+## SMK2         -0.79819783 -0.303322438
+## SMK3         -0.59839171 -0.223411760
+## gestwks       0.20297239  0.279729815
+## BMI           0.01743780  0.072479511
+## mheight       0.05377405  0.111118368
+## age          -0.01668479  0.009337101</code></pre>
+<p>For the prediction model:</p>
+<pre class="r"><code>confint(lm.bwfull_60_age, level = 0.95)</code></pre>
+<pre><code>##                    2.5 %      97.5 %
+## (Intercept) -10.61938216 -5.70903683
+## SMK1         -0.38764413  0.02746481
+## SMK2         -0.79767379 -0.30306260
+## SMK3         -0.59915690 -0.22442405
+## gestwks       0.20300269  0.27972030
+## BMI           0.01671973  0.07133750
+## mheight       0.05360913  0.11090837</code></pre>
+<p>The confidence intervals are quite similar between both models.</p>
+</div>
+<div id="p-values-1" class="section level3">
+<h3><span class="header-section-number">3.5.3</span> P-values</h3>
+<p>For the final association model:</p>
+<pre class="r"><code>summary(lm.bwfull_60)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = bwt ~ SMK1 + SMK2 + SMK3 + gestwks + BMI + mheight + 
+##     age, data = CHDS_60)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -3.2771 -0.6106  0.0142  0.5561  3.2634 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) -8.100887   1.256253  -6.448 2.16e-10 ***
+## SMK1        -0.180649   0.105766  -1.708   0.0881 .  
+## SMK2        -0.550760   0.126018  -4.370 1.44e-05 ***
+## SMK3        -0.410902   0.095487  -4.303 1.93e-05 ***
+## gestwks      0.241351   0.019546  12.348  &lt; 2e-16 ***
+## BMI          0.044959   0.014016   3.208   0.0014 ** 
+## mheight      0.082446   0.014603   5.646 2.43e-08 ***
+## age         -0.003674   0.006626  -0.554   0.5795    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.9358 on 671 degrees of freedom
+## Multiple R-squared:  0.2743, Adjusted R-squared:  0.2667 
+## F-statistic: 36.23 on 7 and 671 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>For the prediction model:</p>
+<pre class="r"><code>summary(lm.bwfull_60_age)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = bwt ~ SMK1 + SMK2 + SMK3 + gestwks + BMI + mheight, 
+##     data = CHDS_60)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -3.2487 -0.6078  0.0073  0.5562  3.2309 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) -8.16421    1.25041  -6.529 1.30e-10 ***
+## SMK1        -0.18009    0.10571  -1.704  0.08890 .  
+## SMK2        -0.55037    0.12595  -4.370 1.44e-05 ***
+## SMK3        -0.41179    0.09542  -4.315 1.83e-05 ***
+## gestwks      0.24136    0.01954  12.355  &lt; 2e-16 ***
+## BMI          0.04403    0.01391   3.166  0.00162 ** 
+## mheight      0.08226    0.01459   5.638 2.54e-08 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.9353 on 672 degrees of freedom
+## Multiple R-squared:  0.274,  Adjusted R-squared:  0.2675 
+## F-statistic: 42.26 on 6 and 672 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>The p-values are generally similar between both models.</p>
+</div>
 </div>
 </div>
 <div id="mediation-analysis" class="section level1">

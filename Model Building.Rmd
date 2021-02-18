@@ -627,7 +627,43 @@ All factors are well below 10; indicating that collinearity is likely minimal.
 
 ## Statistical Inference
 
+### Regression line:
 
+If we retain the definition of the $X_i$ as above, we can write the regression line as:
+
+$$Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2+ \beta_3 X_3 + \beta_4 X_4 + \beta_5 X_5 + \beta_6 X_6 + \epsilon$$
+
+### Confidence Intervals
+
+For the adjusted association model:
+
+```{r}
+confint(lm.bwfull_60, level = 0.95)
+```
+
+For the prediction model:
+
+```{r}
+confint(lm.bwfull_60_age, level = 0.95)
+```
+
+The confidence intervals are quite similar between both models.
+
+### P-values
+
+For the final association model:
+
+```{r}
+summary(lm.bwfull_60)
+```
+
+For the prediction model:
+
+```{r}
+summary(lm.bwfull_60_age)
+```
+
+The p-values are generally similar between both models.
 
 # Mediation analysis
 
