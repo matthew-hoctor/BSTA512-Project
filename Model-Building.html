@@ -1665,7 +1665,7 @@ summary(lm.bwcrude)</code></pre>
 <div id="full-model" class="section level2">
 <h2><span class="header-section-number">2.2</span> Full Model</h2>
 <p>To create the full association model we will include all independent variables in the dataset except for maternal weight, as it is already a linear component of BMI, and will create colinearity without adding significantly to the model. Scientific evidence suggest including these variables may improve association The following R code creates the full model and reports summary and ANOVA data:</p>
-<pre class="r"><code>lm.bwfull &lt;- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + mheight + BMI + age, data = CHDS)
+<pre class="r"><code>lm.bwfull &lt;- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + BMI + mheight + age, data = CHDS)
 anova(lm.bwfull)</code></pre>
 <pre><code>## Analysis of Variance Table
 ## 
@@ -1675,8 +1675,8 @@ anova(lm.bwfull)</code></pre>
 ## SMK2        1  24.04  24.043  27.0938 2.578e-07 ***
 ## SMK3        1  21.11  21.108  23.7855 1.346e-06 ***
 ## gestwks     1 132.20 132.200 148.9717 &lt; 2.2e-16 ***
-## mheight     1  25.17  25.169  28.3625 1.374e-07 ***
-## BMI         1   8.84   8.843   9.9649  0.001667 ** 
+## BMI         1   6.71   6.709   7.5602  0.006128 ** 
+## mheight     1  27.30  27.303  30.7672 4.186e-08 ***
 ## age         1   0.25   0.249   0.2810  0.596210    
 ## Residuals 672 596.34   0.887                       
 ## ---
@@ -1684,7 +1684,7 @@ anova(lm.bwfull)</code></pre>
 <pre class="r"><code>summary(lm.bwfull)</code></pre>
 <pre><code>## 
 ## Call:
-## lm(formula = bwt ~ SMK1 + SMK2 + SMK3 + gestwks + mheight + BMI + 
+## lm(formula = bwt ~ SMK1 + SMK2 + SMK3 + gestwks + BMI + mheight + 
 ##     age, data = CHDS)
 ## 
 ## Residuals:
@@ -1698,8 +1698,8 @@ anova(lm.bwfull)</code></pre>
 ## SMK2        -0.548731   0.126858  -4.326 1.75e-05 ***
 ## SMK3        -0.405474   0.096109  -4.219 2.79e-05 ***
 ## gestwks      0.231123   0.019405  11.910  &lt; 2e-16 ***
-## mheight      0.081685   0.014698   5.558 3.95e-08 ***
 ## BMI          0.045115   0.014110   3.197  0.00145 ** 
+## mheight      0.081685   0.014698   5.558 3.95e-08 ***
 ## age         -0.003536   0.006670  -0.530  0.59621    
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
@@ -1707,13 +1707,13 @@ anova(lm.bwfull)</code></pre>
 ## Residual standard error: 0.942 on 672 degrees of freedom
 ## Multiple R-squared:  0.264,  Adjusted R-squared:  0.2563 
 ## F-statistic: 34.43 on 7 and 672 DF,  p-value: &lt; 2.2e-16</code></pre>
-<p>We can see that including our four predictors of interest (gestational age, maternal age, maternal height, and maternal BMI) has changed our model parameters, <span class="math inline">\(\beta_0\)</span> - <span class="math inline">\(\beta_3\)</span> significantly.</p>
-<p>et:</p>
+<p>We can see that including our four predictors of interest (gestational age, maternal age, maternal height, and maternal BMI) has changed our model parameters, <span class="math inline">\(\beta_0\)</span> - <span class="math inline">\(\beta_3\)</span> significantly. Maternal height is not statistically significant, however we will include it as a political variable in the association model.</p>
+<p>Let:</p>
 <p><span class="math display">\[
 \begin{split}
 X_4 &amp;= \; \mbox{Gestational Age}\\
-X_5 &amp;= \; \mbox{Maternal Height}\\
-X_6 &amp;= \; \mbox{Maternal BMI}\\
+X_5 &amp;= \; \mbox{Maternal BMI}\\
+X_6 &amp;= \; \mbox{Maternal Height}\\
 X_7 &amp;= \; \mbox{Maternal Age}\\
 \\
 \end{split}
@@ -1723,470 +1723,622 @@ X_7 &amp;= \; \mbox{Maternal Age}\\
 </div>
 <div id="analysis-of-effect-modification" class="section level2">
 <h2><span class="header-section-number">2.3</span> Analysis of Effect Modification</h2>
-<div id="bmi" class="section level3">
-<h3><span class="header-section-number">2.3.1</span> BMI</h3>
-<p>For this step we wish to investigate if BMI is an effect-modifier which changes the association between smoking and birth weight. We can construct an association model with an interaction term for each of our dummy variables:</p>
-<p>For light smoking:</p>
-<p><span class="math display">\[Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2+ \beta_3 X_3 + \beta_4 X_4 + \beta_5 X_5 + \beta_6 X_6 +  \beta_7 X_1 X_5 + \epsilon\]</span></p>
-<p>For moderate smoking:</p>
-<p><span class="math display">\[Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2+ \beta_3 X_3 + \beta_4 X_4 + \beta_5 X_5 +  \beta_8 X_2 X_5 + \epsilon\]</span></p>
-<p>For heavy smoking:</p>
-<p><span class="math display">\[Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2+ \beta_3 X_3 + \beta_4 X_4 + \beta_5 X_5 + + \beta_6 X_6 + \beta_9 X_3 X_5 + \epsilon\]</span></p>
-<p>We wish to test the null hypothesis <span class="math inline">\(H_0: \beta_7 = \beta_8 = \beta_9 = 0\)</span>. We can construct three linear models to test this hypothesis:</p>
+<p>For this step we wish to investigate if <span class="math inline">\(X_i\)</span> (<span class="math inline">\(i = 4,...,7\)</span>) are an effect-modifiers of the association between smoking and birth weight. We can construct an association model with an interaction term for each of our dummy variables:</p>
+<p>For <span class="math inline">\(i = 4,...,7\)</span> and <span class="math inline">\(j = 1...3\)</span>:</p>
+<p><span class="math display">\[Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2+ \beta_3 X_3 + \beta_4 X_4 + \beta_5 X_5 + \beta_6 X_6 + \beta_7 X_7 +  \beta_{i,j} X_i X_j + \epsilon\]</span></p>
+<p>We wish to test the null hypothesis <span class="math inline">\(H_0: \beta_{i,j} = 0\)</span> for <span class="math inline">\(i = 4,...,7\)</span> and <span class="math inline">\(j = 1...3\)</span>. We can construct three linear models to test this hypothesis:</p>
+<div id="gestational-age" class="section level3">
+<h3><span class="header-section-number">2.3.1</span> Gestational Age</h3>
+<p>For this step we wish to investigate if gestational age, <span class="math inline">\(X_4\)</span>, is an effect-modifier which changes the association between smoking and birth weight. We will test three models for <span class="math inline">\(X_1\)</span>, <span class="math inline">\(X_2\)</span>, &amp; <span class="math inline">\(X_3\)</span>:</p>
 <div id="light-smoking" class="section level4">
 <h4><span class="header-section-number">2.3.1.1</span> Light Smoking</h4>
-<pre class="r"><code>lm.par_X1BMI &lt;- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + mheight + BMI + BMI*as.factor(SMK1), data = CHDS)
-summary(lm.par_X1BMI)</code></pre>
+<pre class="r"><code>lm.X1gestwks &lt;- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + BMI + mheight + age + gestwks*as.factor(SMK1), data = CHDS)
+summary(lm.X1gestwks)</code></pre>
 <pre><code>## 
 ## Call:
-## lm(formula = bwt ~ SMK1 + SMK2 + SMK3 + gestwks + mheight + BMI + 
-##     BMI * as.factor(SMK1), data = CHDS)
+## lm(formula = bwt ~ SMK1 + SMK2 + SMK3 + gestwks + BMI + mheight + 
+##     age + gestwks * as.factor(SMK1), data = CHDS)
 ## 
 ## Residuals:
 ##     Min      1Q  Median      3Q     Max 
-## -3.2541 -0.6122  0.0196  0.5510  3.2557 
-## 
-## Coefficients: (1 not defined because of singularities)
-##                      Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)          -7.75065    1.25779  -6.162 1.24e-09 ***
-## SMK1                  0.05895    0.95080   0.062  0.95058    
-## SMK2                 -0.54733    0.12694  -4.312 1.86e-05 ***
-## SMK3                 -0.40560    0.09616  -4.218 2.80e-05 ***
-## gestwks               0.23165    0.01951  11.871  &lt; 2e-16 ***
-## mheight               0.08127    0.01473   5.519 4.87e-08 ***
-## BMI                   0.04541    0.01480   3.068  0.00224 ** 
-## as.factor(SMK1)1           NA         NA      NA       NA    
-## BMI:as.factor(SMK1)1 -0.01135    0.04559  -0.249  0.80342    
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-## 
-## Residual standard error: 0.9422 on 672 degrees of freedom
-## Multiple R-squared:  0.2637, Adjusted R-squared:  0.256 
-## F-statistic: 34.38 on 7 and 672 DF,  p-value: &lt; 2.2e-16</code></pre>
-<pre class="r"><code>anova(lm.par_X1BMI)</code></pre>
-<pre><code>## Analysis of Variance Table
-## 
-## Response: bwt
-##                      Df Sum Sq Mean Sq  F value    Pr(&gt;F)    
-## SMK1                  1   2.24   2.241   2.5250   0.11252    
-## SMK2                  1  24.04  24.043  27.0850 2.590e-07 ***
-## SMK3                  1  21.11  21.108  23.7778 1.351e-06 ***
-## gestwks               1 132.20 132.200 148.9232 &lt; 2.2e-16 ***
-## mheight               1  25.17  25.169  28.3533 1.380e-07 ***
-## BMI                   1   8.84   8.843   9.9616   0.00167 ** 
-## BMI:as.factor(SMK1)   1   0.06   0.055   0.0620   0.80342    
-## Residuals           672 596.54   0.888                       
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
-<p>The F-value and associated p-value are 0.0620 &amp; 0.80342 respectively; thus we can conclude that BMI is not an effect-measure modifier of light smoking, at pre-defined significance <span class="math inline">\(\alpha = 0.05\)</span>; the observed results are not inconsistent with <span class="math inline">\(\beta_7 = 0\)</span>.</p>
-</div>
-<div id="moderate-smoking" class="section level4">
-<h4><span class="header-section-number">2.3.1.2</span> Moderate Smoking</h4>
-<pre class="r"><code>lm.par_X2BMI &lt;- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + mheight + BMI + BMI*as.factor(SMK2), data = CHDS)
-summary(lm.par_X2BMI)</code></pre>
-<pre><code>## 
-## Call:
-## lm(formula = bwt ~ SMK1 + SMK2 + SMK3 + gestwks + mheight + BMI + 
-##     BMI * as.factor(SMK2), data = CHDS)
-## 
-## Residuals:
-##     Min      1Q  Median      3Q     Max 
-## -3.2359 -0.6172  0.0233  0.5556  3.2592 
-## 
-## Coefficients: (1 not defined because of singularities)
-##                      Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)          -7.71381    1.25145  -6.164 1.22e-09 ***
-## SMK1                 -0.17810    0.10651  -1.672  0.09497 .  
-## SMK2                 -1.30442    1.40683  -0.927  0.35415    
-## SMK3                 -0.40693    0.09610  -4.234 2.61e-05 ***
-## gestwks               0.23183    0.01945  11.921  &lt; 2e-16 ***
-## mheight               0.08156    0.01469   5.550 4.11e-08 ***
-## BMI                   0.04255    0.01435   2.966  0.00313 ** 
-## as.factor(SMK2)1           NA         NA      NA       NA    
-## BMI:as.factor(SMK2)1  0.03587    0.06647   0.540  0.58964    
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-## 
-## Residual standard error: 0.942 on 672 degrees of freedom
-## Multiple R-squared:  0.264,  Adjusted R-squared:  0.2563 
-## F-statistic: 34.43 on 7 and 672 DF,  p-value: &lt; 2.2e-16</code></pre>
-<pre class="r"><code>anova(lm.par_X2BMI)</code></pre>
-<pre><code>## Analysis of Variance Table
-## 
-## Response: bwt
-##                      Df Sum Sq Mean Sq  F value    Pr(&gt;F)    
-## SMK1                  1   2.24   2.241   2.5259  0.112462    
-## SMK2                  1  24.04  24.043  27.0942 2.578e-07 ***
-## SMK3                  1  21.11  21.108  23.7859 1.345e-06 ***
-## gestwks               1 132.20 132.200 148.9740 &lt; 2.2e-16 ***
-## mheight               1  25.17  25.169  28.3629 1.373e-07 ***
-## BMI                   1   8.84   8.843   9.9650  0.001667 ** 
-## BMI:as.factor(SMK2)   1   0.26   0.258   0.2912  0.589638    
-## Residuals           672 596.33   0.887                       
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
-<p>The F-value and associated p-value are 0.2912 &amp; 0.589638 respectively; thus we can conclude that BMI is not an effect-measure modifier of moderate smoking, at pre-defined significance <span class="math inline">\(\alpha = 0.05\)</span>; the observed results are not inconsistent with <span class="math inline">\(\beta_8 = 0\)</span>.</p>
-</div>
-<div id="heavy-smoking" class="section level4">
-<h4><span class="header-section-number">2.3.1.3</span> Heavy Smoking</h4>
-<pre class="r"><code>lm.par_X3BMI &lt;- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + mheight + BMI + BMI*as.factor(SMK3), data = CHDS)
-summary(lm.par_X3BMI)</code></pre>
-<pre><code>## 
-## Call:
-## lm(formula = bwt ~ SMK1 + SMK2 + SMK3 + gestwks + mheight + BMI + 
-##     BMI * as.factor(SMK3), data = CHDS)
-## 
-## Residuals:
-##     Min      1Q  Median      3Q     Max 
-## -3.2178 -0.6183  0.0231  0.5557  3.2572 
-## 
-## Coefficients: (1 not defined because of singularities)
-##                       Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)          -7.756265   1.267639  -6.119 1.60e-09 ***
-## SMK1                 -0.174518   0.106944  -1.632  0.10318    
-## SMK2                 -0.547208   0.127036  -4.308 1.90e-05 ***
-## SMK3                 -0.279375   0.702871  -0.397  0.69114    
-## gestwks               0.231025   0.019420  11.896  &lt; 2e-16 ***
-## mheight               0.081648   0.014718   5.548 4.17e-08 ***
-## BMI                   0.045694   0.016175   2.825  0.00487 ** 
-## as.factor(SMK3)1            NA         NA      NA       NA    
-## BMI:as.factor(SMK3)1 -0.005916   0.032446  -0.182  0.85537    
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-## 
-## Residual standard error: 0.9422 on 672 degrees of freedom
-## Multiple R-squared:  0.2637, Adjusted R-squared:  0.256 
-## F-statistic: 34.38 on 7 and 672 DF,  p-value: &lt; 2.2e-16</code></pre>
-<pre class="r"><code>anova(lm.par_X3BMI)</code></pre>
-<pre><code>## Analysis of Variance Table
-## 
-## Response: bwt
-##                      Df Sum Sq Mean Sq  F value    Pr(&gt;F)    
-## SMK1                  1   2.24   2.241   2.5249   0.11253    
-## SMK2                  1  24.04  24.043  27.0838 2.591e-07 ***
-## SMK3                  1  21.11  21.108  23.7767 1.352e-06 ***
-## gestwks               1 132.20 132.200 148.9168 &lt; 2.2e-16 ***
-## mheight               1  25.17  25.169  28.3520 1.381e-07 ***
-## BMI                   1   8.84   8.843   9.9612   0.00167 ** 
-## BMI:as.factor(SMK3)   1   0.03   0.030   0.0332   0.85537    
-## Residuals           672 596.56   0.888                       
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
-<p>The F-value and associated p-value are 0.0332 &amp; 0.85537 respectively; thus we can conclude that BMI is not an effect-measure modifier of heavy smoking, at pre-defined significance <span class="math inline">\(\alpha = 0.05\)</span>; the observed results are not inconsistent with <span class="math inline">\(\beta_9 = 0\)</span>.</p>
-</div>
-</div>
-<div id="gestational-age" class="section level3">
-<h3><span class="header-section-number">2.3.2</span> Gestational Age</h3>
-<p>For this step we wish to investigate if gestational age is an effect-modifier which changes the association between smoking and birth weight. We can construct an association model with an interaction term for each of our dummy variables:</p>
-<p>For light smoking:</p>
-<p><span class="math display">\[Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2+ \beta_3 X_3 + \beta_4 X_4 + \beta_5 X_5 + \beta_6 X_6 +  \beta_7&#39; X_1 X_4 + \epsilon\]</span></p>
-<p>For moderate smoking:</p>
-<p><span class="math display">\[Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2+ \beta_3 X_3 + \beta_4 X_4 + \beta_5 X_5 +  \beta_8&#39; X_2 X_4 + \epsilon\]</span></p>
-<p>For heavy smoking:</p>
-<p><span class="math display">\[Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2+ \beta_3 X_3 + \beta_4 X_4 + \beta_5 X_5 + + \beta_6 X_6 + \beta_9&#39; X_3 X_4 + \epsilon\]</span></p>
-<p>We wish to test the null hypothesis <span class="math inline">\(H_0: \beta_7&#39; = \beta_8&#39; = \beta_9&#39; = 0\)</span>. We can construct three linear models to test this hypothesis:</p>
-<div id="light-smoking-1" class="section level4">
-<h4><span class="header-section-number">2.3.2.1</span> Light Smoking</h4>
-<pre class="r"><code>lm.par_X1gestwks &lt;- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + mheight + BMI + gestwks*as.factor(SMK1), data = CHDS)
-summary(lm.par_X1gestwks)</code></pre>
-<pre><code>## 
-## Call:
-## lm(formula = bwt ~ SMK1 + SMK2 + SMK3 + gestwks + mheight + BMI + 
-##     gestwks * as.factor(SMK1), data = CHDS)
-## 
-## Residuals:
-##     Min      1Q  Median      3Q     Max 
-## -3.2416 -0.6185  0.0301  0.5539  3.2666 
-## 
-## Coefficients: (1 not defined because of singularities)
-##                          Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)              -7.54382    1.31132  -5.753 1.33e-08 ***
-## SMK1                     -1.12744    2.12082  -0.532  0.59517    
-## SMK2                     -0.55094    0.12699  -4.338 1.66e-05 ***
-## SMK3                     -0.40752    0.09614  -4.239 2.56e-05 ***
-## gestwks                   0.22739    0.02113  10.762  &lt; 2e-16 ***
-## mheight                   0.08129    0.01470   5.528 4.63e-08 ***
-## BMI                       0.04368    0.01406   3.107  0.00197 ** 
-## as.factor(SMK1)1               NA         NA      NA       NA    
-## gestwks:as.factor(SMK1)1  0.02400    0.05345   0.449  0.65356    
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-## 
-## Residual standard error: 0.9421 on 672 degrees of freedom
-## Multiple R-squared:  0.2639, Adjusted R-squared:  0.2562 
-## F-statistic: 34.41 on 7 and 672 DF,  p-value: &lt; 2.2e-16</code></pre>
-<pre class="r"><code>anova(lm.par_X1gestwks)</code></pre>
-<pre><code>## Analysis of Variance Table
-## 
-## Response: bwt
-##                          Df Sum Sq Mean Sq  F value    Pr(&gt;F)    
-## SMK1                      1   2.24   2.241   2.5255  0.112486    
-## SMK2                      1  24.04  24.043  27.0906 2.583e-07 ***
-## SMK3                      1  21.11  21.108  23.7827 1.347e-06 ***
-## gestwks                   1 132.20 132.200 148.9541 &lt; 2.2e-16 ***
-## mheight                   1  25.17  25.169  28.3592 1.376e-07 ***
-## BMI                       1   8.84   8.843   9.9637  0.001668 ** 
-## gestwks:as.factor(SMK1)   1   0.18   0.179   0.2016  0.653555    
-## Residuals               672 596.41   0.888                       
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
-<p>The F-value and associated p-value are 0.2016 &amp; 0.653555 respectively; thus we can conclude that gestational age is not an effect-measure modifier of light smoking, at pre-defined significance <span class="math inline">\(\alpha = 0.05\)</span>; the observed results are not inconsistent with <span class="math inline">\(\beta_7&#39; = 0\)</span>.</p>
-</div>
-<div id="moderate-smoking-1" class="section level4">
-<h4><span class="header-section-number">2.3.2.2</span> Moderate Smoking</h4>
-<pre class="r"><code>lm.par_X2gestwks &lt;- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + mheight + BMI + gestwks*as.factor(SMK2), data = CHDS)
-summary(lm.par_X2gestwks)</code></pre>
-<pre><code>## 
-## Call:
-## lm(formula = bwt ~ SMK1 + SMK2 + SMK3 + gestwks + mheight + BMI + 
-##     gestwks * as.factor(SMK2), data = CHDS)
-## 
-## Residuals:
-##     Min      1Q  Median      3Q     Max 
-## -3.2462 -0.6139  0.0264  0.5508  3.2581 
+## -3.2681 -0.6209  0.0288  0.5673  3.2962 
 ## 
 ## Coefficients: (1 not defined because of singularities)
 ##                           Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)              -7.726493   1.263658  -6.114 1.64e-09 ***
-## SMK1                     -0.176293   0.106487  -1.656  0.09828 .  
-## SMK2                     -0.429725   3.016908  -0.142  0.88678    
-## SMK3                     -0.406291   0.096122  -4.227 2.70e-05 ***
-## gestwks                   0.231354   0.020130  11.493  &lt; 2e-16 ***
-## mheight                   0.081492   0.014701   5.543 4.27e-08 ***
-## BMI                       0.044188   0.014034   3.149  0.00171 ** 
-## as.factor(SMK2)1                NA         NA      NA       NA    
-## gestwks:as.factor(SMK2)1 -0.003009   0.076463  -0.039  0.96862    
+## (Intercept)              -7.494725   1.315598  -5.697 1.83e-08 ***
+## SMK1                     -1.074384   2.124563  -0.506  0.61324    
+## SMK2                     -0.551152   0.127065  -4.338 1.66e-05 ***
+## SMK3                     -0.406626   0.096207  -4.227 2.70e-05 ***
+## gestwks                   0.227582   0.021145  10.763  &lt; 2e-16 ***
+## BMI                       0.044571   0.014177   3.144  0.00174 ** 
+## mheight                   0.081470   0.014716   5.536 4.44e-08 ***
+## age                      -0.003396   0.006683  -0.508  0.61154    
+## as.factor(SMK1)1                NA         NA      NA       NA    
+## gestwks:as.factor(SMK1)1  0.022649   0.053547   0.423  0.67245    
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.9422 on 672 degrees of freedom
-## Multiple R-squared:  0.2636, Adjusted R-squared:  0.256 
-## F-statistic: 34.37 on 7 and 672 DF,  p-value: &lt; 2.2e-16</code></pre>
-<pre class="r"><code>anova(lm.par_X2gestwks)</code></pre>
+## Residual standard error: 0.9426 on 671 degrees of freedom
+## Multiple R-squared:  0.2641, Adjusted R-squared:  0.2554 
+## F-statistic: 30.11 on 8 and 671 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>anova(lm.X1gestwks)</code></pre>
 <pre><code>## Analysis of Variance Table
 ## 
 ## Response: bwt
 ##                          Df Sum Sq Mean Sq  F value    Pr(&gt;F)    
-## SMK1                      1   2.24   2.241   2.5248  0.112540    
-## SMK2                      1  24.04  24.043  27.0826 2.593e-07 ***
-## SMK3                      1  21.11  21.108  23.7756 1.352e-06 ***
-## gestwks                   1 132.20 132.200 148.9098 &lt; 2.2e-16 ***
-## mheight                   1  25.17  25.169  28.3507 1.382e-07 ***
-## BMI                       1   8.84   8.843   9.9607  0.001671 ** 
-## gestwks:as.factor(SMK2)   1   0.00   0.001   0.0015  0.968617    
-## Residuals               672 596.59   0.888                       
+## SMK1                      1   2.24   2.241   2.5228  0.112685    
+## SMK2                      1  24.04  24.043  27.0607 2.622e-07 ***
+## SMK3                      1  21.11  21.108  23.7564 1.366e-06 ***
+## gestwks                   1 132.20 132.200 148.7897 &lt; 2.2e-16 ***
+## BMI                       1   6.71   6.709   7.5509  0.006159 ** 
+## mheight                   1  27.30  27.303  30.7296 4.266e-08 ***
+## age                       1   0.25   0.249   0.2807  0.596434    
+## gestwks:as.factor(SMK1)   1   0.16   0.159   0.1789  0.672446    
+## Residuals               671 596.18   0.888                       
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
-<p>The F-value and associated p-value are 0.0015 &amp; 0.968617 respectively; thus we can conclude that gestational age is not an effect-measure modifier of moderate smoking, at pre-defined significance <span class="math inline">\(\alpha = 0.05\)</span>; the observed results are not inconsistent with <span class="math inline">\(\beta_8&#39; = 0\)</span>.</p>
+<p>The F-value and associated p-value are 0.1789 &amp; 0.672446 respectively; thus we can conclude that gestational age is not an effect-measure modifier of light smoking, at pre-defined significance <span class="math inline">\(\alpha = 0.05\)</span>; the observed results are not inconsistent with <span class="math inline">\(\beta_{4,1} = 0\)</span>.</p>
 </div>
-<div id="heavy-smoking-1" class="section level4">
-<h4><span class="header-section-number">2.3.2.3</span> Heavy Smoking</h4>
-<pre class="r"><code>lm.par_X3gestwks &lt;- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + mheight + BMI + gestwks*as.factor(SMK3), data = CHDS)
-summary(lm.par_X3gestwks)</code></pre>
+<div id="moderate-smoking" class="section level4">
+<h4><span class="header-section-number">2.3.1.2</span> Moderate Smoking</h4>
+<pre class="r"><code>lm.X2gestwks &lt;- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + BMI + mheight + age + gestwks*as.factor(SMK2), data = CHDS)
+summary(lm.X2gestwks)</code></pre>
 <pre><code>## 
 ## Call:
-## lm(formula = bwt ~ SMK1 + SMK2 + SMK3 + gestwks + mheight + BMI + 
-##     gestwks * as.factor(SMK3), data = CHDS)
+## lm(formula = bwt ~ SMK1 + SMK2 + SMK3 + gestwks + BMI + mheight + 
+##     age + gestwks * as.factor(SMK2), data = CHDS)
 ## 
 ## Residuals:
 ##     Min      1Q  Median      3Q     Max 
-## -3.2560 -0.6167  0.0336  0.5519  3.2714 
+## -3.2735 -0.6128  0.0213  0.5604  3.2894 
 ## 
 ## Coefficients: (1 not defined because of singularities)
-##                          Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)              -7.47544    1.31024  -5.705 1.74e-08 ***
-## SMK1                     -0.17851    0.10651  -1.676  0.09419 .  
-## SMK2                     -0.55154    0.12695  -4.345 1.61e-05 ***
-## SMK3                     -1.58918    1.88427  -0.843  0.39931    
-## gestwks                   0.22480    0.02188  10.276  &lt; 2e-16 ***
-## mheight                   0.08155    0.01469   5.551 4.10e-08 ***
-## BMI                       0.04450    0.01401   3.175  0.00156 ** 
-## as.factor(SMK3)1               NA         NA      NA       NA    
-## gestwks:as.factor(SMK3)1  0.02978    0.04737   0.629  0.52985    
+##                           Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)              -7.664274   1.269786  -6.036 2.62e-09 ***
+## SMK1                     -0.176832   0.106549  -1.660   0.0975 .  
+## SMK2                     -0.444201   3.018649  -0.147   0.8831    
+## SMK3                     -0.405435   0.096187  -4.215 2.84e-05 ***
+## gestwks                   0.231308   0.020141  11.484  &lt; 2e-16 ***
+## BMI                       0.045087   0.014144   3.188   0.0015 ** 
+## mheight                   0.081673   0.014713   5.551 4.09e-08 ***
+## age                      -0.003534   0.006676  -0.529   0.5967    
+## as.factor(SMK2)1                NA         NA      NA       NA    
+## gestwks:as.factor(SMK2)1 -0.002652   0.076507  -0.035   0.9724    
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.9419 on 672 degrees of freedom
-## Multiple R-squared:  0.2641, Adjusted R-squared:  0.2564 
-## F-statistic: 34.45 on 7 and 672 DF,  p-value: &lt; 2.2e-16</code></pre>
-<pre class="r"><code>anova(lm.par_X3gestwks)</code></pre>
+## Residual standard error: 0.9427 on 671 degrees of freedom
+## Multiple R-squared:  0.264,  Adjusted R-squared:  0.2552 
+## F-statistic: 30.08 on 8 and 671 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>anova(lm.X2gestwks)</code></pre>
 <pre><code>## Analysis of Variance Table
 ## 
 ## Response: bwt
 ##                          Df Sum Sq Mean Sq  F value    Pr(&gt;F)    
-## SMK1                      1   2.24   2.241   2.5263  0.112435    
-## SMK2                      1  24.04  24.043  27.0984 2.573e-07 ***
-## SMK3                      1  21.11  21.108  23.7895 1.343e-06 ***
-## gestwks                   1 132.20 132.200 148.9970 &lt; 2.2e-16 ***
-## mheight                   1  25.17  25.169  28.3673 1.370e-07 ***
-## BMI                       1   8.84   8.843   9.9666  0.001665 ** 
-## gestwks:as.factor(SMK3)   1   0.35   0.351   0.3951  0.529848    
-## Residuals               672 596.24   0.887                       
+## SMK1                      1   2.24   2.241   2.5221  0.112733    
+## SMK2                      1  24.04  24.043  27.0536 2.632e-07 ***
+## SMK3                      1  21.11  21.108  23.7502 1.370e-06 ***
+## gestwks                   1 132.20 132.200 148.7503 &lt; 2.2e-16 ***
+## BMI                       1   6.71   6.709   7.5489  0.006166 ** 
+## mheight                   1  27.30  27.303  30.7215 4.284e-08 ***
+## age                       1   0.25   0.249   0.2806  0.596483    
+## gestwks:as.factor(SMK2)   1   0.00   0.001   0.0012  0.972362    
+## Residuals               671 596.34   0.889                       
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
-<p>The F-value and associated p-value are 0.3951 &amp; 0.529848 respectively; thus we can conclude that gestational age is not an effect-measure modifier of heavy smoking, at pre-defined significance <span class="math inline">\(\alpha = 0.05\)</span>; the observed results are not inconsistent with <span class="math inline">\(\beta_9&#39; = 0\)</span>.</p>
+<p>The F-value and associated p-value are 0.0012 &amp; 0.972362 respectively; thus we can conclude that gestational age is not an effect-measure modifier of moderate smoking, at pre-defined significance <span class="math inline">\(\alpha = 0.05\)</span>; the observed results are not inconsistent with <span class="math inline">\(\beta_{4,2} = 0\)</span>.</p>
+</div>
+<div id="heavy-smoking" class="section level4">
+<h4><span class="header-section-number">2.3.1.3</span> Heavy Smoking</h4>
+<pre class="r"><code>lm.X3gestwks &lt;- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + BMI + mheight + age + gestwks*as.factor(SMK3), data = CHDS)
+summary(lm.X3gestwks)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = bwt ~ SMK1 + SMK2 + SMK3 + gestwks + BMI + mheight + 
+##     age + gestwks * as.factor(SMK3), data = CHDS)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -3.2848 -0.6127  0.0316  0.5625  3.3046 
+## 
+## Coefficients: (1 not defined because of singularities)
+##                           Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)              -7.402909   1.317431  -5.619 2.81e-08 ***
+## SMK1                     -0.179144   0.106569  -1.681  0.09322 .  
+## SMK2                     -0.552041   0.127015  -4.346 1.60e-05 ***
+## SMK3                     -1.628079   1.886550  -0.863  0.38845    
+## gestwks                   0.224559   0.021891  10.258  &lt; 2e-16 ***
+## BMI                       0.045448   0.014125   3.218  0.00136 ** 
+## mheight                   0.081745   0.014705   5.559 3.92e-08 ***
+## age                      -0.003701   0.006678  -0.554  0.57961    
+## as.factor(SMK3)1                NA         NA      NA       NA    
+## gestwks:as.factor(SMK3)1  0.030780   0.047434   0.649  0.51662    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.9424 on 671 degrees of freedom
+## Multiple R-squared:  0.2644, Adjusted R-squared:  0.2556 
+## F-statistic: 30.15 on 8 and 671 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>anova(lm.X3gestwks)</code></pre>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: bwt
+##                          Df Sum Sq Mean Sq  F value    Pr(&gt;F)    
+## SMK1                      1   2.24   2.241   2.5237   0.11262    
+## SMK2                      1  24.04  24.043  27.0705 2.610e-07 ***
+## SMK3                      1  21.11  21.108  23.7650 1.360e-06 ***
+## gestwks                   1 132.20 132.200 148.8434 &lt; 2.2e-16 ***
+## BMI                       1   6.71   6.709   7.5537   0.00615 ** 
+## mheight                   1  27.30  27.303  30.7407 4.243e-08 ***
+## age                       1   0.25   0.249   0.2808   0.59637    
+## gestwks:as.factor(SMK3)   1   0.37   0.374   0.4211   0.51662    
+## Residuals               671 595.97   0.888                       
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>The F-value and associated p-value are 0.4211 &amp; 0.51662 respectively; thus we can conclude that gestational age is not an effect-measure modifier of heavy smoking, at pre-defined significance <span class="math inline">\(\alpha = 0.05\)</span>; the observed results are not inconsistent with <span class="math inline">\(\beta_{4,3} = 0\)</span>.</p>
+</div>
+</div>
+<div id="bmi" class="section level3">
+<h3><span class="header-section-number">2.3.2</span> BMI</h3>
+<p>For this step we wish to investigate if BMI, <span class="math inline">\(X_5\)</span>, is an effect-modifier which changes the association between smoking and birth weight. We will test three models for <span class="math inline">\(X_1\)</span>, <span class="math inline">\(X_2\)</span>, &amp; <span class="math inline">\(X_3\)</span>:</p>
+<div id="light-smoking-1" class="section level4">
+<h4><span class="header-section-number">2.3.2.1</span> Light Smoking</h4>
+<pre class="r"><code>lm.X1BMI &lt;- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + BMI + mheight + age + BMI*as.factor(SMK1), data = CHDS)
+summary(lm.X1BMI)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = bwt ~ SMK1 + SMK2 + SMK3 + gestwks + BMI + mheight + 
+##     age + BMI * as.factor(SMK1), data = CHDS)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -3.2819 -0.6153  0.0209  0.5574  3.2872 
+## 
+## Coefficients: (1 not defined because of singularities)
+##                       Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)          -7.689798   1.263612  -6.086 1.95e-09 ***
+## SMK1                  0.066478   0.951413   0.070  0.94432    
+## SMK2                 -0.547677   0.127012  -4.312 1.86e-05 ***
+## SMK3                 -0.404705   0.096223  -4.206 2.95e-05 ***
+## gestwks               0.231643   0.019524  11.865  &lt; 2e-16 ***
+## BMI                   0.046351   0.014913   3.108  0.00196 ** 
+## mheight               0.081446   0.014738   5.526 4.68e-08 ***
+## age                  -0.003564   0.006676  -0.534  0.59366    
+## as.factor(SMK1)1            NA         NA      NA       NA    
+## BMI:as.factor(SMK1)1 -0.011742   0.045619  -0.257  0.79696    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.9427 on 671 degrees of freedom
+## Multiple R-squared:  0.264,  Adjusted R-squared:  0.2553 
+## F-statistic: 30.09 on 8 and 671 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>anova(lm.X1BMI)</code></pre>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: bwt
+##                      Df Sum Sq Mean Sq  F value    Pr(&gt;F)    
+## SMK1                  1   2.24   2.241   2.5223  0.112715    
+## SMK2                  1  24.04  24.043  27.0562 2.628e-07 ***
+## SMK3                  1  21.11  21.108  23.7525 1.369e-06 ***
+## gestwks               1 132.20 132.200 148.7647 &lt; 2.2e-16 ***
+## BMI                   1   6.71   6.709   7.5497  0.006163 ** 
+## mheight               1  27.30  27.303  30.7245 4.277e-08 ***
+## age                   1   0.25   0.249   0.2806  0.596465    
+## BMI:as.factor(SMK1)   1   0.06   0.059   0.0663  0.796955    
+## Residuals           671 596.28   0.889                       
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>The F-value and associated p-value are 0.0663 &amp; 0.796955 respectively; thus we can conclude that BMI is not an effect-measure modifier of light smoking, at pre-defined significance <span class="math inline">\(\alpha = 0.05\)</span>; the observed results are not inconsistent with <span class="math inline">\(\beta_{5,1} = 0\)</span>.</p>
+</div>
+<div id="moderate-smoking-1" class="section level4">
+<h4><span class="header-section-number">2.3.2.2</span> Moderate Smoking</h4>
+<pre class="r"><code>lm.X2BMI &lt;- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + BMI + mheight + age + BMI*as.factor(SMK2), data = CHDS)
+summary(lm.X2BMI)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = bwt ~ SMK1 + SMK2 + SMK3 + gestwks + BMI + mheight + 
+##     age + BMI * as.factor(SMK2), data = CHDS)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -3.2625 -0.6188  0.0212  0.5606  3.2894 
+## 
+## Coefficients: (1 not defined because of singularities)
+##                       Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)          -7.654724   1.257467  -6.087 1.93e-09 ***
+## SMK1                 -0.178553   0.106572  -1.675  0.09432 .  
+## SMK2                 -1.279164   1.408476  -0.908  0.36410    
+## SMK3                 -0.406082   0.096169  -4.223 2.75e-05 ***
+## gestwks               0.231785   0.019457  11.912  &lt; 2e-16 ***
+## BMI                   0.043468   0.014468   3.005  0.00276 ** 
+## mheight               0.081728   0.014706   5.557 3.95e-08 ***
+## age                  -0.003412   0.006678  -0.511  0.60961    
+## as.factor(SMK2)1            NA         NA      NA       NA    
+## BMI:as.factor(SMK2)1  0.034652   0.066547   0.521  0.60274    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.9425 on 671 degrees of freedom
+## Multiple R-squared:  0.2643, Adjusted R-squared:  0.2555 
+## F-statistic: 30.12 on 8 and 671 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>anova(lm.X2BMI)</code></pre>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: bwt
+##                      Df Sum Sq Mean Sq  F value    Pr(&gt;F)    
+## SMK1                  1   2.24   2.241   2.5231  0.112660    
+## SMK2                  1  24.04  24.043  27.0644 2.617e-07 ***
+## SMK3                  1  21.11  21.108  23.7597 1.364e-06 ***
+## gestwks               1 132.20 132.200 148.8101 &lt; 2.2e-16 ***
+## BMI                   1   6.71   6.709   7.5520  0.006155 ** 
+## mheight               1  27.30  27.303  30.7338 4.258e-08 ***
+## age                   1   0.25   0.249   0.2807  0.596409    
+## BMI:as.factor(SMK2)   1   0.24   0.241   0.2711  0.602736    
+## Residuals           671 596.10   0.888                       
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>The F-value and associated p-value are 0.2711 &amp; 0.602736 respectively; thus we can conclude that BMI is not an effect-measure modifier of moderate smoking, at pre-defined significance <span class="math inline">\(\alpha = 0.05\)</span>; the observed results are not inconsistent with <span class="math inline">\(\beta_{5,2} = 0\)</span>.</p>
+</div>
+<div id="heavy-smoking-1" class="section level4">
+<h4><span class="header-section-number">2.3.2.3</span> Heavy Smoking</h4>
+<pre class="r"><code>lm.X3BMI &lt;- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + BMI + mheight + age + BMI*as.factor(SMK3), data = CHDS)
+summary(lm.X3BMI)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = bwt ~ SMK1 + SMK2 + SMK3 + gestwks + BMI + mheight + 
+##     age + BMI * as.factor(SMK3), data = CHDS)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -3.2447 -0.6129  0.0231  0.5623  3.2885 
+## 
+## Coefficients: (1 not defined because of singularities)
+##                       Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)          -7.695222   1.273525  -6.042 2.52e-09 ***
+## SMK1                 -0.175029   0.107006  -1.636  0.10237    
+## SMK2                 -0.547567   0.127105  -4.308 1.89e-05 ***
+## SMK3                 -0.276780   0.703264  -0.394  0.69403    
+## gestwks               0.231002   0.019430  11.889  &lt; 2e-16 ***
+## BMI                   0.046611   0.016276   2.864  0.00432 ** 
+## mheight               0.081830   0.014730   5.556 3.99e-08 ***
+## age                  -0.003542   0.006675  -0.531  0.59588    
+## as.factor(SMK3)1            NA         NA      NA       NA    
+## BMI:as.factor(SMK3)1 -0.005997   0.032463  -0.185  0.85350    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.9427 on 671 degrees of freedom
+## Multiple R-squared:  0.264,  Adjusted R-squared:  0.2552 
+## F-statistic: 30.08 on 8 and 671 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>anova(lm.X3BMI)</code></pre>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: bwt
+##                      Df Sum Sq Mean Sq  F value    Pr(&gt;F)    
+## SMK1                  1   2.24   2.241   2.5222  0.112724    
+## SMK2                  1  24.04  24.043  27.0549 2.630e-07 ***
+## SMK3                  1  21.11  21.108  23.7513 1.369e-06 ***
+## gestwks               1 132.20 132.200 148.7576 &lt; 2.2e-16 ***
+## BMI                   1   6.71   6.709   7.5493  0.006165 ** 
+## mheight               1  27.30  27.303  30.7230 4.280e-08 ***
+## age                   1   0.25   0.249   0.2806  0.596474    
+## BMI:as.factor(SMK3)   1   0.03   0.030   0.0341  0.853495    
+## Residuals           671 596.31   0.889                       
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>The F-value and associated p-value are 0.0341 &amp; 0.853495 respectively; thus we can conclude that BMI is not an effect-measure modifier of heavy smoking, at pre-defined significance <span class="math inline">\(\alpha = 0.05\)</span>; the observed results are not inconsistent with <span class="math inline">\(\beta_{5,3} = 0\)</span>.</p>
 </div>
 </div>
 <div id="maternal-height" class="section level3">
 <h3><span class="header-section-number">2.3.3</span> Maternal Height</h3>
-<p>For this step we wish to investigate if maternal height is an effect-modifier which changes the association between smoking and birth weight. We can construct an association model with an interaction term for each of our dummy variables:</p>
-<p>For light smoking:</p>
-<p><span class="math display">\[Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2+ \beta_3 X_3 + \beta_4 X_4 + \beta_5 X_5 + \beta_6 X_6 +  \beta_7&#39;&#39; X_1 X_6 + \epsilon\]</span></p>
-<p>For moderate smoking:</p>
-<p><span class="math display">\[Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2+ \beta_3 X_3 + \beta_4 X_4 + \beta_5 X_5 +  \beta_8&#39;&#39; X_2 X_6 + \epsilon\]</span></p>
-<p>For heavy smoking:</p>
-<p><span class="math display">\[Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2+ \beta_3 X_3 + \beta_4 X_4 + \beta_5 X_5 + + \beta_6 X_6 + \beta_9&#39;&#39; X_3 X_6 + \epsilon\]</span></p>
-<p>We wish to test the null hypothesis <span class="math inline">\(H_0: \beta_7&#39;&#39; = \beta_8&#39;&#39; = \beta_9&#39;&#39; = 0\)</span>. We can construct three linear models to test this hypothesis:</p>
+<p>For this step we wish to investigate if maternal height, <span class="math inline">\(X_6\)</span>, is an effect-modifier which changes the association between smoking and birth weight. We will test three models for <span class="math inline">\(X_1\)</span>, <span class="math inline">\(X_2\)</span>, &amp; <span class="math inline">\(X_3\)</span>:</p>
 <div id="light-smoking-2" class="section level4">
 <h4><span class="header-section-number">2.3.3.1</span> Light Smoking</h4>
-<pre class="r"><code>lm.par_X1mheight &lt;- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + mheight + BMI + mheight*as.factor(SMK1), data = CHDS)
-summary(lm.par_X1mheight)</code></pre>
+<pre class="r"><code>lm.X1mheight &lt;- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + BMI + mheight + age + mheight*as.factor(SMK1), data = CHDS)
+summary(lm.X1mheight)</code></pre>
 <pre><code>## 
 ## Call:
-## lm(formula = bwt ~ SMK1 + SMK2 + SMK3 + gestwks + mheight + BMI + 
-##     mheight * as.factor(SMK1), data = CHDS)
+## lm(formula = bwt ~ SMK1 + SMK2 + SMK3 + gestwks + BMI + mheight + 
+##     age + mheight * as.factor(SMK1), data = CHDS)
 ## 
 ## Residuals:
 ##     Min      1Q  Median      3Q     Max 
-## -3.2458 -0.6155  0.0259  0.5487  3.2603 
+## -3.2737 -0.6137  0.0275  0.5575  3.2927 
 ## 
 ## Coefficients: (1 not defined because of singularities)
 ##                           Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)              -7.801855   1.309703  -5.957 4.14e-09 ***
-## SMK1                      0.403816   2.724209   0.148  0.88220    
-## SMK2                     -0.547581   0.126930  -4.314 1.84e-05 ***
-## SMK3                     -0.406687   0.096127  -4.231 2.65e-05 ***
-## gestwks                   0.231274   0.019418  11.910  &lt; 2e-16 ***
-## mheight                   0.082746   0.015807   5.235 2.21e-07 ***
-## BMI                       0.044082   0.014026   3.143  0.00175 ** 
+## (Intercept)              -7.750662   1.313783  -5.899 5.78e-09 ***
+## SMK1                      0.486871   2.729934   0.178  0.85851    
+## SMK2                     -0.547854   0.126998  -4.314 1.85e-05 ***
+## SMK3                     -0.405854   0.096189  -4.219 2.79e-05 ***
+## gestwks                   0.231271   0.019429  11.904  &lt; 2e-16 ***
+## BMI                       0.044981   0.014130   3.183  0.00152 ** 
+## mheight                   0.083109   0.015829   5.250 2.04e-07 ***
+## age                      -0.003628   0.006686  -0.543  0.58756    
 ## as.factor(SMK1)1                NA         NA      NA       NA    
-## mheight:as.factor(SMK1)1 -0.009039   0.042413  -0.213  0.83130    
+## mheight:as.factor(SMK1)1 -0.010342   0.042503  -0.243  0.80783    
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.9422 on 672 degrees of freedom
-## Multiple R-squared:  0.2637, Adjusted R-squared:  0.256 
-## F-statistic: 34.38 on 7 and 672 DF,  p-value: &lt; 2.2e-16</code></pre>
-<pre class="r"><code>anova(lm.par_X1mheight)</code></pre>
+## Residual standard error: 0.9427 on 671 degrees of freedom
+## Multiple R-squared:  0.264,  Adjusted R-squared:  0.2552 
+## F-statistic: 30.09 on 8 and 671 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>anova(lm.X1mheight)</code></pre>
 <pre><code>## Analysis of Variance Table
 ## 
 ## Response: bwt
 ##                          Df Sum Sq Mean Sq  F value    Pr(&gt;F)    
-## SMK1                      1   2.24   2.241   2.5250   0.11253    
-## SMK2                      1  24.04  24.043  27.0843 2.591e-07 ***
-## SMK3                      1  21.11  21.108  23.7772 1.351e-06 ***
-## gestwks                   1 132.20 132.200 148.9195 &lt; 2.2e-16 ***
-## mheight                   1  25.17  25.169  28.3526 1.380e-07 ***
-## BMI                       1   8.84   8.843   9.9614   0.00167 ** 
-## mheight:as.factor(SMK1)   1   0.04   0.040   0.0454   0.83130    
-## Residuals               672 596.55   0.888                       
+## SMK1                      1   2.24   2.241   2.5223  0.112717    
+## SMK2                      1  24.04  24.043  27.0559 2.629e-07 ***
+## SMK3                      1  21.11  21.108  23.7522 1.369e-06 ***
+## gestwks                   1 132.20 132.200 148.7631 &lt; 2.2e-16 ***
+## BMI                       1   6.71   6.709   7.5496  0.006164 ** 
+## mheight                   1  27.30  27.303  30.7241 4.278e-08 ***
+## age                       1   0.25   0.249   0.2806  0.596467    
+## mheight:as.factor(SMK1)   1   0.05   0.053   0.0592  0.807833    
+## Residuals               671 596.29   0.889                       
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
-<p>The F-value and associated p-value are 0.0454 &amp; 0.83130 respectively; thus we can conclude that maternal height is not an effect-measure modifier of light smoking, at pre-defined significance <span class="math inline">\(\alpha = 0.05\)</span>; the observed results are not inconsistent with <span class="math inline">\(\beta_7&#39;&#39; = 0\)</span>.</p>
+<p>The F-value and associated p-value are 0.0592 &amp; 0.807833 respectively; thus we can conclude that maternal height is not an effect-measure modifier of light smoking, at pre-defined significance <span class="math inline">\(\alpha = 0.05\)</span>; the observed results are not inconsistent with <span class="math inline">\(\beta_{6,1} = 0\)</span>.</p>
 </div>
 <div id="moderate-smoking-2" class="section level4">
 <h4><span class="header-section-number">2.3.3.2</span> Moderate Smoking</h4>
-<pre class="r"><code>lm.par_X2mheight &lt;- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + mheight + BMI + mheight*as.factor(SMK2), data = CHDS)
-summary(lm.par_X2mheight)</code></pre>
+<pre class="r"><code>lm.X2mheight &lt;- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + BMI + mheight + age + mheight*as.factor(SMK2), data = CHDS)
+summary(lm.X2mheight)</code></pre>
 <pre><code>## 
 ## Call:
-## lm(formula = bwt ~ SMK1 + SMK2 + SMK3 + gestwks + mheight + BMI + 
-##     mheight * as.factor(SMK2), data = CHDS)
+## lm(formula = bwt ~ SMK1 + SMK2 + SMK3 + gestwks + BMI + mheight + 
+##     age + mheight * as.factor(SMK2), data = CHDS)
 ## 
 ## Residuals:
 ##     Min      1Q  Median      3Q     Max 
-## -3.2445 -0.6070  0.0224  0.5637  3.2498 
+## -3.2745 -0.6077  0.0200  0.5708  3.2840 
 ## 
 ## Coefficients: (1 not defined because of singularities)
-##                          Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)              -7.39126    1.28728  -5.742 1.42e-08 ***
-## SMK1                     -0.17819    0.10640  -1.675   0.0945 .  
-## SMK2                     -3.88084    3.09892  -1.252   0.2109    
-## SMK3                     -0.40489    0.09604  -4.216 2.83e-05 ***
-## gestwks                   0.23157    0.01940  11.939  &lt; 2e-16 ***
-## mheight                   0.07619    0.01549   4.917 1.10e-06 ***
-## BMI                       0.04411    0.01400   3.151   0.0017 ** 
-## as.factor(SMK2)1               NA         NA      NA       NA    
-## mheight:as.factor(SMK2)1  0.05214    0.04845   1.076   0.2822    
+##                           Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)              -7.315029   1.294538  -5.651 2.36e-08 ***
+## SMK1                     -0.178830   0.106463  -1.680  0.09347 .  
+## SMK2                     -3.968583   3.104099  -1.278  0.20152    
+## SMK3                     -0.403904   0.096104  -4.203 2.99e-05 ***
+## gestwks                   0.231559   0.019406  11.932  &lt; 2e-16 ***
+## BMI                       0.045089   0.014107   3.196  0.00146 ** 
+## mheight                   0.076246   0.015501   4.919 1.10e-06 ***
+## age                      -0.003892   0.006677  -0.583  0.56019    
+## as.factor(SMK2)1                NA         NA      NA       NA    
+## mheight:as.factor(SMK2)1  0.053508   0.048527   1.103  0.27058    
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.9414 on 672 degrees of freedom
-## Multiple R-squared:  0.2649, Adjusted R-squared:  0.2573 
-## F-statistic:  34.6 on 7 and 672 DF,  p-value: &lt; 2.2e-16</code></pre>
-<pre class="r"><code>anova(lm.par_X2mheight)</code></pre>
+## Residual standard error: 0.9419 on 671 degrees of freedom
+## Multiple R-squared:  0.2653, Adjusted R-squared:  0.2565 
+## F-statistic: 30.28 on 8 and 671 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>anova(lm.X2mheight)</code></pre>
 <pre><code>## Analysis of Variance Table
 ## 
 ## Response: bwt
 ##                          Df Sum Sq Mean Sq  F value    Pr(&gt;F)    
-## SMK1                      1   2.24   2.241   2.5291  0.112231    
-## SMK2                      1  24.04  24.043  27.1292 2.534e-07 ***
-## SMK3                      1  21.11  21.108  23.8165 1.325e-06 ***
-## gestwks                   1 132.20 132.200 149.1661 &lt; 2.2e-16 ***
-## mheight                   1  25.17  25.169  28.3995 1.349e-07 ***
-## BMI                       1   8.84   8.843   9.9779  0.001655 ** 
-## mheight:as.factor(SMK2)   1   1.03   1.027   1.1584  0.282193    
-## Residuals               672 595.56   0.886                       
+## SMK1                      1   2.24   2.241   2.5267   0.11241    
+## SMK2                      1  24.04  24.043  27.1025 2.568e-07 ***
+## SMK3                      1  21.11  21.108  23.7931 1.341e-06 ***
+## gestwks                   1 132.20 132.200 149.0195 &lt; 2.2e-16 ***
+## BMI                       1   6.71   6.709   7.5626   0.00612 ** 
+## mheight                   1  27.30  27.303  30.7771 4.168e-08 ***
+## age                       1   0.25   0.249   0.2811   0.59615    
+## mheight:as.factor(SMK2)   1   1.08   1.079   1.2158   0.27058    
+## Residuals               671 595.26   0.887                       
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
-<p>The F-value and associated p-value are 1.1584 &amp; 0.282193 respectively; thus we can conclude that maternal height is not an effect-measure modifier of moderate smoking, at pre-defined significance <span class="math inline">\(\alpha = 0.05\)</span>; the observed results are not inconsistent with <span class="math inline">\(\beta_8&#39;&#39; = 0\)</span>.</p>
+<p>The F-value and associated p-value are 1.2158 &amp; 0.27058 respectively; thus we can conclude that maternal height is not an effect-measure modifier of moderate smoking, at pre-defined significance <span class="math inline">\(\alpha = 0.05\)</span>; the observed results are not inconsistent with <span class="math inline">\(\beta_{6,2} = 0\)</span>.</p>
 </div>
 <div id="heavy-smoking-2" class="section level4">
 <h4><span class="header-section-number">2.3.3.3</span> Heavy Smoking</h4>
-<pre class="r"><code>lm.par_X3mheight &lt;- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + mheight + BMI + mheight*as.factor(SMK3), data = CHDS)
-summary(lm.par_X3mheight)</code></pre>
+<pre class="r"><code>lm.X3mheight &lt;- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + BMI + mheight + age + mheight*as.factor(SMK3), data = CHDS)
+summary(lm.X3mheight)</code></pre>
 <pre><code>## 
 ## Call:
-## lm(formula = bwt ~ SMK1 + SMK2 + SMK3 + gestwks + mheight + BMI + 
-##     mheight * as.factor(SMK3), data = CHDS)
+## lm(formula = bwt ~ SMK1 + SMK2 + SMK3 + gestwks + BMI + mheight + 
+##     age + mheight * as.factor(SMK3), data = CHDS)
 ## 
 ## Residuals:
 ##     Min      1Q  Median      3Q     Max 
-## -3.2404 -0.6221  0.0182  0.5600  3.2743 
+## -3.2732 -0.6220  0.0071  0.5667  3.3124 
 ## 
 ## Coefficients: (1 not defined because of singularities)
-##                          Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)              -8.47383    1.32802  -6.381 3.28e-10 ***
-## SMK1                     -0.17102    0.10631  -1.609  0.10816    
-## SMK2                     -0.54016    0.12671  -4.263 2.31e-05 ***
-## SMK3                      3.76182    2.49477   1.508  0.13205    
-## gestwks                   0.23115    0.01937  11.934  &lt; 2e-16 ***
-## mheight                   0.09284    0.01616   5.746 1.39e-08 ***
-## BMI                       0.04526    0.01400   3.234  0.00128 ** 
-## as.factor(SMK3)1               NA         NA      NA       NA    
-## mheight:as.factor(SMK3)1 -0.06440    0.03852  -1.672  0.09499 .  
+##                           Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)              -8.418121   1.331476  -6.322 4.70e-10 ***
+## SMK1                     -0.171530   0.106359  -1.613  0.10727    
+## SMK2                     -0.540412   0.126771  -4.263 2.31e-05 ***
+## SMK3                      3.863973   2.500996   1.545  0.12282    
+## gestwks                   0.231122   0.019378  11.927  &lt; 2e-16 ***
+## BMI                       0.046369   0.014109   3.287  0.00107 ** 
+## mheight                   0.093334   0.016184   5.767 1.23e-08 ***
+## age                      -0.004259   0.006674  -0.638  0.52361    
+## as.factor(SMK3)1                NA         NA      NA       NA    
+## mheight:as.factor(SMK3)1 -0.065962   0.038611  -1.708  0.08803 .  
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.9403 on 672 degrees of freedom
-## Multiple R-squared:  0.2667, Adjusted R-squared:  0.2591 
-## F-statistic: 34.91 on 7 and 672 DF,  p-value: &lt; 2.2e-16</code></pre>
-<pre class="r"><code>anova(lm.par_X3mheight)</code></pre>
+## Residual standard error: 0.9407 on 671 degrees of freedom
+## Multiple R-squared:  0.2671, Adjusted R-squared:  0.2584 
+## F-statistic: 30.57 on 8 and 671 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>anova(lm.X3mheight)</code></pre>
 <pre><code>## Analysis of Variance Table
 ## 
 ## Response: bwt
 ##                          Df Sum Sq Mean Sq  F value    Pr(&gt;F)    
-## SMK1                      1   2.24   2.241   2.5353  0.111796    
-## SMK2                      1  24.04  24.043  27.1952 2.452e-07 ***
-## SMK3                      1  21.11  21.108  23.8745 1.287e-06 ***
-## gestwks                   1 132.20 132.200 149.5289 &lt; 2.2e-16 ***
-## mheight                   1  25.17  25.169  28.4686 1.303e-07 ***
-## BMI                       1   8.84   8.843  10.0022  0.001634 ** 
-## mheight:as.factor(SMK3)   1   2.47   2.472   2.7956  0.094990 .  
-## Residuals               672 594.12   0.884                       
+## SMK1                      1   2.24   2.241   2.5331  0.111955    
+## SMK2                      1  24.04  24.043  27.1712 2.482e-07 ***
+## SMK3                      1  21.11  21.108  23.8534 1.301e-06 ***
+## gestwks                   1 132.20 132.200 149.3970 &lt; 2.2e-16 ***
+## BMI                       1   6.71   6.709   7.5818  0.006056 ** 
+## mheight                   1  27.30  27.303  30.8550 4.011e-08 ***
+## age                       1   0.25   0.249   0.2818  0.595686    
+## mheight:as.factor(SMK3)   1   2.58   2.583   2.9185  0.088033 .  
+## Residuals               671 593.76   0.885                       
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
-<p>The F-value and associated p-value are 2.7956 &amp; 0.094990 respectively; thus we can conclude that maternal height is not an effect-measure modifier of heavy smoking, at pre-defined significance <span class="math inline">\(\alpha = 0.05\)</span>; the observed results are not inconsistent with <span class="math inline">\(\beta_9&#39;&#39; = 0\)</span>.</p>
+<p>The F-value and associated p-value are 2.9185 &amp; 0.088033 respectively; thus we can conclude that maternal height is not an effect-measure modifier of heavy smoking, at pre-defined significance <span class="math inline">\(\alpha = 0.05\)</span>; the observed results are not inconsistent with <span class="math inline">\(\beta_{6,3} = 0\)</span>.</p>
+</div>
+</div>
+<div id="maternal-age" class="section level3">
+<h3><span class="header-section-number">2.3.4</span> Maternal Age</h3>
+<p>For this step we wish to investigate if maternal age, <span class="math inline">\(X_7\)</span>, is an effect-modifier which changes the association between smoking and birth weight. We will test three models for <span class="math inline">\(X_1\)</span>, <span class="math inline">\(X_2\)</span>, &amp; <span class="math inline">\(X_3\)</span>:</p>
+<div id="light-smoking-3" class="section level4">
+<h4><span class="header-section-number">2.3.4.1</span> Light Smoking</h4>
+<pre class="r"><code>lm.X1age &lt;- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + BMI + mheight + age + age*as.factor(SMK1), data = CHDS)
+summary(lm.X1age)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = bwt ~ SMK1 + SMK2 + SMK3 + gestwks + BMI + mheight + 
+##     age + age * as.factor(SMK1), data = CHDS)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -3.2957 -0.6116  0.0401  0.5682  3.3162 
+## 
+## Coefficients: (1 not defined because of singularities)
+##                       Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)          -7.670084   1.256919  -6.102 1.77e-09 ***
+## SMK1                 -0.596071   0.453477  -1.314  0.18915    
+## SMK2                 -0.548430   0.126867  -4.323 1.77e-05 ***
+## SMK3                 -0.404847   0.096118  -4.212 2.88e-05 ***
+## gestwks               0.231743   0.019418  11.935  &lt; 2e-16 ***
+## BMI                   0.045660   0.014122   3.233  0.00128 ** 
+## mheight               0.082504   0.014724   5.603 3.07e-08 ***
+## age                  -0.006527   0.007375  -0.885  0.37647    
+## as.factor(SMK1)1            NA         NA      NA       NA    
+## age:as.factor(SMK1)1  0.016459   0.017307   0.951  0.34194    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.9421 on 671 degrees of freedom
+## Multiple R-squared:  0.2649, Adjusted R-squared:  0.2562 
+## F-statistic: 30.23 on 8 and 671 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>anova(lm.X1age)</code></pre>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: bwt
+##                      Df Sum Sq Mean Sq  F value    Pr(&gt;F)    
+## SMK1                  1   2.24   2.241   2.5255  0.112491    
+## SMK2                  1  24.04  24.043  27.0900 2.584e-07 ***
+## SMK3                  1  21.11  21.108  23.7821 1.348e-06 ***
+## gestwks               1 132.20 132.200 148.9505 &lt; 2.2e-16 ***
+## BMI                   1   6.71   6.709   7.5591  0.006131 ** 
+## mheight               1  27.30  27.303  30.7628 4.197e-08 ***
+## age                   1   0.25   0.249   0.2810  0.596236    
+## age:as.factor(SMK1)   1   0.80   0.803   0.9044  0.341945    
+## Residuals           671 595.54   0.888                       
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>The F-value and associated p-value are 0.9044 &amp; 0.341945 respectively; thus we can conclude that maternal age is not an effect-measure modifier of light smoking, at pre-defined significance <span class="math inline">\(\alpha = 0.05\)</span>; the observed results are not inconsistent with <span class="math inline">\(\beta_{7,1} = 0\)</span>.</p>
+</div>
+<div id="moderate-smoking-3" class="section level4">
+<h4><span class="header-section-number">2.3.4.2</span> Moderate Smoking</h4>
+<pre class="r"><code>lm.X2age &lt;- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + BMI + mheight + age + age*as.factor(SMK2), data = CHDS)
+summary(lm.X2age)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = bwt ~ SMK1 + SMK2 + SMK3 + gestwks + BMI + mheight + 
+##     age + age * as.factor(SMK2), data = CHDS)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -3.2731 -0.6127  0.0212  0.5605  3.2893 
+## 
+## Coefficients: (1 not defined because of singularities)
+##                        Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)          -7.6610091  1.2608296  -6.076 2.06e-09 ***
+## SMK1                 -0.1768501  0.1065457  -1.660  0.09741 .  
+## SMK2                 -0.5301982  0.6026412  -0.880  0.37929    
+## SMK3                 -0.4054981  0.0961838  -4.216 2.83e-05 ***
+## gestwks               0.2311227  0.0194197  11.901  &lt; 2e-16 ***
+## BMI                   0.0450971  0.0141321   3.191  0.00148 ** 
+## mheight               0.0817076  0.0147261   5.548 4.15e-08 ***
+## age                  -0.0034687  0.0070107  -0.495  0.62092    
+## as.factor(SMK2)1             NA         NA      NA       NA    
+## age:as.factor(SMK2)1 -0.0007229  0.0229786  -0.031  0.97491    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.9427 on 671 degrees of freedom
+## Multiple R-squared:  0.264,  Adjusted R-squared:  0.2552 
+## F-statistic: 30.08 on 8 and 671 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>anova(lm.X2age)</code></pre>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: bwt
+##                      Df Sum Sq Mean Sq  F value    Pr(&gt;F)    
+## SMK1                  1   2.24   2.241   2.5221  0.112733    
+## SMK2                  1  24.04  24.043  27.0536 2.632e-07 ***
+## SMK3                  1  21.11  21.108  23.7501 1.370e-06 ***
+## gestwks               1 132.20 132.200 148.7502 &lt; 2.2e-16 ***
+## BMI                   1   6.71   6.709   7.5489  0.006166 ** 
+## mheight               1  27.30  27.303  30.7215 4.284e-08 ***
+## age                   1   0.25   0.249   0.2806  0.596483    
+## age:as.factor(SMK2)   1   0.00   0.001   0.0010  0.974913    
+## Residuals           671 596.34   0.889                       
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>The F-value and associated p-value are 0.0010 &amp; 0.974913 respectively; thus we can conclude that maternal age is not an effect-measure modifier of moderate smoking, at pre-defined significance <span class="math inline">\(\alpha = 0.05\)</span>; the observed results are not inconsistent with <span class="math inline">\(\beta_{7,2} = 0\)</span>.</p>
+</div>
+<div id="heavy-smoking-3" class="section level4">
+<h4><span class="header-section-number">2.3.4.3</span> Heavy Smoking</h4>
+<pre class="r"><code>lm.X3age &lt;- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + BMI + mheight + age + age*as.factor(SMK3), data = CHDS)
+summary(lm.X3age)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = bwt ~ SMK1 + SMK2 + SMK3 + gestwks + BMI + mheight + 
+##     age + age * as.factor(SMK3), data = CHDS)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -3.1009 -0.6190  0.0126  0.5565  3.3463 
+## 
+## Coefficients: (1 not defined because of singularities)
+##                       Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)          -7.550832   1.255677  -6.013 2.99e-09 ***
+## SMK1                 -0.180078   0.106277  -1.694  0.09065 .  
+## SMK2                 -0.550620   0.126622  -4.349 1.58e-05 ***
+## SMK3                 -1.279720   0.473495  -2.703  0.00705 ** 
+## gestwks               0.229677   0.019384  11.849  &lt; 2e-16 ***
+## BMI                   0.044674   0.014085   3.172  0.00158 ** 
+## mheight               0.083307   0.014695   5.669 2.14e-08 ***
+## age                  -0.009111   0.007285  -1.251  0.21148    
+## as.factor(SMK3)1            NA         NA      NA       NA    
+## age:as.factor(SMK3)1  0.033517   0.017777   1.885  0.05980 .  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.9402 on 671 degrees of freedom
+## Multiple R-squared:  0.2678, Adjusted R-squared:  0.2591 
+## F-statistic: 30.68 on 8 and 671 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>anova(lm.X3age)</code></pre>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: bwt
+##                      Df Sum Sq Mean Sq  F value    Pr(&gt;F)    
+## SMK1                  1   2.24   2.241   2.5355  0.111786    
+## SMK2                  1  24.04  24.043  27.1968 2.451e-07 ***
+## SMK3                  1  21.11  21.108  23.8759 1.286e-06 ***
+## gestwks               1 132.20 132.200 149.5381 &lt; 2.2e-16 ***
+## BMI                   1   6.71   6.709   7.5889  0.006032 ** 
+## mheight               1  27.30  27.303  30.8842 3.954e-08 ***
+## age                   1   0.25   0.249   0.2821  0.595513    
+## age:as.factor(SMK3)   1   3.14   3.143   3.5550  0.059799 .  
+## Residuals           671 593.20   0.884                       
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>The F-value and associated p-value are 3.5550 &amp; 0.059799 respectively; thus we can conclude that maternal age is not an effect-measure modifier of heavy smoking, at pre-defined significance <span class="math inline">\(\alpha = 0.05\)</span>; the observed results are not inconsistent with <span class="math inline">\(\beta_{7,3} = 0\)</span>.</p>
 </div>
 </div>
 <div id="conclusion" class="section level3">
-<h3><span class="header-section-number">2.3.4</span> Conclusion</h3>
+<h3><span class="header-section-number">2.3.5</span> Conclusion</h3>
 <p>Finding no effect-measure modification, we can move on to analysis of confounding:</p>
 </div>
 </div>
 <div id="analysis-of-confounding" class="section level2">
 <h2><span class="header-section-number">2.4</span> Analysis of Confounding</h2>
-<p>For each possible confounding variable (gestational age, <span class="math inline">\(X_4\)</span>; BMI, <span class="math inline">\(X_5\)</span>; and maternal height, <span class="math inline">\(X_6\)</span>) we can create an adjusted model (i.e. the parsimonious model above), and a crude model with the confounder in question removed. We can then consider change in estimated coefficients for each smoking category and test if the change is greater than 10%:</p>
+<p>For each possible confounding variable (gestational age, <span class="math inline">\(X_4\)</span>; BMI, <span class="math inline">\(X_5\)</span>; maternal height, <span class="math inline">\(X_6\)</span>; and maternal age, <span class="math inline">\(X_7\)</span>) we can create an adjusted model (i.e. the full model above), and a crude model with the potential confounder in question removed. We can then consider change in estimated coefficients for each smoking category and test if the change is greater than 10%:</p>
 <p><span class="math display">\[\Delta \hat{\beta_i} = \frac{\hat{\beta_i}_{\; adjusted} - \hat{\beta_i}_{\; crude}}{\hat{\beta_i}_{\; crude}}\]</span></p>
 <div id="gestational-age-1" class="section level3">
 <h3><span class="header-section-number">2.4.1</span> Gestational Age</h3>
@@ -2394,7 +2546,7 @@ summary(lm.par_60)</code></pre>
 <pre class="r"><code>summary(lm.bwfull)</code></pre>
 <pre><code>## 
 ## Call:
-## lm(formula = bwt ~ SMK1 + SMK2 + SMK3 + gestwks + mheight + BMI + 
+## lm(formula = bwt ~ SMK1 + SMK2 + SMK3 + gestwks + BMI + mheight + 
 ##     age, data = CHDS)
 ## 
 ## Residuals:
@@ -2408,8 +2560,8 @@ summary(lm.par_60)</code></pre>
 ## SMK2        -0.548731   0.126858  -4.326 1.75e-05 ***
 ## SMK3        -0.405474   0.096109  -4.219 2.79e-05 ***
 ## gestwks      0.231123   0.019405  11.910  &lt; 2e-16 ***
-## mheight      0.081685   0.014698   5.558 3.95e-08 ***
 ## BMI          0.045115   0.014110   3.197  0.00145 ** 
+## mheight      0.081685   0.014698   5.558 3.95e-08 ***
 ## age         -0.003536   0.006670  -0.530  0.59621    
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
