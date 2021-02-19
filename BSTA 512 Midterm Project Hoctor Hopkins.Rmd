@@ -6,23 +6,61 @@ date: "2/10/2021"
 output:
   pdf_document:
     toc: true
+    
+header-includes:
+- \usepackage{booktabs}
+- \usepackage{longtable}
+- \usepackage{array}
+- \usepackage{multirow}
+- \usepackage{wrapfig}
+- \usepackage{float}
+- \usepackage{colortbl}
+- \usepackage{pdflscape}
+- \usepackage{tabu}
+- \usepackage{threeparttable}
+- \usepackage{threeparttablex}
+- \usepackage[normalem]{ulem}
+- \usepackage{makecell}
+- \usepackage{xcolor}
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE)
 
+library(knitr)
 library(dplyr)
 library(tidyverse)
-#library(ggplot2)
-#library(ggthemes)
-#library(gridExtra)
+library(janitor)
+library(ggplot2)
+library(ggthemes)
+library(gridExtra)
+library(kableExtra)
 library(describedata)
+library(skimr)
 #library(readxl)
 #library(CarletonStats)
 #library(pwr)
 #library(BSDA)
 #library(exact2x2)
 library(ppcor)
+```
+
+```{r data, include=FALSE}
+# Loading the data set ======================================================
+CHDS <- read.csv("CHDS.csv")
+
+# Creating categorical variable for smoking categories ======================
+CHDS <- CHDS %>%
+  mutate(
+    SMK = case_when(
+      mnocig == 0 ~ "0",
+      mnocig > 0 & mnocig <= 10 ~ "1",
+      mnocig > 10 & mnocig <= 20 ~ "2",
+      mnocig > 20 ~ "3"),
+    SMK1 = as.factor(ifelse(SMK == "1", 1, 0)),
+    SMK2 = as.factor(ifelse(SMK == "2", 1, 0)),
+    SMK3 = as.factor(ifelse(SMK == "3", 1, 0)),
+    BMI = 703 * CHDS$mppwt / ((CHDS$mheight)^2))
 ```
 
 ******************************************************************************
@@ -53,17 +91,21 @@ Due to limitations of scope, this analysis was performed with a reduced sample o
 
 **Birth weight** This is the the weight of the infant at the time of birth, in pounds. This is the response variable for this analysis and, as noted previously, this is of interest because LBW has been associated with poor health outcomes, such as infant mortality (Martin et al., 2013). 
 
-**Mean number of cigarettes smoked per day** This is the averaged number of cigarettes smoked today by the mother during pregnancy. This is the primary predictor of interest in this analysis, since, as described above, it has been demonstrated in multiple studies in the past that maternal smoking is associated with LBW (Zhang and Yang, 2019; Parascandola, 2014; Yerushalmy, 1971). This variable was converted into a categorical variable for light (< 10 cigarettes per day), moderate (10 - 20 cigarettes per day), and heavy (> 20 cigarettes per day) smokers. These designations were chosen somewhat arbitrarily, although it should be noted that consistency in definitions for smoking severity has been poor. For example, Husten (2009) reports that measures such as thresholds of <4, <10, <15, and <20 have all been used to classify "light" smoking. Husten (2009) further points out that cigarettes smoked per day may not necessarily be the best proxy for toxin exposure levels, due to reasons such as the differences in toxin levels in different tobacco products and the nonlinear relationship of cigarette consumption with disease risk in some cases, among others. The levels chosen for this analysis were picked mostly out of convenience in providing separation of smoking groups, with the intention of potentially identifying general trends in the relationship of maternal smoking with the other variables in this study, while paying special attention to how those relationships might change with different levels of smoking severity. It should be noted that the effects of other potential exposures, such as paternal smoking during the pregnancy, were not assessed in this analysis.
+**Mean number of cigarettes smoked per day** is split into four categories, for levels of smoking: light (< 10 cigarettes per day), moderate (10 - 20 cigarettes per day), and heavy (> 20 cigarettes per day) smokers. This is the primary predictor of interest in this analysis, since, as described above, it has been demonstrated in multiple studies in the past that maternal smoking is associated with LBW (Zhang and Yang, 2019; Parascandola, 2014; Yerushalmy, 1971).  These category thresholds were chosen somewhat arbitrarily, although it should be noted that consistency in definitions for smoking severity has been poor. For example, Husten (2009) reports that measures such as thresholds of <4, <10, <15, and <20 have all been used to classify "light" smoking. Husten (2009) further points out that cigarettes smoked per day may not necessarily be the best proxy for toxin exposure levels, due to reasons such as the differences in toxin levels in different tobacco products and the nonlinear relationship of cigarette consumption with disease risk in some cases, among others. For these reasons, levels of smoking severity were chosen out of convenience in providing separation of smoking groups, with the intention of potentially identifying general trends and without interpreting too heavily in what significant differences between these levels might mean. It should be noted that the effects of other potential exposures, such as paternal smoking during the pregnancy, were not assessed in this analysis.
 
-**Gestational age** This is the length of gestation, in weeks, at time of birth. This is a secondary predictor variable for this analysis. This variable is of interest in the study because, as noted by Engle (2006), birth weight is often associated with gestational age but can differ in clinically-significant ways. This suggests that controlling for gestational age may reveal more about the biological mechanisms underlying the relationships of birth weight with the other variables in this study than if birth weight were examined without gestational age.
+**Gestational age** is a continuous variable, measured in weeks. This is a secondary predictor variable for this analysis and is of interest in the study because, as noted by Engle (2006), birth weight is often associated with gestational age but can differ in clinically-significant ways. This suggests that controlling for gestational age may reveal more about the biological mechanisms underlying the relationships of birth weight with the other variables in this study than if birth weight were examined without gestational age.
 
-**Maternal age** This is the age of the mother at time of birth, measured in years. This is also a secondary predictor of interest in this analysis, although the relationship that maternal age has with birth weight is more complex. Dennis and Mollborn (2014) discuss how pregnancies at both ends of the spectrum for maternal age are associated with an increased risk for LBW. However, they also report that there are a variety of other non-biological factors involved and that "LBW disparities by maternal age are a complex product of socioeconomic disadvantage and current social and behavioral factors, such that LBW risk does not operate uniformly by race/ethnicity or maternal age." (Mollborn & Dennis, 2014). Similarly, Wang et al. (2020) found that the relationship between maternal age and birthweight is non-linear and that the risk of LBW increased both with very young and very old maternal age. For these reasons, including maternal age in the analysis can serve to verify past results and also provide another means for observing how relationships with the response variable change when other predictors are present.
+**Maternal age** is is a continuous variable, measured in years. This is also a secondary predictor of interest in this analysis, although the relationship that maternal age has with birth weight is more complex. Dennis and Mollborn (2014) discuss how pregnancies at both ends of the spectrum for maternal age are associated with an increased risk for LBW. However, they also report that there are a variety of other non-biological factors involved and that "LBW disparities by maternal age are a complex product of socioeconomic disadvantage and current social and behavioral factors, such that LBW risk does not operate uniformly by race/ethnicity or maternal age." (Mollborn & Dennis, 2014). Similarly, Wang et al. (2020) found that the relationship between maternal age and birthweight is non-linear and that the risk of LBW increased both with very young and very old maternal age. For these reasons, including maternal age in the analysis can serve to verify past results and also provide another means for observing how relationships with the response variable change when other predictors are present.
 
-**Maternal height** This is the height of the mother, measured in inches. This is a secondary variable of interest for this analysis because maternal height has been shown to have a direct association with LBW, with increasing risk for LBW as height decreases, even in cases where socio-economic status is thought not to be a factor (Inoue et al., 2016). This would suggest that there could be a biological component in LBW independent of malnutrition or social status. Including this variable in the study is useful because it serves to motivate the biological argument for LBW not explained by maternal smoking.
+**Maternal height** is a continuous variable, measured in inches. This is a secondary variable of interest for this analysis because maternal height has been shown to have a direct association with LBW, with increasing risk for LBW as height decreases, even in cases where socio-economic status is thought not to be a factor (Inoue et al., 2016). This would suggest that there could be a biological component in LBW independent of malnutrition or social status. Including this variable in the study is useful because it serves to motivate the biological argument for LBW not explained by maternal smoking.
 
-**Maternal pre-pregnancy weight** This is the pre-pregnancy weight of the mother, measured in pounds. Similar to maternal height, this is a secondary predictor of interest in this analysis due to the biological implications it might have about the mechanism for LBW. Also like maternal height, pre-pregnancy weight has been shown to have a direct association with LBW, with increasing risk of LBW as pre-pregnancy weight decreases (Zhang & Yang, 2019). Pre-pregnancy weight is useful to include in the analysis because it has been postulated that the association between pre-pregnancy weight and LBW can be explained by poor nutrition or malnutrition (Inoue et al., 2016), suggesting that pre-pregnancy weight might be a good proxy for the mother's pre-pregnancy nutritional status.
+**Maternal pre-pregnancy weight** is a continuous variable, measured in pounds. Similar to maternal height, this is a secondary predictor of interest in this analysis due to the biological implications it might have about the mechanism for LBW. Also like maternal height, pre-pregnancy weight has been shown to have a direct association with LBW, with increasing risk of LBW as pre-pregnancy weight decreases (Zhang & Yang, 2019). Pre-pregnancy weight is useful to include in the analysis because it has been postulated that the association between pre-pregnancy weight and LBW can be explained by poor nutrition or malnutrition (Inoue et al., 2016), suggesting that pre-pregnancy weight might be a good proxy for the mother's pre-pregnancy nutritional status.
 
-**Maternal pre-pregnancy BMI** This variable was derived from maternal height and pre-pregnancy maternal weight data from the study. This is another secondary predictor that is of interest for this analysis because it provides for a slightly different way to examine the relationship between maternal height and pre-pregnancy weight, since BMI is a measure of weight relative to height.This may make pre-pregnancy BMI a better proxy for nutritional status than pre-pregnancy weight alone.
+**Maternal pre-pregnancy BMI** is a continuous variable, derived from maternal height and pre-pregnancy maternal weight data from the study. This is another secondary predictor that is of interest for this analysis because it provides for a slightly different way to examine the relationship between maternal height and pre-pregnancy weight, since BMI is a measure of weight relative to height.This may make pre-pregnancy BMI a better proxy for nutritional status than pre-pregnancy weight alone.
+
+There is a strong likelihood that the small size and relative uniformity of the sample used for this analysis will result in issues of generalization, particularly when the original data set the sample was itself fairly homogeneous. The purpose of this analysis for this reason is not to make generalizable conlusions about the population but instead to identify general trends towards significance that may inform future work.
+
+# 3. Statistical Analysis
 
 This analysis has two primary aims: (1) to evaluate the effects of BMI on the relationship between maternal smoking and birth weight; and (2) to develop a model to predict birth weight based on factors such as smoking status, maternal BMI, and age. The primary hypothesis that will be evaluated during this analysis is that pre-pregnancy BMI is a confounder for the relationship between birthweight and smoking status. A major reason BMI is of interest in this analysis is due to its usefulness as a diagnostic tool for evaluating malnutrition, which can be otherwise difficult to assess (Cederholm et al., 2015). If a high BMI were to significantly mitigate the risk of LBW from maternal smoking compared to low BMI, this may highlight a potential biological mechanism for LBW and infant mortality that could be evaluated in future work. The motivation behind the second aim in this analysis would be to provide validation for existing methods of predicting LBW based on maternal characteristics, such as maternal pre-pregnancy BMI (Gul et al., 2020), maternal height (Inoue et al., 2016), and smoking status (Knopik et al., 2016).
 
@@ -73,13 +115,70 @@ The analysis was accomplished in three major steps:
 * An association model was built using birth weight as the primary response variable and cigarettes smoking as the primary predictor. Multiple relationships were examined during this step, and specifically the role of BMI as a confounder for the relationship between maternal smoking and birth weight was examined.
 * A prediction model was then build, again with birth weight as the primary response variable and maternal smoking as the primary predictor.
 
-There is a strong likelihood that the small size and relative uniformity of the sample used for this analysis will result in issues of generalization, particularly when the original data set the sample was itself fairly homogeneous. Instead, the purpose of this analysis will not be for making generalizable conlusions about the population but to identify trends that may be worth investigating in future work.
-
-# 3. Statistical Analysis
-
 ## 3.1 Exploratory Analysis
 
+For this section of the analysis, the primary goal was to gain a basic understanding of the characteristics of the variables used in this analysis. A summary of descriptive statistics is presented in Table 1. A brief analysis of each of the variables shown in Table 1 is described below:
+
+```{r table1}
+skim_without_charts(CHDS) %>%
+  dplyr::select(
+    skim_variable, 
+    numeric.mean, 
+    numeric.sd, 
+    numeric.p0, 
+    numeric.p25, 
+    numeric.p50, 
+    numeric.p75, 
+    numeric.p100) %>%
+  slice_tail(n = 7) %>%
+  rename(
+    "Variable" = skim_variable,
+    "Mean" = numeric.mean,
+    "Standard deviation" = numeric.sd,
+    "Min" = numeric.p0,
+    "Q1" = numeric.p25,
+    "Median" = numeric.p50,
+    "Q3" = numeric.p75,
+    "Max" = numeric.p100) %>%
+  mutate(
+    "Variable" = c(
+      "Birth weight (lbs)",
+      "Gestation age (weeks)",
+      "Maternal age (years)",
+      "Number of cigarettes smoked daily",
+      "Maternal height (inches)",
+      "Maternal pre-pregnancy weight (lbs)",
+      "Maternal pre-pregnancy BMI"),
+    .before = "Mean") %>%
+  kbl(booktabs = TRUE,
+      digits = 2,
+      caption = "Descriptive statistics from sample of 680 pregnancies") %>%
+  kable_styling(latex_options = "striped") %>%
+  column_spec(1, "4 cm") %>%
+  column_spec(3, "2 cm")
+```
+
+**Birth weight** is a continuous ratio variable that is measured in lbs. From Figure B.2, it can be seen that the distribution of Birth weight is very symmetric and approximately normal as the response variable. There would be no indication for transformation of this distribution, since the shape is already very reasonably normal and adding transformations to the analysis would therefore be of questionable benefit.
+
+**Gestation age** is a continuous ratio variable that is measured in weeks. From Figure B.2, it can be seen that this variable is also approximately normal and fairly symmetric.
+
+**Maternal age** is a continuous ratio variable that is measured in years. Figure B.2 shows that this variable is skewed to the right.
+
+**Cigarettes smoked per day** is a continuous ratio variable (since it is an average). From Figure B.2, it can be seen that the distribution of this variable is very asymmetric and there appear to be multiple regions around which the data points tend to be concentrated. The most salient of these is around 0 cigarettes per day, which represents non-smokers. This was one of the primary reasons that cigarette-smoking was turned into a categorical variable, as there would be good reason to believe that there are significant differences between the very large non-smoker group and all of the other data points in the sample, particularly when considering the response variable, birth weight. As noted in the previous section, the thresholds chosen for this variable were 0-10, 10-20, and >20 cigarettes per day. These thresholds were chosen partially out of convenience, although Husten (2009) notes that both <10 and <20 cigarettes per day have been used to designate "light" smoking by researchers in the past (it may be helpful to think of the 0-10 and 10-20 thresholds as "light" and "medium-light" for this reason).
+
+**Maternal height** is a continuous ratio variable, measured in inches. Figure B.2 shows that this variable is reasonably symmetric and approximately normal.
+
+**Maternal pre-pregnancy weight** is a continuous ratio variable, measured in lbs. Figure B.2 shows that this variable is skewed to the right.
+
+Figure B.1 shows a scatter-plot matrix for each of the variables described in this analysis. This representation shows no obvious departure from linearity for any of the variables in this sample. Some of the variables appear to lack any obvious association at all, such as between BMI and age. Other pairs do seem to more clearly show a possible association, such as birth weight vs gestation age or pre-pregnancy weight and BMI. However, neither of these findings are surprising, as it has been noted by authors such as Engle (2006) that birth weight and gestational age are associated with one another and BMI was calculated directly from pre-pregnancy weight. These findings suggest that if any associations are found in this analysis, they are likely to be weak.
+
+The correlation matrix from Output A.1 shows similar findings: there are a few pairs, such as birth weight vs gestation age (0.4212) and pre-pregnancy weight vs maternal height (0.9925), that are highly correlated with one another, but otherwise the correlations are much weaker. Other notable associations outside of these more clear associations would be birth weight vs mean cigarettes per day (-0.1707) followed by birth weight vs pre-pregnancy weight (0.0340), although these associations are much weaker.
+
 ## 3.2 Method
+
+A simple linear regression analysis was performed to establish the association between birth weight as the primary response variable and cigarette use as the primary predictor. This is appropriate because the birth weight is a quantitative variable. Simple regression analysis was used to develop an association model and a prediction model with birth weight as the response variables and the remaining variables in this sample as the predictors, namely: gestation age, maternal age, average cigarettes smoked per day, maternal height, and maternal pre-pregnancy weight. Additionally, a new variable BMI was derived from existing maternal height and pre-pregnancy weight data and was included in the analysis, as well. The association model was developed using the "backward-elimination" method for efficiency purposes. The prediction model was developed using the parsimonious framework.
+
+The advantages of this strategy is that simple regression analysis is relatively easy to perform and is not hardware intensive. The findings from this analysis should also be easier to communicate and easier for the reader to interpret, compared to some methods. One potential limitation of this method would be that if the relationships between the variables in this sample are truly non-linear, this would diminish the value of the models produced by this analysis greatly.
 
 ## 3.3 Association Model
 
@@ -87,12 +186,45 @@ There is a strong likelihood that the small size and relative uniformity of the 
 
 # 4. Discussion
 
+\newpage
+
 # Appendix
 
-## Appendix A
+## Appendix A: R Output
 
-## Appendix B
+### Output A.1: Correlation Matrix
 
-## Appendix C
+```{r}
+df <- CHDS %>%
+  dplyr::select(bwt, gestwks, age, mnocig, mheight, mppwt, BMI)
+
+pcor(df)$estimate %>%
+  round(digits = 4)
+```
+
+
+## Appendix B: Plots and Figures
+
+### Figure B.1 Scatterplot Matrix
+
+```{r}
+pairs(~bwt+gestwks+age+mnocig+mheight+mppwt+BMI, data = CHDS, main = "")
+```
+
+### Figure B.2 Distributions of Sample Variables
+
+```{r}
+par(mfrow = c(3, 2))
+hist(CHDS$bwt, main = NULL, xlab = "Birth Weight (lbs)")
+hist(CHDS$gestwks, main = NULL, xlab = "Gestational Age (weeks)")
+hist(CHDS$age, main = NULL, xlab = "Maternal Age (years)")
+hist(CHDS$mnocig, main = NULL, xlab = "Maternal Smoking (cigarettes/day)")
+hist(CHDS$mheight, main = NULL, xlab = "Maternal Height (in)")
+hist(CHDS$mppwt, main = NULL, xlab = "Maternal Pre-Partum Weight (lbs)")
+```
+
+## Appendix C: Model Diagnostics
+
+\newpage
 
 # References
