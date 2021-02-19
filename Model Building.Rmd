@@ -29,6 +29,7 @@ library(describedata)
 #library(exact2x2)
 #library(ppcor)
 library(car)
+library(mediation)
 ```
 
 # Import Dataset
@@ -666,6 +667,23 @@ summary(lm.bwfull_60_age)
 The p-values are generally similar between both models.
 
 # Mediation analysis
+
+Based on our preliminary research, the possible relations between the variables in the dataset are depicted below:
+
+![DAG of possible mediators by BMI or gestational age](mediation_dag2.svg "DAG of possible mediators by BMI or gestational age")
+
+If BMI truly does influence gestational age then analysis for "intertwined" mediation would be required (e.g. propensity matching).  To see if this is required, we can test $H_0: \beta_1' = 0$, at significance $\alpha = 0.10$, where:
+
+$$gestational \; age = \beta_0' + \beta_1' \times BMI + \beta_2' \times light \; smoking + \beta_3' \times moderate \; smoking + \beta_4' \times heavy \; smoking + \epsilon$$
+
+The following R code creates a crude linear model and performs the hypothesis test:
+
+```{r}
+lm.ga <- lm(gestwks ~ BMI + SMK1 + SMK2 + SMK3, data = CHDS_60)
+summary(lm.ga)
+```
+
+The p-value is well above our pre-specified significance level, $\alpha = 0.10$; therefore the influence of BMI on gestational age can be ignored for the purposes of this mediation analysis.
 
 ## BMI
 
