@@ -103,7 +103,7 @@ anova(lm.bwfull)
 summary(lm.bwfull)
 ```
 
-We can see that including our four predictors of interest (gestational age, maternal age, maternal height, and maternal BMI) has changed our model parameters, $\beta_0$ - $\beta_3$ significantly.  Maternal height is not statistically significant, however we will include it as a political variable in the association model.
+We can see that including our four predictors of interest (gestational age, maternal age, maternal height, and gestational age) has changed our model parameters, $\beta_0$ - $\beta_3$ significantly.  Maternal height is not statistically significant, however we will include it as a political variable in the association model.
 
 Let:
 
@@ -695,6 +695,8 @@ Mediation by Gestational Age:
 
 ## BMI
 
+### Preliminary Analysis
+
 To show that mediation of the smoking-gestational weight relation by BMI is plausible we can test if there is a linear relation between smoking and BMI, and between BMI and gestational age.  For smoking and BMI:
 
 ```{r}
@@ -705,12 +707,89 @@ summary(lm.BMI)
 All smoking categories were found to have a significant linear relation with BMI a pre-specified significance, $\alpha = 0.10$.  We can test BMI and birth weight:
 
 ```{r}
-summary(lm.bwfull_60_age)
+summary(lm.bwfull_60)
 ```
 
 The p-value for the linear relation of BMI and gestational weight meets our pre-specified significance, $\alpha = 0.10$.
 
+### Light Smoking-BMI Mediation Analysis
+
+```{r}
+set.seed(Sys.time())
+med.BMI1 <- mediate(lm.BMI, lm.bwfull_60, treat = "SMK1", mediator = "BMI", boot = TRUE, sims = 500)
+summary(med.BMI1)
+```
+
+This simulation finds that ~23% of the effect of light smoking on birth weight is mediated by maternal BMI (slightly different values may be obtained upon subsequent simulations); furthermore, estimates for mediated effect, and proportion mediated meet pre-specified significance, $\alpha = 0.10$.
+
+### Moderate Smoking-BMI Mediation Analysis
+
+```{r}
+set.seed(Sys.time())
+med.BMI2 <- mediate(lm.BMI, lm.bwfull_60, treat = "SMK2", mediator = "BMI", boot = TRUE, sims = 500)
+summary(med.BMI2)
+```
+
+This simulation finds that ~6% of the effect of moderate smoking on birth weight is mediated by maternal BMI (slightly different values may be obtained upon subsequent simulations); furthermore, estimates for mediated effect, and proportion mediated meet pre-specified significance, $\alpha = 0.10$.
+
+### Heavy Smoking-BMI Mediation Analysis
+
+```{r}
+set.seed(Sys.time())
+med.BMI3 <- mediate(lm.BMI, lm.bwfull_60, treat = "SMK3", mediator = "BMI", boot = TRUE, sims = 500)
+summary(med.BMI3)
+```
+
+This simulation finds that ~5% of the effect of heavy smoking on birth weight is mediated by maternal BMI (slightly different values may be obtained upon subsequent simulations); furthermore, estimates for mediated effect, and proportion mediated meet pre-specified significance, $\alpha = 0.10$.
+
 ## Gestational Age
+
+### Preliminary Analysis
+
+To show that mediation of the smoking-gestational weight relation by BMI is plausible we can test if there is a linear relation between smoking and BMI, and between BMI and gestational age.  For smoking and BMI:
+
+```{r}
+lm.gestwks <- lm(gestwks ~ SMK1 + SMK2 + SMK3 + age, data = CHDS_60)
+summary(lm.gestwks)
+```
+
+Light and moderate smoking categories were found to have a significant linear relation with gestational age a pre-specified significance, $\alpha = 0.10$.  We can test the relation between gestational age and birth weight:
+
+```{r}
+summary(lm.bwfull_60)
+```
+
+The p-value for the linear relation of gestational age and gestational weight meets our pre-specified significance, $\alpha = 0.10$.
+
+### Light Smoking-Gestational Age Mediation Analysis
+
+```{r}
+set.seed(Sys.time())
+med.gestwks1 <- mediate(lm.gestwks, lm.bwfull_60, treat = "SMK1", mediator = "gestwks", boot = TRUE, sims = 500)
+summary(med.gestwks1)
+```
+
+This simulation finds that ~34% of the effect of light smoking on birth weight is possibly mediated by gestational age (slightly different values may be obtained upon subsequent simulations); estimates for mediated effect size meet pre-specified significance, $\alpha = 0.10$, however proportion mediated does not meet significance (p = 0.108).
+
+### Moderate Smoking-Gestational Age Mediation Analysis
+
+```{r}
+set.seed(Sys.time())
+med.gestwks2 <- mediate(lm.gestwks, lm.bwfull_60, treat = "SMK2", mediator = "gestwks", boot = TRUE, sims = 500)
+summary(med.gestwks2)
+```
+
+This simulation finds that ~18% of the effect of moderate smoking on birth weight is mediated by gestational age (slightly different values may be obtained upon subsequent simulations); furthermore, estimates for mediated effect, and proportion mediated meet pre-specified significance, $\alpha = 0.10$.
+
+### Heavy Smoking-Gestational Age Mediation Analysis
+
+```{r}
+set.seed(Sys.time())
+med.gestwks3 <- mediate(lm.gestwks, lm.bwfull_60, treat = "SMK3", mediator = "gestwks", boot = TRUE, sims = 500)
+summary(med.gestwks3)
+```
+
+This simulation finds that ~13% of the effect of heavy smoking on birth weight may be mediated by gestational age (slightly different values may be obtained upon subsequent simulations); however, estimates for mediated effect, and proportion mediated did not meet pre-specified significance, $\alpha = 0.10$.
 
 # References
 

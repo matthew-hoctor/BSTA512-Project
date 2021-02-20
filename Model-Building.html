@@ -2967,6 +2967,8 @@ summary(lm.ga)</code></pre>
 </div>
 <div id="bmi-2" class="section level2">
 <h2><span class="header-section-number">4.1</span> BMI</h2>
+<div id="preliminary-work" class="section level3">
+<h3><span class="header-section-number">4.1.1</span> Preliminary Work</h3>
 <p>To show that mediation of the smoking-gestational weight relation by BMI is plausible we can test if there is a linear relation between smoking and BMI, and between BMI and gestational age. For smoking and BMI:</p>
 <pre class="r"><code>lm.BMI &lt;- lm(BMI ~ SMK1 + SMK2 + SMK3 + age, data = CHDS_60)
 summary(lm.BMI)</code></pre>
@@ -3018,6 +3020,11 @@ summary(lm.BMI)</code></pre>
 ## Multiple R-squared:  0.274,  Adjusted R-squared:  0.2675 
 ## F-statistic: 42.26 on 6 and 672 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>The p-value for the linear relation of BMI and gestational weight meets our pre-specified significance, <span class="math inline">\(\alpha = 0.10\)</span>.</p>
+</div>
+<div id="section" class="section level3">
+<h3><span class="header-section-number">4.1.2</span> 2</h3>
+<pre class="r"><code>set.seed(Sys.time())</code></pre>
+</div>
 </div>
 <div id="gestational-age-2" class="section level2">
 <h2><span class="header-section-number">4.2</span> Gestational Age</h2>
