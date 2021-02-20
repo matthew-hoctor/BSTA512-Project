@@ -683,9 +683,32 @@ lm.ga <- lm(gestwks ~ BMI + SMK1 + SMK2 + SMK3, data = CHDS_60)
 summary(lm.ga)
 ```
 
-The p-value is well above our pre-specified significance level, $\alpha = 0.10$; therefore the influence of BMI on gestational age can be ignored for the purposes of this mediation analysis.
+The p-value is well above our pre-specified significance level, $\alpha = 0.10$; therefore the influence of BMI on gestational age can be ignored for the purposes of this mediation analysis.  Thus we can perform two separate mediation analyses for each proposed mediator.  The following DAGs depict the hypothesized relations:
+
+Mediation by BMI:
+
+![DAG of possible mediaton by BMI](BMI_mediation.svg "DAG of possible mediaton by BMI")
+
+Mediation by Gestational Age:
+
+![DAG of possible mediaton by gestational age](gestational_age_mediation.svg "DAG of possible mediaton by gestational age")
 
 ## BMI
+
+To show that mediation of the smoking-gestational weight relation by BMI is plausible we can test if there is a linear relation between smoking and BMI, and between BMI and gestational age.  For smoking and BMI:
+
+```{r}
+lm.BMI <- lm(BMI ~ SMK1 + SMK2 + SMK3 + age, data = CHDS_60)
+summary(lm.BMI)
+```
+
+All smoking categories were found to have a significant linear relation with BMI a pre-specified significance, $\alpha = 0.10$.  We can test BMI and birth weight:
+
+```{r}
+summary(lm.bwfull_60_age)
+```
+
+The p-value for the linear relation of BMI and gestational weight meets our pre-specified significance, $\alpha = 0.10$.
 
 ## Gestational Age
 
