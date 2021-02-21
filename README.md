@@ -1,3 +1,12 @@
+# Links
+
+* [Project References](https://www.zotero.org/groups/2774873/bsta512_-_group_project/library)
+* [Preliminary Analysis](https://matthew-hoctor.github.io/BSTA512-Project/Preliminary-Analysis.html)
+* [Association Model](https://matthew-hoctor.github.io/BSTA512-Project/Model-Building.html#2_Association_Model)
+* [Prediction Model](https://matthew-hoctor.github.io/BSTA512-Project/Model-Building.html#3_Prediction_Model_Building_by_Backward-Elimination)
+* [Mediation Analysis](https://matthew-hoctor.github.io/BSTA512-Project/Model-Building.html#4_Mediation_analysis)
+* [Final Report](https://github.com/matthew-hoctor/BSTA512-Project/blob/main/BSTA-512-Midterm-Project-Hoctor-Hopkins.pdf)
+
 # Getting Started
 
 **Read carefully project outline document to see what you need to do with your project.**
