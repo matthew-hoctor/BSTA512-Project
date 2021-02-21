@@ -267,23 +267,25 @@ The R^2^ value for this prediction model is 0.2675 (Output A.15), which is very 
 
 Based on preliminary research, the possible relations between the variables in the dataset are depicted below:
 
+![DAG of possible mediators by BMI or gestational age](mediation_dag2.svg "DAG of possible mediators by BMI or gestational age")
+
 ![DAG of possible mediators by BMI or gestational age](mediation_dag2.svg "DAG of possible mediators by BMI or gestational age"
 
-Regression of gestational age on BMI provides no significant evidence for an association (p > 0.10; Output D.1), suggesting that "intertwined" mediation can be ignored for this analysis (e.g. propensity matching) and that mediation analysis can be performed separately for each of the two potential mediatiors (gestational age and BMI). The following DAGs depict the hypothesized relations:
+Regression of gestational age on BMI provides no significant evidence for an association (p > 0.10; Output D.1), suggesting that "intertwined" mediation can be ignored for this analysis and that mediation analysis can be performed separately for each of the two potential mediators (gestational age and BMI). The following DAGs depict the hypothesized relations:
 
 Mediation by BMI:
 
-![DAG of possible mediaton by BMI](BMI_mediation.svg "DAG of possible mediaton by BMI"
+![DAG of possible mediation by BMI](BMI_mediation.svg "DAG of possible mediation by BMI"
 
 Mediation by Gestational Age:
 
-![DAG of possible mediaton by gestational age](gestational_age_mediation.svg "DAG of possible mediaton by gestational age"
+![DAG of possible mediation by gestational age](gestational_age_mediation.svg "DAG of possible mediation by gestational age"
 
 **Pre-Pregnancy BMI** Linear regression of SDP on pre-pregnancy BMI and of birth weight on pre-pregnancy BMI shows significant relationships (p < 0.01 in all cases, see Outputs D.2 and D.3), suggesting the mediation of the smoking-gestational weight relation by BMI is plausible. 
 
 Simulations from Outputs D.4, D.5, and D.6 show evidence that ~23%, ~6%, and ~5% of the effect on birth weight from light smoking, moderate smoking, and heavy smoking, respectively, is mediated by pre-pregnancy BMI (slightly different values may be obtained upon subsequent simulations). Estimates for mediated effect and proportion mediated met significance thresholds (P > 0.10).
 
-**Gestational Age** Output D.7 shows evidence that light and moderate smoking categories have a significant association with gestational age (P < 0.10) and Output D.8 shows evidence for a significant association between birth weight and gestational age. These findings suggest that the mediation of the smoking-gestational weight relation by BMI is plausible. 
+**Gestational Age** Output D.7 shows evidence that light and moderate smoking categories have a significant association with gestational age (P < 0.10) and output D.8 shows evidence for a significant association between birth weight and gestational age. These findings suggest that the mediation of the smoking-gestational weight relation by BMI is plausible. 
 
 Simulations from D.9, D.10, and D.11 show evidence that ~34%, ~18%, and ~13% of the effect on birth weight from light smoking, moderate smoking, and heavy smoking, respectively, is mediated by gestational age (slightly different values may be obtained upon subsequent simulations). Estimates for mediated effect size met the significance threshold (P < 0.10) for light and moderate smokers, but not for heavy smokers. Estimates for proportion mediated met significance thresholds (P < 0.10) for moderate smokers only.
 
