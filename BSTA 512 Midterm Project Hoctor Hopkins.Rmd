@@ -7,6 +7,8 @@ output:
   pdf_document:
     toc: true
 
+classoption: fleqn
+
 bibliography: references.bib
 nocite: '@*'
 
@@ -40,12 +42,9 @@ library(gridExtra)
 library(kableExtra)
 library(describedata)
 library(skimr)
-#library(readxl)
-#library(CarletonStats)
-#library(pwr)
-#library(BSDA)
-#library(exact2x2)
 library(ppcor)
+library(car)
+library(mediation)
 ```
 
 ```{r data, include=FALSE}
@@ -55,20 +54,20 @@ CHDS <- read.csv("CHDS.csv")
 
 ```{r variables, include=FALSE}
 # Creating BMI variable and categorical variable for smoking categories =======
-CHDS <- CHDS %>%
-  mutate(
-    SMK_cat = case_when(
-      mnocig == 0 ~ "0",
-      mnocig > 0 & mnocig <= 10 ~ "1",
-      mnocig > 10 & mnocig <= 20 ~ "2",
-      mnocig > 20 ~ "3"),
-    SMK1 = ifelse(SMK_cat == "1", 1, 0),
-    SMK2 = ifelse(SMK_cat == "2", 1, 0),
-    SMK3 = ifelse(SMK_cat == "3", 1, 0),
-    BMI = 703 * CHDS$mppwt / ((CHDS$mheight)^2))
+CHDS$BMI <- 703 * CHDS$mppwt / ((CHDS$mheight)^2)
+
+CHDS$SMK_cat <-
+  ifelse(CHDS$mnocig == 0, 0,
+  ifelse(CHDS$mnocig < 10, 1,
+  ifelse(CHDS$mnocig < 20, 2, 
+  3)))
+
+CHDS$SMK1 <- ifelse(CHDS$SMK_cat == 1, 1, 0)
+CHDS$SMK2 <- ifelse(CHDS$SMK_cat == 2, 1, 0)
+CHDS$SMK3 <- ifelse(CHDS$SMK_cat == 3, 1, 0)
 ```
 
-******************************************************************************
+*****************************************************************************
 
 # Summary
 
@@ -78,7 +77,7 @@ The relationship between maternal prenatal smoking and low birth weight (LBW) is
 
 However, although the association of maternal smoking with LBW is well-documented and consistent [@ventura_trends_2003], the mechanism by which it contributes to LBW and how this mechanism might be affected by other factors are not well understood. For example, the risk of LBW from prenatal smoking has been demonstrated to be significantly reduced among overweight and obese mothers [@la_merrill_prepregnancy_2011]. But it is unclear how these mechanisms interact with one another, as maternal pre-pregnancy BMI is itself implicated as a predictor for birth-weight [@gul_pre-pregnancy_2020]. This relationship is further complicated by the fact that one of the primary outcomes that makes LBW a topic of interest for researchers, perinatal death, is not always associated with LBW in the way that it might seem that it should --- it was demonstrated by @yerushalmy_relationship_2014 that among LBW infants, maternal smoking was actually associated with a decreased risk of perinatal death. @ebrahim_yerushalmy_2014 proposed that these seemingly contradictory findings, often referred to as the "Birth weight Paradox" [@vanderweele_commentary_2014]. This would reasonably explain Yerushalmy's finding if the association of this phenotype with maternal smoking were strong enough such that LBW infants with smoking mothers were much more likely to have this phenotype compared to others.
 
-The mechanisms that might contribute to these "other" phenotypes of LBW are not entirely clear, although existing work does point toward some reasonable candidates to start with. @vanderweele_commentary_2014 proposes that the increase in mortality for LBW infants with non-smoking mothers compared to smoking mothers may be that there is a much more insidious root cause for LBW in non-smoking mothers, such as malnutrition. There is some support for malnutrition as a potential cause for LBW, as it has been demonstrated there is a higher risk of pregnancies resulting in LBW in situations of inadequate social support, such as in low-income households (??Gould, Davey, & Leroy, 1989) and in teenage pregnancies (??Fraser et al., 1995). As noted above, low pre-pregnancy BMI has been noted to be associated with LBW [@gul_pre-pregnancy_2020], as well. These findings suggest that evaluating the effects that BMI has on the relationship between maternal smoking and LBW may help to clarify potential directions for future work related to the mechanisms underlying LBW and infant mortality.
+The mechanisms that might contribute to these "other" phenotypes of LBW are not entirely clear, although existing work does point toward some reasonable candidates to start with. @vanderweele_commentary_2014 proposes that the increase in mortality for LBW infants with non-smoking mothers compared to smoking mothers may be that there is a much more insidious root cause for LBW in non-smoking mothers, such as malnutrition. There is some support for malnutrition as a potential cause for LBW, as it has been demonstrated there is a higher risk of pregnancies resulting in LBW in situations of inadequate social support, such as in low-income households [@gould_socioeconomic_1989] and in teenage pregnancies [@fraser_association_1995]. As noted above, low pre-pregnancy BMI has been noted to be associated with LBW [@gul_pre-pregnancy_2020], as well. These findings suggest that evaluating the effects that BMI has on the relationship between maternal smoking and LBW may help to clarify potential directions for future work related to the mechanisms underlying LBW and infant mortality.
 
 # 2. Study Background
 
@@ -90,17 +89,17 @@ The sample used for this analysis was taken from the Child Health and Developmen
 
 > The interviewed group comprised some 15,000 pregnancies. This study is based on single live born infants among the whites and the blacks. The numbers of members in the other ethnic groups in the sample were too small and were therefore left out. The study is based on 9,793 pregnancies among the whites and 3,290 among the blacks
 
-A key point to note from the description above is that the majority of pregnancies from the data set involve middle-class women who have established healthcare. This will be an important limitation going forward, because low social status has been shown to be associated with both LBW (Gould, Davey, & Leroy, 1989) and, to some extent, with BMI (Basto-Abreu et al., 2017). There is the possibility that there are aspects of the relationship between maternal smoking and LBW that would not be apparent from this sample simply because it has poor representation of women with low socio-economic status or women who are not established with a regular medical provider. With that being said, however, this analysis is still expected to provide some value in the sense that it may provide insight into potential avenues that might be taken. Potentially, this analysis could reveal important attributes of the relationship between maternal smoking and factors such as pre-pregnancy BMI, maternal height, or maternal age, which could then be evaluated further in future work.
+A key point to note from the description above is that the majority of pregnancies from the data set involve middle-class women who have established healthcare. This will be an important limitation going forward, because low social status has been shown to be associated with both LBW [@gould_socioeconomic_1989] and, to some extent, with BMI [@basto-abreu_relationship_2018]. There is the possibility that there are aspects of the relationship between maternal smoking and LBW that would not be apparent from this sample simply because it has poor representation of women with low socio-economic status or women who are not established with a regular medical provider. With that being said, however, this analysis is still expected to provide some value in the sense that it may provide insight into potential avenues that might be taken. Potentially, this analysis could reveal important attributes of the relationship between maternal smoking and factors such as pre-pregnancy BMI, maternal height, or maternal age, which could then be evaluated further in future work.
 
 Due to limitations of scope, this analysis was performed with a reduced sample of 680 white women from the source data set. Many of the variables described by Yerushalmy in the quote above, such as alcohol use or contraceptive methods, were not examined. Instead, the focus of this analysis is on 6 variables from the @yerushalmy_relationship_2014 study: birth-weight as the response variable; and gestational age, maternal age, mean number of cigarettes smoked per day by the mother, maternal height, and maternal pre-pregnancy weight as the predictors. Additionally, pre-pregnancy BMI was derived from maternal height and pre-pregnancy weight and examined as well. Each of these variables is discussed briefly below:
 
-**Birth weight** This is the the weight of the infant at the time of birth, in pounds. This is the response variable for this analysis and, as noted previously, this is of interest because LBW has been associated with poor health outcomes, such as infant mortality (Martin et al., 2013). 
+**Birth weight** This is the the weight of the infant at the time of birth, in pounds. This is the response variable for this analysis and, as noted previously, this is of interest because LBW has been associated with poor health outcomes, such as infant mortality [@martin_births:_2015]. 
 
-**Mean number of cigarettes smoked per day** is split into four categories, for levels of smoking: light (< 10 cigarettes per day), moderate (10 - 20 cigarettes per day), and heavy (> 20 cigarettes per day) smokers. This is the primary predictor of interest in this analysis, since, as described above, it has been demonstrated in multiple studies in the past that maternal smoking is associated with LBW [@zhang_maternal_2019; @parascandola_commentary_2014; @yerushalmy_relationship_2014].  These category thresholds were chosen somewhat arbitrarily, although it should be noted that consistency in definitions for smoking severity has been poor. For example, Husten (2009) reports that measures such as thresholds of <4, <10, <15, and <20 have all been used to classify "light" smoking. Husten (2009) further points out that cigarettes smoked per day may not necessarily be the best proxy for toxin exposure levels, due to reasons such as the differences in toxin levels in different tobacco products and the nonlinear relationship of cigarette consumption with disease risk in some cases, among others. For these reasons, levels of smoking severity were chosen out of convenience in providing separation of smoking groups, with the intention of potentially identifying general trends and without interpreting too heavily in what significant differences between these levels might mean. It should be noted that the effects of other potential exposures, such as paternal smoking during the pregnancy, were not assessed in this analysis.
+**Mean number of cigarettes smoked per day** is split into four categories, for levels of smoking: light (< 10 cigarettes per day), moderate (10 - 20 cigarettes per day), and heavy (> 20 cigarettes per day) smokers. This is the primary predictor of interest in this analysis, since, as described above, it has been demonstrated in multiple studies in the past that maternal smoking is associated with LBW [@zhang_maternal_2019; @parascandola_commentary_2014; @yerushalmy_relationship_2014].  These category thresholds were chosen somewhat arbitrarily, although it should be noted that consistency in definitions for smoking severity has been poor. For example, @husten_how_2009 reports that measures such as thresholds of <4, <10, <15, and <20 have all been used to classify "light" smoking. husten_how_2009 further points out that cigarettes smoked per day may not necessarily be the best proxy for toxin exposure levels, due to reasons such as the differences in toxin levels in different tobacco products and the nonlinear relationship of cigarette consumption with disease risk in some cases, among others. For these reasons, levels of smoking severity were chosen out of convenience in providing separation of smoking groups, with the intention of potentially identifying general trends and without interpreting too heavily in what significant differences between these levels might mean. It should be noted that the effects of other potential exposures, such as paternal smoking during the pregnancy, were not assessed in this analysis.
 
-**Gestational age** is a continuous variable, measured in weeks. This is a secondary predictor variable for this analysis and is of interest in the study because, as noted by Engle (2006), birth weight is often associated with gestational age but can differ in clinically-significant ways. This suggests that controlling for gestational age may reveal more about the biological mechanisms underlying the relationships of birth weight with the other variables in this study than if birth weight were examined without gestational age.
+**Gestational age** is a continuous variable, measured in weeks. This is a secondary predictor variable for this analysis and is of interest in the study because, as noted by @engle_recommendation_2006, birth weight is often associated with gestational age but can differ in clinically-significant ways. This suggests that controlling for gestational age may reveal more about the biological mechanisms underlying the relationships of birth weight with the other variables in this study than if birth weight were examined without gestational age.
 
-**Maternal age** is is a continuous variable, measured in years. This is also a secondary predictor of interest in this analysis, although the relationship that maternal age has with birth weight is more complex. Dennis and Mollborn (2014) discuss how pregnancies at both ends of the spectrum for maternal age are associated with an increased risk for LBW. However, they also report that there are a variety of other non-biological factors involved and that "LBW disparities by maternal age are a complex product of socioeconomic disadvantage and current social and behavioral factors, such that LBW risk does not operate uniformly by race/ethnicity or maternal age." (Mollborn & Dennis, 2014). Similarly, Wang et al. (2020) found that the relationship between maternal age and birthweight is non-linear and that the risk of LBW increased both with very young and very old maternal age. For these reasons, including maternal age in the analysis can serve to verify past results and also provide another means for observing how relationships with the response variable change when other predictors are present.
+**Maternal age** is is a continuous variable, measured in years. This is also a secondary predictor of interest in this analysis, although the relationship that maternal age has with birth weight is more complex. @dennis_young_2013 discuss how pregnancies at both ends of the spectrum for maternal age are associated with an increased risk for LBW. However, they also report that there are a variety of other non-biological factors involved and that "LBW disparities by maternal age are a complex product of socioeconomic disadvantage and current social and behavioral factors, such that LBW risk does not operate uniformly by race/ethnicity or maternal age." [@dennis_young_2013] Similarly, @wang_changing_2020 found that the relationship between maternal age and birthweight is non-linear and that the risk of LBW increased both with very young and very old maternal age. For these reasons, including maternal age in the analysis can serve to verify past results and also provide another means for observing how relationships with the response variable change when other predictors are present.
 
 **Maternal height** is a continuous variable, measured in inches. This is a secondary variable of interest for this analysis because maternal height has been shown to have a direct association with LBW, with increasing risk for LBW as height decreases, even in cases where socio-economic status is thought not to be a factor [@inoue_association_2016]. This would suggest that there could be a biological component in LBW independent of malnutrition or social status. Including this variable in the study is useful because it serves to motivate the biological argument for LBW not explained by maternal smoking.
 
@@ -112,13 +111,14 @@ There is a strong likelihood that the small size and relative uniformity of the 
 
 # 3. Statistical Analysis
 
-This analysis has two primary aims: (1) to evaluate the effects of BMI on the relationship between maternal smoking and birth weight; and (2) to develop a model to predict birth weight based on factors such as smoking status, maternal BMI, and age. The primary hypothesis that will be evaluated during this analysis is that pre-pregnancy BMI is a confounder for the relationship between birthweight and smoking status. A major reason BMI is of interest in this analysis is due to its usefulness as a diagnostic tool for evaluating malnutrition, which can be otherwise difficult to assess (Cederholm et al., 2015). If a high BMI were to significantly mitigate the risk of LBW from maternal smoking compared to low BMI, this may highlight a potential biological mechanism for LBW and infant mortality that could be evaluated in future work. The motivation behind the second aim in this analysis would be to provide validation for existing methods of predicting LBW based on maternal characteristics, such as maternal pre-pregnancy BMI [@gul_pre-pregnancy_2020], maternal height [@inoue_association_2016], and smoking status (Knopik et al., 2016).
+This analysis has two primary aims: (1) to evaluate the effects of BMI on the relationship between maternal smoking and birth weight; and (2) to develop a model to predict birth weight based on factors such as smoking status, maternal BMI, and age. The primary hypothesis that will be evaluated during this analysis is that pre-pregnancy BMI is a confounder for the relationship between birthweight and smoking status. A major reason BMI is of interest in this analysis is due to its usefulness as a diagnostic tool for evaluating malnutrition, which can be otherwise difficult to assess [@cederholm_diagnostic_2015]. If a high BMI were to significantly mitigate the risk of LBW from maternal smoking compared to low BMI, this may highlight a potential biological mechanism for LBW and infant mortality that could be evaluated in future work. The motivation behind the second aim in this analysis would be to provide validation for existing methods of predicting LBW based on maternal characteristics, such as maternal pre-pregnancy BMI [@gul_pre-pregnancy_2020], maternal height [@inoue_association_2016], and smoking status [@knopik_maternal_2016].
 
 The analysis was accomplished in three major steps:
 
 * A preliminary exploratory analysis was performed, in order to identify any basic relationships between the variables in the sample.
 * An association model was built using birth weight as the primary response variable and cigarettes smoking as the primary predictor. Multiple relationships were examined during this step, and specifically the role of BMI as a confounder for the relationship between maternal smoking and birth weight was examined.
-* A prediction model was then build, again with birth weight as the primary response variable and maternal smoking as the primary predictor.
+* A prediction model was then built, again with birth weight as the primary response variable and maternal smoking as the primary predictor.
+* Last, a mediation analysis was performed to determine whether any of the secondary predictors might have a mediating effect on the relationship between birth weight and maternal smoking.
 
 ## 3.1 Exploratory Analysis
 
@@ -135,7 +135,7 @@ skim_without_charts(CHDS) %>%
     numeric.p50, 
     numeric.p75, 
     numeric.p100) %>%
-  slice(index = c(2:7, 11)) %>%
+  slice_head(n = 7) %>%
   rename(
     "Variable" = skim_variable,
     "Mean" = numeric.mean,
@@ -169,13 +169,13 @@ skim_without_charts(CHDS) %>%
 
 **Maternal age** is a continuous ratio variable that is measured in years. Figure B.2 shows that this variable is skewed to the right.
 
-**Cigarettes smoked per day** is a continuous ratio variable (since it is an average). From Figure B.2, it can be seen that the distribution of this variable is very asymmetric and there appear to be multiple regions around which the data points tend to be concentrated. The most salient of these is around 0 cigarettes per day, which represents non-smokers. This was one of the primary reasons that cigarette-smoking was turned into a categorical variable, as there would be good reason to believe that there are significant differences between the very large non-smoker group and all of the other data points in the sample, particularly when considering the response variable, birth weight. As noted in the previous section, the thresholds chosen for this variable were 0-10, 10-20, and >20 cigarettes per day. These thresholds were chosen partially out of convenience, although Husten (2009) notes that both <10 and <20 cigarettes per day have been used to designate "light" smoking by researchers in the past (it may be helpful to think of the 0-10 and 10-20 thresholds as "light" and "medium-light" for this reason).
+**Cigarettes smoked per day** is a continuous ratio variable (since it is an average). From Figure B.2, it can be seen that the distribution of this variable is very asymmetric and there appear to be multiple regions around which the data points tend to be concentrated. The most salient of these is around 0 cigarettes per day, which represents non-smokers. This was one of the primary reasons that cigarette-smoking was turned into a categorical variable, as there would be good reason to believe that there are significant differences between the very large non-smoker group and all of the other data points in the sample, particularly when considering the response variable, birth weight. As noted in the previous section, the thresholds chosen for this variable were 0-10, 10-20, and >20 cigarettes per day. These thresholds were chosen partially out of convenience, although @husten_how_2009 notes that both <10 and <20 cigarettes per day have been used to designate "light" smoking by researchers in the past (it may be helpful to think of the 0-10 and 10-20 thresholds as "light" and "medium-light" for this reason).
 
 **Maternal height** is a continuous ratio variable, measured in inches. Figure B.2 shows that this variable is reasonably symmetric and approximately normal.
 
 **Maternal pre-pregnancy weight** is a continuous ratio variable, measured in lbs. Figure B.2 shows that this variable is skewed to the right.
 
-Figure B.1 shows a scatter-plot matrix for each of the variables described in this analysis. This representation shows no obvious departure from linearity for any of the variables in this sample. Some of the variables appear to lack any obvious association at all, such as between BMI and age. Other pairs do seem to more clearly show a possible association, such as birth weight vs gestation age or pre-pregnancy weight and BMI. However, neither of these findings are surprising, as it has been noted by authors such as Engle (2006) that birth weight and gestational age are associated with one another and BMI was calculated directly from pre-pregnancy weight. These findings suggest that if any associations are found in this analysis, they are likely to be weak.
+Figure B.1 shows a scatter-plot matrix for each of the variables described in this analysis. This representation shows no obvious departure from linearity for any of the variables in this sample. Some of the variables appear to lack any obvious association at all, such as between BMI and age. Other pairs do seem to more clearly show a possible association, such as birth weight vs gestation age or pre-pregnancy weight and BMI. However, neither of these findings are surprising, as it has been noted by authors such as @engle_recommendation_2006 that birth weight and gestational age are associated with one another and BMI was calculated directly from pre-pregnancy weight. These findings suggest that if any associations are found in this analysis, they are likely to be weak.
 
 The correlation matrix from Output A.1 shows similar findings: there are a few pairs, such as birth weight vs gestation age (0.4212) and pre-pregnancy weight vs maternal height (0.9925), that are highly correlated with one another, but otherwise the correlations are much weaker. Other notable associations outside of these more clear associations would be birth weight vs mean cigarettes per day (-0.1707) followed by birth weight vs pre-pregnancy weight (0.0340), although these associations are much weaker.
 
@@ -185,15 +185,125 @@ A simple linear regression analysis was performed to establish the association b
 
 The advantages of this strategy is that simple regression analysis is relatively easy to perform and is not hardware intensive. The findings from this analysis should also be easier to communicate and easier for the reader to interpret, compared to some methods. One potential limitation of this method would be that if the relationships between the variables in this sample are truly non-linear, this would diminish the value of the models produced by this analysis greatly.
 
+BMI and categorical variables for maternal smoking were derived according to the following equations:
+
+$$
+\textrm{BMI} = 703 * \textrm{mppwt} / \textrm{mheight}^2 
+$$
+
+$$
+SMK_1 =
+\left\{\begin{matrix}
+1 & ~ \textrm{if} ~~ 0 < \textrm{mnocig} \leq 10 \\ 
+0 & ~ \textrm{otherwise} 
+\end{matrix}\right.
+$$
+
+$$
+SMK_2 =
+\left\{\begin{matrix}
+1 & ~ \textrm{if} ~~ 10 < \textrm{mnocig} \leq 20 \\ 
+0 & ~ \textrm{otherwise} 
+\end{matrix}\right.
+$$
+
+$$
+SMK_3 =
+\left\{\begin{matrix}
+1 & ~ \textrm{if} ~~ \textrm{mnocig} > 20 \\ 
+0 & ~ \textrm{otherwise} 
+\end{matrix}\right.
+$$
+
+where *mmpwt* is mean pre-pregnancy weight, *mheight* is maternal height, and *mnocig* is the mean number of cigarettes smoked per day.
+
 ## 3.3 Association Model
+
+First, a crude association model was developed for the response variable birth weight and the primary predictor mean number of cigarettes per day. There was highly statistically significant evidence (P < 0.001, see Output A.2) that this model provides for a better fit of the data compared to the mean value for birth weight alone. These findings suggest that a crude model such as this one would be appropriate for this sample.
+
+Next, an analysis was performed for the remaining variables to determine if any qualify as effect modifiers or confounders. This process was conducted step-by-step with each variable evaluated against the crude model, shown below for each variable.
+
+**Gestational Age** There was no significant evidence to support the inclusion of gestational age as an effect modifier for the relationship between birth weight and maternal smoking (p > 0.10 for all three interaction terms; see Output A.3), but there was sufficient support to include gestational age as a confounder (>10% change in slope for all three smoking terms; see Output A.4).
+
+**Maternal Age** There was no evidence supporting the inclusion of maternal age as an effect modifier for the relationship between birth weight and maternal smoking (p > 0.10 for all three interaction terms; see Output A.5) and insufficient support to include it as a confounder (<10% change in slope for all smoking terms, see Output A.6).
+
+**Maternal Height** There was no evidence to support the inclusion of maternal age as an effect modifier (p > 0.10 for all three interaction terms; see Output A.7) and no support for maternal age as a confounder in the model (<10% change in slope for all smoking terms; see Output A.8).
+
+**Maternal Pre-Pregnancy BMI** There was no evidence to support the inclusion of maternal age as an effect modifier (P > 0.10 for all three interaction terms; see Output A.9), but there was support for the inclusion of BMI as a confounder for the relationship between maternal smoking and birth weight (>10% change in one slope term for smoking with inclusion of BMI; see Output A.10).
+
+Therefore, the full association model can be described by the following equation:
+
+$$\hat{BWT} = -2.90 - 0.21 * \hat{\textrm{SMK1}} - 0.61 * \hat{\textrm{SMK2}} - 0.39 * \hat{\textrm{SMK3}} + 0.25 * \hat{\textrm{gestwks}} + 0.04 * \hat{\textrm{BMI}}$$
+
+This model satisfies all of the assumptions for regression. Examination of model diagnostic Figures C.1 and C.2 reveals no overt overt change in variance with increasing $\hat{Y}$, suggesting that the homoscedasticity assumption is met. Furthermore, the residuals do not seem to be asymmetrically distributed, skewed, or multi-modal in any way, suggesting that the normality assumption is also met. Examination of Q-Q plots shown in Figures C.3, C.4, and C.5 also support the normality assumption, with the majority of points consistent with a straight line and only a handful of points at the extremes possibly signaling a deviation from normality (Shapiro-Wilk testing would not be appropriate in this situation because of the large sample size). The reference cell coding approach for creating dummy variables for smoking category ensures that the linearity assumption is met.
+
+**Outliers** An assessment of potential outliers was assessed using Cook's Distance, which is shown in Output C.6. None of the data is implausible, with the exception of a 48 week gestational age.  According to @hoffman_comparison_2008, a gestational age of 48 weeks is in the 99.9th percentile of births. A new data set with this outlier removed was created. In comparison of Output A.12 with A.11, it can be seen that there is only slight changes to the slope coefficients after this was performed.
+
+**Colinearity** Colinearity was then checked for using a variance inflation factor (VIF) assessment, which is shown in Output C.7. This revealed no factors over 10, which does not suggest there is any significant colinearity in the model.
+
+**Confidence Intervals** Output A.13 shows confidence intervals for the full vs reduced association models produced by this analysis. These findings show that the confidence intervals for slightly narrower for the full model compared to the reduced model.
+
+From comparison of the crude model in Output A.2 and the adjusted full model from Output A.11, it can be seen that the adjusted R^2^ has increased from 0.05432 for the crude model to 0.234 for the full model. This suggests there was improvement in the fit of the regression of birth weight on maternal smoking when gestational age and pre-pregancy BMI are included as confounders. These findings provide evidence for a confounding effect from both BMI and gestational age, which suggests that at least some of the association between maternal smoking and birth weight is distorted by maternal smoking and gestational age. This could be due to some causal relationship between these variables or it could be due to some other combination of factors not examined here.
+
+This model was build by starting with a crude model and then separately assessing whether additional predictors should be considered as effect modifiers or confounders. The main advantage of this method was that it is simple and is not time-consuming. A potential drawback from this, however, is that it neglects many of the possible interactions and relationships between the different variables in the study that might not be apparent when only checked against the crude model. However, such an analysis would require extensive examination of interactions between variables and would likely be too cumbersome for the scope of this project.
 
 ## 3.4 Prediction Model
 
+A prediction model was built using a backward-elimination procedure, starting with a complete model containing all variables from the study (except for maternal pre-pregnancy weight, again due to concerns about colinearity with BMI). This model was built over two iterations, shown in Outputs A.14 and A.15. Maternal age was removed during the first step, since it was the least significant term in the model and had an insignificant slope coefficient (P > 0.10). During the second step, no variables were removed since all slope coefficients were significant (P < 0.10). Although the coefficient for the first smoking term had the highest P-value during this step, it is still considered significant (0.01 < P < 0.10). Additionally, this variable will be left in the model due to its role as a primary predictor variable.
+
+This resulted the following model:
+
+$$\hat{BWT} = -8.16 - 0.18 * \hat{\textrm{SMK1}} - 0.55 * \hat{\textrm{SMK2}} - 0.41 * \hat{\textrm{SMK3}} + 0.24 * \hat{\textrm{gestwks}} + 0.04 * \hat{\textrm{BMI}} + 0.08 \hat{\textrm{mheight}}$$
+
+By inspection, it can be seen that this procedure has produced almost the same model as that produced from the association model-building method. Analysis of residuals in Figures C.8 and C.9 shows that there is no clear change in variance as the value of birth weight changes, suggesting that this model meets the assumption of homoscedasticity. There is also no clear departure from normality in either of these plots. Again, since smoking status was split into dummy variables, the linearity assumption has also been met. VIF assessment does not suggest there is any significant degree of colinearity (output C.7). Confidence intervals for this model are shown in Output A.15 --- the confidence intervals for this model appear to be about the same width as those for the association model.
+
+These findings suggest that a baby born at the average gestation time to a non-smoking mother of average height and weight is predicted to be $-8.16 + 39.77*0.24 + 0.04 *21.47 + 0.08 * 64.43 = 7.36$ lbs. Gestation age has by far the most profound effect on this factor, with a coefficient of 0.24 lbs per week gestation, which is reasonable since it has been well established that premature babies have a higher risk of LBW. Smaller effects are seen from pre-pregnancy BMI and maternal height, which result in a change of 0.08 lbs per unit of pre-pregnancy BMI and 0.08 lbs per inch in the mother's height. When the mother smokes, this model predicts a loss of about 0.18 lbs birth weight if the mother is a light smoker (< 10 cigarettes per day) or a loss of 0.41 - 0.55 lbs birth weight if the mother smokes more than that. Since the threshold for LBW is about 5.5 lbs, this suggests that the mother would have to have some combination of smoking and either short stature or low BMI to explain how a newborn might have a weight at this threshold.
+
+The R^2^ value for this prediction model is 0.2675 (Output A.15), which is very slightly higher than the R^2^ of 0.234 produced by the association model process. This suggests that this prediction model explains slightly more of the variance in the response variable birth weight compared to the association model produced previously. However, these differences are not large enough to be of particular concern that the association model would make for an inferior fit of the data compared to this model, and since the association model is made up of one fewer variable, it may be reasonable to choose that model over this one for ease of interpretation. It may be that the effect of maternal height is just not significant enough that it would be noticeable in the stepwise procedure used in the association section to check for confounding/effect modification but was significant enough not to be removed from the backward elimination procedure used to create the prediction model. This is reasonable from a logical standpoint, as well, since the association model already includes BMI, which does account for height to some degree. The slight increase in R^2^ value in the prediction model compared to the association model could then be explained by the small degree of variance that is explained better by the direct relationship with height rather than the indirect relationship accounted for by BMI.
+
+## 3.5 Mediation Analysis
+
+Based on preliminary research, the possible relations between the variables in the dataset are depicted below:
+
+![DAG of possible mediators by BMI or gestational age](mediation_dag2.svg "DAG of possible mediators by BMI or gestational age"
+
+Regression of gestational age on BMI provides no significant evidence for an association (p > 0.10; Output D.1), suggesting that "intertwined" mediation can be ignored for this analysis (e.g. propensity matching) and that mediation analysis can be performed separately for each of the two potential mediatiors (gestational age and BMI). The following DAGs depict the hypothesized relations:
+
+Mediation by BMI:
+
+![DAG of possible mediaton by BMI](BMI_mediation.svg "DAG of possible mediaton by BMI"
+
+Mediation by Gestational Age:
+
+![DAG of possible mediaton by gestational age](gestational_age_mediation.svg "DAG of possible mediaton by gestational age"
+
+**Pre-Pregnancy BMI** Linear regression of maternal smoking on pre-pregnancy BMI and of birth weight on pre-pregnancy BMI shows significant relationships (p < 0.01 in all cases, see Outputs D.2 and D.3), suggesting the mediation of the smoking-gestational weight relation by BMI is plausible. 
+
+Simulations from Outputs D.4, D.5, and D.6 show evidence that ~23%, ~6%, and ~5% of the effect on birth weight from light smoking, moderate smoking, and heavy smoking, respectively, is mediated by pre-pregnancy BMI (slightly different values may be obtained upon subsequent simulations). Estimates for mediated effect and proportion mediated met significance thresholds (P > 0.10).
+
+**Gestational Age** Output D.7 shows evidence that light and moderate smoking categories have a significant association with gestational age (P < 0.10) and Output D.8 shows evidence for a significant association between birth weight and gestational age. These findings suggest that the mediation of the smoking-gestational weight relation by BMI is plausible. 
+
+Simulations from D.9, D.10, and D.11 show evidence that ~34%, ~18%, and ~13% of the effect on birth weight from light smoking, moderate smoking, and heavy smoking, respectively, is mediated by gestational age (slightly different values may be obtained upon subsequent simulations). Estimates for mediated effect size met the significance threshold (P < 0.10) for light and moderate smokers, but not for heavy smokers. Estimates for proportion mediated met significance thresholds (P < 0.10) for moderate smokers only.
+
+These findings provide evidence that both BMI and gestational age are independent mediators for the relationship between maternal smoking and birth weight.
+
 # 4. Discussion
+
+The purpose of this analysis was to build association models and prediction models for the relationship of birth weight with maternal smoking, as well as other predictor variables. It was found that there was a significant linear relationship between birth weight and maternal smoking, at all three designated smoking severity levels. It was also found that pre-pregnancy BMI and gestational age could both qualify as confounders for the relationship between maternal smoking and birth weight. The parsimonious prediction model for birth weight contained one more variable than the association model, maternal height, suggesting that maternal height does have predictive power for birth weight, although there was not evidence to support maternal height as either an effect modifier or a confounder for this relationship. Mediation analysis provided support for both pre-pregnancy BMI and gestational age as mediators for the relationship between maternal smoking and birth weight, suggesting that these variables could partially explain the relationship between birth weight and maternal smoking.
+
+These findings provide support for the hypothesis that BMI is a confounder (and possibly a mediator) for the relationship between maternal smoking and birthweight. These findings may imply that there is some facet of the biological mechanism for low birth weight that smoking mothers are more vulnerable to but mothers with high BMI are more resistant to.
+
+This analysis had some fairly substantial limitations for evaluation of this hypothesis, as discussed earlier. Previous work has discussed how malnutrition may be a significant component in LBW and that the relationship that low pre-pregnancy BMI has with LBW is because BMI can serve as a reasonable proxy for nutritional status in situations of inadequate social support. However, the sample for this analysis contained primarily middle-class white women who all had insurance and regular healthcare. This sample would have very poor representation of individuals with poor nutrition that would be of interest in testing the hypothesis that malnutrition has a significant effect on birth weight that might meaningfully have a connection with the relationship between LBW and infant mortality.
+
+Another potential issue with the sample data used in this analysis, likely due to the age of the study it was taken from, is that there is a large amount of medical data that was missing from this sample that might have been useful for evaluating the relationships in the study. For example, tt may have been helpful to know which of the LBW infants in the study had adverse outcomes such as mortality in first year of life, as this may also have resulted in some useful relationships in the model. Other information that might have been useful for the analysis would have been the mother's health status, such as whether she had chronic diseases like diabetes or heart disease; and other social habits, such as alcohol use or use. This information could have helped to broaden the picture more and inform whether the relationships seen in this study were extraneous assocations only seen because of how little was known about the sample.
+
+There were also limitations in the procedure used for this analysis, as well. A limited method of association-model building was performed where only the crude model was used to check each variable for effect modification and confounding. Although this method still produced statistically significant findings, it is possible that a more rigorous method for model-building could have produced more appropriate results and possibly helped to identify relationships that were not obvious from this relatively basic approach. Similarly, although a conventional backwards-elimination procedure was performed for the prediction model, the model was not verified against test data. Performing more rigorous model-building procedures in future work would likely provide some improvement for the conclusions made in this analysis.
+
+For these reasons, this analysis should be interpreted with caution and is instead meant to identify trends that might be of interest for future studies. This analysis has identified some trends that may be apparent in more generalized populations and could be of value in future work. Conversely, however, there may be general trends present in the population that were not apparent in this sample but may have become apparent if a more representative sample were used. Overall, these findings are promising in the sense that they show that it might be possible to understand LBW and infant mortality better as more information about the factors surrounding these outcomes becomes available. Future work could examine whether these relationships are changed when mothers in situations of poor social support are included in the study.
 
 \newpage
 
-# Appendix
+# Appendices
 
 ## Appendix A: R Output
 
@@ -207,6 +317,127 @@ pcor(df)$estimate %>%
   round(digits = 4)
 ```
 
+### Output A.2: Crude Model (Birth Weight and Maternal Smoking)
+
+```{r}
+lm.bwcrude <- lm(bwt ~ SMK1 + SMK2 + SMK3, data = CHDS)
+summary(lm.bwcrude)
+```
+
+### Output A.3: Gestational Age as an Effect Modifier for Birth Weight and Maternal Smoking
+
+```{r}
+lm.gestwks1 <- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + gestwks*SMK1 + gestwks*SMK2 + gestwks*SMK3, data = CHDS)
+summary(lm.gestwks1)
+```
+
+### Output A.4: Gestational Age as a Confounder for Birth Weight and Maternal Smoking
+
+```{r}
+lm.gestwks2 <- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks, data = CHDS)
+summary(lm.gestwks2)
+
+message("% change")
+100* (summary(lm.bwcrude)$coefficients[c(2:4) , 1] - summary(lm.gestwks2)$coefficients[c(2:4), 1]) / summary(lm.bwcrude)$coefficients[c(2:4) , 1]
+```
+
+### Output A.5: Maternal Age as an Effect Modifier for Birth Weight and Maternal Smoking
+
+```{r}
+lm.age1 <- lm(bwt ~ SMK1 + SMK2 + SMK3 + age + age*SMK1 + age*SMK2 + age*SMK3, data = CHDS)
+summary(lm.age1)
+```
+
+### Output A.6: Maternal Age as a Confounder for Birth Weight and Maternal Smoking
+
+```{r}
+lm.age2 <- lm(bwt ~ SMK1 + SMK2 + SMK3 + age, data = CHDS)
+summary(lm.age2)
+
+message("% change")
+100 * (summary(lm.bwcrude)$coefficients[c(2:4) , 1] - summary(lm.age2)$coefficients[c(2:4), 1]) / summary(lm.bwcrude)$coefficients[c(2:4) , 1]
+```
+
+### Output A.7: Maternal Age as an Effect Modifier for Birth Weight and Maternal Smoking
+
+```{r}
+lm.mheight1 <- lm(bwt ~ SMK1 + SMK2 + SMK3 + mheight + mheight*SMK1 + mheight*SMK2 + mheight*SMK3, data = CHDS)
+summary(lm.mheight1)
+```
+
+### Output A.8: Maternal Age as a Confounder for Birth Weight and Maternal Smoking
+
+```{r}
+lm.mheight2 <- lm(bwt ~ SMK1 + SMK2 + SMK3 + mheight, data = CHDS)
+summary(lm.mheight2)
+
+message("% change")
+100*(summary(lm.bwcrude)$coefficients[c(2:4) , 1] - summary(lm.mheight2)$coefficients[c(2:4), 1]) / summary(lm.bwcrude)$coefficients[c(2:4) , 1]
+```
+
+### Output A.9: Maternal Age as an Effect Modifier for Birth Weight and Maternal Smoking
+
+```{r}
+lm.BMI1 <- lm(bwt ~ SMK1 + SMK2 + SMK3 + BMI + BMI*SMK1 + BMI*SMK2 + BMI*SMK3, data = CHDS)
+summary(lm.BMI1)
+```
+
+### Output A.10: Maternal Age as a Confounder for Birth Weight and Maternal Smoking
+
+```{r}
+lm.BMI2 <- lm(bwt ~ SMK1 + SMK2 + SMK3 + BMI, data = CHDS)
+summary(lm.BMI2)
+
+message("% change")
+100*(summary(lm.bwcrude)$coefficients[c(2:4) , 1] - summary(lm.BMI2)$coefficients[c(2:4), 1]) / summary(lm.bwcrude)$coefficients[c(2:4) , 1]
+```
+
+### Output A.11: Full Association Model
+
+```{r}
+lm.bwfull <- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + BMI, data = CHDS)
+summary(lm.bwfull)
+```
+
+### Output A.12: Creation of New Full Model with Outlier Removed (See C.6)
+
+```{r}
+CHDS_60 <- CHDS[-c(60),]
+lm.bwfull_60 <- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + BMI, data = CHDS_60)
+summary(lm.bwfull_60)
+```
+
+### Output A.13: Confidence Intervals for Full vs Reduced Models --- Association
+
+```{r}
+message("For the crude model:")
+confint(lm.bwcrude, level = 0.95) 
+```
+
+```{r}
+message("For the adjusted model:")
+confint(lm.bwfull_60, level = 0.95)
+```
+
+### Output A.14: Prediction Model Backwards Elimination Procedure Step 1 --- All variables
+
+```{r}
+lm.bwfull_60_all <- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + age + BMI + mheight, data = CHDS_60)
+summary(lm.bwfull_60_all)
+```
+
+### Output A.15: Prediction Model Backwards Elimination Procedure Step 2 --- Maternal Age Removed
+
+```{r}
+lm.bwfull_60_age <- lm(bwt ~ SMK1 + SMK2 + SMK3 + gestwks + BMI + mheight, data = CHDS_60)
+summary(lm.bwfull_60_age)
+```
+
+### Output A.16: Confidence Intervals --- Prediction
+
+```{r}
+confint(lm.bwfull_60_age, level = 0.95)
+```
 
 ## Appendix B: Plots and Figures
 
@@ -229,6 +460,192 @@ hist(CHDS$mppwt, main = NULL, xlab = "Maternal Pre-Partum Weight (lbs)")
 ```
 
 ## Appendix C: Model Diagnostics
+
+### Figure C.1: Plot of Standardized Model Residuals as a Function of Fitted Values for Birth Weight --- Association
+
+```{r, fig.height=3, fig.width=5}
+fitted <- lm.bwfull$fitted.values # extract fitted values
+resm <- resid(lm.bwfull)          # extract model residuals
+standm <- rstandard(lm.bwfull)    # extract standardized residuals
+studm <- rstudent(lm.bwfull)      # extract studentized residuals
+
+#par(mfrow = c(3,1))                   # arranges plots
+# residual plot:
+#plot(fitted, resm, main = "Plot of Model Residuals as a Function of Fitted Values for Birth Weight", xlab = "Fitted Birth Weight Value (lbs)", ylab = "Residual (lbs)")
+#abline(0,0, col = "red")
+# standardized residual plot:
+plot(fitted, standm, xlab = "Fitted Birth Weight Value (lbs)", ylab = "Standardized Residual")
+abline(0,0, col = "red")
+```
+
+### Figure C.2: Plot of Studentized Model Residuals as a Function of Fitted Values for Birth Weight --- Association
+
+```{r, fig.height=3, fig.width=5}
+# studentized residual plot:
+plot(fitted, studm, xlab = "Fitted Birth Weight Value (lbs)", ylab = "Studentized Residual")
+abline(0,0, col = "red")
+```
+
+### Figure C.3: Q-Q Plot of Residuals
+
+```{r, fig.height=3, fig.width=5}
+qqnorm(resm, ylab = "Residuals", main = "")
+qqline(resm)
+
+```
+
+### Figure C.4: Q-Q Plot of Standardized Residuals
+
+```{r, fig.height=3, fig.width=5}
+qqnorm(standm, ylab = "Standardized Residuals", main = "")
+qqline(standm)
+```
+
+### Figure C.5: Q-Q Plot of Studentized Residuals
+
+```{r, fig.height=3, fig.width=5}
+qqnorm(studm, ylab = "Studentized Residuals", main = "")
+qqline(studm)
+```
+
+### Output C.6: Influential Outlier Detection with Cook's Distance
+
+```{r}
+k <- 8                                  # number of predictors in association model
+h_limit <- 2*(1+k)/nrow(CHDS)           # recommended leverage threshold
+CHDS$h <- hatvalues(lm.bwfull)          # Add leverages to the dataset
+CHDS$c <- cooks.distance(lm.bwfull)     # add Cook's distance to the dataset
+
+message("The output below shows all potential outliers from this data")
+CHDS[CHDS$c>1, ] %>%
+  dplyr::select(!c(SMK_cat:SMK3)) %>%
+  round(digits = 4)
+CHDS[CHDS$h>h_limit, ] %>%
+  dplyr::select(!c(SMK_cat:SMK3)) %>%
+  round(digits = 4)
+```
+
+### Output C.7: Collinearity Assessment --- Association
+
+```{r}
+vif(lm.bwfull_60)
+mean(vif(lm.bwfull_60))
+```
+
+### Figure C.8: Plot of Standardized Model Residuals as a Function of Fitted Values for Birth Weight --- Prediction
+
+```{r, fig.height=3, fig.width=5}
+fitted <- lm.bwfull_60_age$fitted.values # extract fitted values
+resm <- resid(lm.bwfull_60_age)          # extract model residuals
+standm <- rstandard(lm.bwfull_60_age)    # extract standardized residuals
+studm <- rstudent(lm.bwfull_60_age)      # extract studentized residuals
+
+#par(mfrow = c(3,1))                   # arranges plots
+# residual plot:
+#plot(fitted, resm, main = "Plot of Model Residuals as a Function of Fitted Values for Birth Weight", xlab = "Fitted Birth Weight Value (lbs)", ylab = "Residual (lbs)")
+#abline(0,0, col = "red")
+# standardized residual plot:
+plot(fitted, standm, xlab = "Fitted Birth Weight Value (lbs)", ylab = "Standardized Residual")
+abline(0,0, col = "red")
+```
+
+### Figure C.9: Plot of Studentized Model Residuals as a Function of Fitted Values for Birth Weight --- Prediction
+
+```{r, fig.height=3, fig.width=5}
+# studentized residual plot:
+plot(fitted, studm, xlab = "Fitted Birth Weight Value (lbs)", ylab = "Studentized Residual")
+abline(0,0, col = "red")
+```
+
+### Output C.7: Collinearity Assessment --- Prediction
+
+```{r}
+vif(lm.bwfull_60_age)
+mean(vif(lm.bwfull_60_age))
+```
+
+## Appendix D: Mediation Analysis
+
+### Output D.1: Gestational Age and BMI
+
+```{r}
+lm.ga <- lm(gestwks ~ BMI + SMK1 + SMK2 + SMK3, data = CHDS_60)
+summary(lm.ga)
+```
+
+### Output D.2: Pre-Pregnancy BMI and Smoking
+
+```{r}
+lm.BMI <- lm(BMI ~ SMK1 + SMK2 + SMK3 + age, data = CHDS_60)
+summary(lm.BMI)
+```
+
+### Output D.3: Pre-Pregnancy BMI and Birth Weight
+
+```{r}
+summary(lm.bwfull_60)
+```
+
+### Output D.4: Light Smoking-BMI Mediation Analysis
+
+```{r}
+set.seed(Sys.time())
+med.BMI1 <- mediate(lm.BMI, lm.bwfull_60, treat = "SMK1", mediator = "BMI", boot = TRUE, sims = 500)
+summary(med.BMI1)
+```
+
+### Output D.5: Moderate Smoking-BMI Mediation Analysis
+
+```{r}
+set.seed(Sys.time())
+med.BMI2 <- mediate(lm.BMI, lm.bwfull_60, treat = "SMK2", mediator = "BMI", boot = TRUE, sims = 500)
+summary(med.BMI2)
+```
+
+### Output D.6: Heavy Smoking-BMI Mediation Analysis
+
+```{r}
+set.seed(Sys.time())
+med.BMI3 <- mediate(lm.BMI, lm.bwfull_60, treat = "SMK3", mediator = "BMI", boot = TRUE, sims = 500)
+summary(med.BMI3)
+```
+
+### Output D.7: Gestational Age and Maternal Smoking
+
+```{r}
+lm.gestwks <- lm(gestwks ~ SMK1 + SMK2 + SMK3 + age, data = CHDS_60)
+summary(lm.gestwks)
+```
+
+### Output D.8: Gestational Age and Birth Weight
+
+```{r}
+summary(lm.bwfull_60)
+```
+
+### Output D.9: Light Smoking-Gestational Age Mediation Analysis
+
+```{r}
+set.seed(Sys.time())
+med.gestwks1 <- mediate(lm.gestwks, lm.bwfull_60, treat = "SMK1", mediator = "gestwks", boot = TRUE, sims = 500)
+summary(med.gestwks1)
+```
+
+### Output D.10: Moderate Smoking-Gestational Age Mediation Analysis
+
+```{r}
+set.seed(Sys.time())
+med.gestwks2 <- mediate(lm.gestwks, lm.bwfull_60, treat = "SMK2", mediator = "gestwks", boot = TRUE, sims = 500)
+summary(med.gestwks2)
+```
+
+### Output D.11: Heavy Smoking-Gestational Age Mediation Analysis
+
+```{r}
+set.seed(Sys.time())
+med.gestwks3 <- mediate(lm.gestwks, lm.bwfull_60, treat = "SMK3", mediator = "gestwks", boot = TRUE, sims = 500)
+summary(med.gestwks3)
+```
 
 \newpage
 
